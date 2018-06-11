@@ -87,6 +87,7 @@ import { BpmWrap } from 'yyuap-bpm';
 6|url|string|提交流程所需要的地址，必须传入
 7|onSuccess|function|提交流程业务成功后回调
 8|onError|function|提交流程业务失败后回调
+9|className|string|传入class
 
 
 ##### BpmButtonRecall
@@ -99,6 +100,7 @@ import { BpmWrap } from 'yyuap-bpm';
 4|url|string|提交流程所需要的地址，必须传入
 5|onSuccess|function|提交流程业务成功后回调
 6|onError|function|提交流程业务失败后回调
+7|className|string|传入class
 
 
 ##### BpmWrap

@@ -461,16 +461,34 @@ class BpmTaskApproval extends Component {
                             </Col>
                         </Row>
                     </div>}
-                    {this.props.appType == "2" && <Row>
-                        <Col md={12}>
-                            <Radio.RadioGroup
-                                name="approvetype"
-                                selectedValue={this.state.approvetype}
-                                onChange={this.handleChange}>
-                                <Radio value="withdraw">弃审</Radio>
-                            </Radio.RadioGroup>
-                        </Col>
-                    </Row>}
+                    {this.props.appType == "2" && <div>
+                        <Row>
+                            <Col md={12}>
+                                <Radio.RadioGroup
+                                    name="approvetype"
+                                    selectedValue={this.state.approvetype}
+                                    onChange={this.handleChange}>
+                                    <Radio value="withdraw">弃审</Radio>
+                                </Radio.RadioGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={12}>
+                                <textarea
+                                    style={{
+                                        "height": "200px",
+                                        "width": "99%",
+                                        "outline": "none",
+                                        "resize": "none",
+                                        "border": "1px solid #ececec",
+                                        "padding": "10px",
+                                        "marginBottom": "20px"
+                                    }}
+                                    onChange={this.handlerCommentChange}
+                                />
+                            </Col>
+                        </Row>
+                    </div>}
                 </div>
                 <Modal
                     show={this.state.rejectToActivityShow}

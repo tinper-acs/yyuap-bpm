@@ -12,6 +12,7 @@ const propTypes = {
     nodekey: PropTypes.string,
     url: PropTypes.string,
     data: PropTypes.array,
+    className: PropTypes.string,
     onSuccess: PropTypes.func,
     onError: PropTypes.func
 };
@@ -67,7 +68,7 @@ class BpmButtonSubmit extends Component {
     render() {
         let { text } = this.props;
         return (
-            <Button onClick={this.handlerBtn} colors="primary">{text}</Button>
+            <Button className={this.props.className} size="sm" onClick={this.handlerBtn} colors="primary">{text}</Button>
         );
     }
 }
@@ -77,6 +78,7 @@ BpmButtonSubmit.defaultProps = {
     text: "提交",
     nodekey: "003",
     url: "/example/ygdemo_yw_info/submit",
-    data: []
+    data: [],
+    className: ""
 }
 export default BpmButtonSubmit;

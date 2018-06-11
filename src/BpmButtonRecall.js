@@ -10,6 +10,7 @@ const propTypes = {
     text: PropTypes.string,
     url: PropTypes.string,
     data: PropTypes.array,
+    className: PropTypes.string,
     onSuccess: PropTypes.func,
     onError: PropTypes.func
 };
@@ -46,7 +47,7 @@ class BpmButtonRecall extends Component {
     render() {
         let { text } = this.props;
         return (
-            <Button onClick={this.handlerBtn} colors="primary">{text}</Button>
+            <Button className={this.props.className} size="sm" onClick={this.handlerBtn} colors="primary">{text}</Button>
         );
     }
 }
@@ -55,6 +56,7 @@ BpmButtonRecall.defaultProps = {
     checkedArray: [],
     text: "收回",
     url: "/example/ygdemo_yw_info/unsubmit",
-    data: []
+    data: [],
+    className: ""
 }
 export default BpmButtonRecall;
