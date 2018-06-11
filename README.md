@@ -5,7 +5,7 @@
 
 
 
-### 1. 简介
+### 1. 简介
 
 > 基于tinper-bee组件库对iUap原有UUI流程业务组件流程部分进行封装React版本
 
@@ -22,7 +22,7 @@
 7|BpmTaskApprovalWrap|流程整合审批面板
 8|BpmTestCheckTable|测试任务中心表格组件
 
-实际使用中不需要使用全部组件
+实际使用中不需要使用全部组件
 
 ### 2. 安装
 
@@ -51,7 +51,7 @@ import { BpmWrap } from 'yyuap-bpm';
 ##### BpmFlowChart
 
 序号 | 参数 | 类型 | 说明
----|---|---|---|---
+---|---|---|---
 1|host|string|请求流程图的接口前缀一般不需要设置默认走本地部署服务
 2|processDefinitionId|string|流程图服务必备参数
 3|processInstanceId|string|流程图服务必备参数
@@ -106,13 +106,13 @@ import { BpmWrap } from 'yyuap-bpm';
 ##### BpmWrap
 
 > 基于BpmFlowChart和BpmTable组合使用的流程查看组件
-当传入id(TaskID)、processDefinitionId、processInstanceId的时候不请求getbillid接口
+当传入id(TaskID)、processDefinitionId、processInstanceId的时候不请求getbillid接口
 当只传入id(单据ID)的时候，组件会从getbillid处请求所需要的参数
 
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
-1|id|string|传入的ID(注：只传ID的话，就是单据ID组件会去请求getbillid接口拿到流程需要的参数，如果传递3个参数的话ID就是TaskID,processDefinitionId,processInstanceId)
+1|id|string|传入的ID(注：只传ID的话，就是单据ID组件会去请求getbillid接口拿到流程需要的参数，如果传递3个参数的话ID就是TaskID,processDefinitionId,processInstanceId)
 2|processDefinitionId|string|processDefinitionId
 3|processInstanceId|string|processInstanceId
 
@@ -122,7 +122,7 @@ import { BpmWrap } from 'yyuap-bpm';
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
-1|id|string|传入的ID(注：只传ID的话，就是单据ID组件会去请求getbillid接口拿到流程需要的参数，如果传递3个参数的话ID就是TaskID,processDefinitionId,processInstanceId)
+1|id|string|传入的ID(注：只传ID的话，就是单据ID组件会去请求getbillid接口拿到流程需要的参数，如果传递3个参数的话ID就是TaskID,processDefinitionId,processInstanceId)
 2|processDefinitionId|string|processDefinitionId
 3|processInstanceId|string|processInstanceId
 4|onBpmFlowClick|function|流程图按钮单击事件，一般用来给流程图页面跳转路由和参数使用
@@ -131,6 +131,6 @@ import { BpmWrap } from 'yyuap-bpm';
 
 ##### BpmTestCheckTable
 
-> 用来开发的时候测试任务中心表格，禁止用于生产阶段切记！！！
+> 用来开发的时候测试任务中心表格，禁止用于生产阶段切记！！！
 
 
