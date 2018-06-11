@@ -124,6 +124,7 @@ import { BpmWrap } from 'yyuap-bpm';
 2|processDefinitionId|string|processDefinitionId
 3|processInstanceId|string|processInstanceId
 4|onBpmFlowClick|function|流程图按钮单击事件，一般用来给流程图页面跳转路由和参数使用
+5|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
 
 
 ##### BpmTestCheckTable
