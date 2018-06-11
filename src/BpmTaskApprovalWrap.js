@@ -1,3 +1,7 @@
+/**
+ * 审批逻辑组件
+ */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Button } from 'tinper-bee';
@@ -28,7 +32,7 @@ class BpmTaskApprovalWrap extends Component {
         if (!this.props.processDefinitionId) {//督办查看详情
             let pID = await billidToIds(this.props.id);
             if (pID.data.message && pID.data.message == 'NoBpm') {
-                console.log('NoBpm');
+                // console.log('NoBpm');
                 this.setState({
                     isShowFlowBtn: false
                 });
@@ -40,7 +44,6 @@ class BpmTaskApprovalWrap extends Component {
                     processInstanceId
                 });
             } else {
-                console.log(111);
                 this.setState({
                     isShowFlowBtn: true
                 });

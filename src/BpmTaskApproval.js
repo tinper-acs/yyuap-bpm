@@ -85,7 +85,6 @@ class BpmTaskApproval extends Component {
     componentWillMount = async () => {
         //通过billID获得processDefinitionId,processInstanceId
         // let pID = await billidToIds('f39234a2-ed92-473f-b7c1-45f71559facb');
-        // console.log(pID.data);
     }
     componentDidMount = async () => {
         //传入类型是弃审，那么直接设置2
@@ -154,7 +153,6 @@ class BpmTaskApproval extends Component {
             // selIds: selIds
         });
         // self.props.onSelIds(selIds);
-        // console.log(checkedArray.filter((item) => item.isChecked))
         let userIdArr = checkedArray.filter((item) => item.isChecked);
         let userIdsArray = [];
         userIdArr.map((item) => {
@@ -216,7 +214,6 @@ class BpmTaskApproval extends Component {
     }
     //审批提交
     handlerSubmitBtn = async () => {
-        console.log('state=', this.state);
         if (this.state.comment == "") {
             Message.create({ content: '不能为空', color: 'danger', position: 'top' });
             return;
@@ -255,7 +252,6 @@ class BpmTaskApproval extends Component {
                 break;
             //改派
             case 'delegate':
-                console.log(result.data);
                 if (result.data.status == 1) {
                     this.setState({
                         delegateList: result.data.data.content,
@@ -304,7 +300,6 @@ class BpmTaskApproval extends Component {
     //eiap-plus/task/rejecttask/reject
     //
     rejectToActivityOK = async () => {
-        console.log(this.state);
         let msg = await axios.post(getBpmTaskURL('rejectToBillMaker'), {
             activityId: this.state.activityId,
             approvetype: this.state.approvetype,
@@ -329,12 +324,9 @@ class BpmTaskApproval extends Component {
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
         }
-
-        console.log(msg);
     }
     //加签
     signAddOK = async () => {
-        console.log(this.state);
         let msg = await axios.post('eiap-plus/task/signaddtask/signadd', {
             approvetype: this.state.approvetype,
             comment: this.state.comment,
@@ -360,12 +352,9 @@ class BpmTaskApproval extends Component {
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
         }
-
-        console.log(msg);
     }
     //改派
     delegatedOK = async () => {
-        console.log(this.state);
         if (this.state.userId == null) {
             Message.create({ content: `请选择一条数据`, color: 'danger', position: 'top' });
             return;
@@ -396,8 +385,6 @@ class BpmTaskApproval extends Component {
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
         }
-
-        console.log(msg);
     }
     handlerFlow = () => {
         let onBpmFlowClick = this.props.onBpmFlowClick;
@@ -434,52 +421,56 @@ class BpmTaskApproval extends Component {
         return (
             <div>
                 <Row style={{ "margin": "10px 0" }}>
-                    {/* <Col md={10}>
-                        <Button style={{ "marginRight": "10px" }} >返回</Button>
-                    </Col> */}
                     <Col mdOffset={10} md={2}>
-                        <Button onClick={this.handlerFlow} style={{ "marginRight": "10px" }} colors="primary">流程图</Button>
-                        <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>
+                        {this.props.appType != "3" && <Button onClick={this.handlerFlow} style={{ "marginRight": "10px" }} colors="primary">流程图</Button>}
+                        {this.props.appType != "3" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}
+                        {this.props.appType == "3" && <Button onClick={this.handlerFlow} style={{ "marginRight": "10px" }} colors="primary">流程图</Button>}
                     </Col>
                 </Row>
                 <div style={{ "background": "#eeeff1" }}>
-                    <Row>
+                    {this.props.appType == "1" && <div>
+                        <Row>
+                            <Col md={12}>
+                                <Radio.RadioGroup
+                                    name="approvetype"
+                                    selectedValue={this.state.approvetype}
+                                    onChange={this.handleChange}>
+                                    <Radio value="agree">同意</Radio>
+                                    <Radio value="unagree">不同意</Radio>
+                                    <Radio value="rejectToActivity">驳回到环节</Radio>
+                                    <Radio value="rejectToBillMaker">驳回到制单人</Radio>
+                                    <Radio value="signAdd">加签</Radio>
+                                    <Radio value="delegate">改派</Radio>
+                                </Radio.RadioGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={12}>
+                                <textarea
+                                    style={{
+                                        "height": "200px",
+                                        "width": "99%",
+                                        "outline": "none",
+                                        "resize": "none",
+                                        "border": "1px solid #ececec",
+                                        "padding": "10px",
+                                        "marginBottom": "20px"
+                                    }}
+                                    onChange={this.handlerCommentChange}
+                                />
+                            </Col>
+                        </Row>
+                    </div>}
+                    {this.props.appType == "2" && <Row>
                         <Col md={12}>
-                            {this.props.appType == "1" && <Radio.RadioGroup
-                                name="approvetype"
-                                selectedValue={this.state.approvetype}
-                                onChange={this.handleChange}>
-                                <Radio value="agree">同意</Radio>
-                                <Radio value="unagree">不同意</Radio>
-                                <Radio value="rejectToActivity">驳回到环节</Radio>
-                                <Radio value="rejectToBillMaker">驳回到制单人</Radio>
-                                <Radio value="signAdd">加签</Radio>
-                                <Radio value="delegate">改派</Radio>
-                            </Radio.RadioGroup>}
-                            {this.props.appType == "2" && <Radio.RadioGroup
+                            <Radio.RadioGroup
                                 name="approvetype"
                                 selectedValue={this.state.approvetype}
                                 onChange={this.handleChange}>
                                 <Radio value="withdraw">弃审</Radio>
-                            </Radio.RadioGroup>}
+                            </Radio.RadioGroup>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}>
-                            <textarea
-                                style={{
-                                    "height": "200px",
-                                    "width": "99%",
-                                    "outline": "none",
-                                    "resize": "none",
-                                    "border": "1px solid #ececec",
-                                    "padding": "10px",
-                                    "marginBottom": "20px"
-                                }}
-                                onChange={this.handlerCommentChange}
-                            />
-                        </Col>
-                    </Row>
+                    </Row>}
                 </div>
                 <Modal
                     show={this.state.rejectToActivityShow}
