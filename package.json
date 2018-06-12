@@ -1,10 +1,10 @@
 {
   "name": "yyuap-bpm",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "tinper-bee bpm component",
   "main": "./lib/index.js",
   "scripts": {
-    "build": "rm -rf lib && babel src -d lib --no-comments",
+    "build": "rm -rf lib && rm -rf dist && babel src -d lib --no-comments",
     "bundle": "webpack && webpack -p --output-filename yyuap-bpm.min.js"
   },
   "keywords": [

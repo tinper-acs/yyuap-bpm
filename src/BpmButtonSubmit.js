@@ -14,7 +14,8 @@ const propTypes = {
     data: PropTypes.array,
     className: PropTypes.string,
     onSuccess: PropTypes.func,
-    onError: PropTypes.func
+    onError: PropTypes.func,
+    onStart: PropTypes.func
 };
 
 class BpmButtonSubmit extends Component {
@@ -22,7 +23,10 @@ class BpmButtonSubmit extends Component {
         super();
     }
     handlerBtn = async () => {
-        let { checkedArray, data } = this.props;
+        let { checkedArray, data, onStart } = this.props;
+        if (onStart) {
+            onStart();
+        }
         let submitArray = [];
         for (var i = 0; i < checkedArray.length; i++) {
             if (checkedArray[i]) {

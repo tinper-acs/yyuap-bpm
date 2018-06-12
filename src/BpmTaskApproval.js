@@ -12,7 +12,8 @@ const propTypes = {
     host: PropTypes.string,
     id: PropTypes.string,
     appType: PropTypes.string,
-    onBpmFlowClick: PropTypes.func
+    onBpmFlowClick: PropTypes.func,
+    onStart: PropTypes.func
 };
 
 class BpmTaskApproval extends Component {
@@ -387,6 +388,10 @@ class BpmTaskApproval extends Component {
         }
     }
     handlerFlow = () => {
+        let onStart = this.props.onStart;
+        if (onStart) {
+            onStart();
+        }
         let onBpmFlowClick = this.props.onBpmFlowClick;
         if (onBpmFlowClick) {
             onBpmFlowClick();

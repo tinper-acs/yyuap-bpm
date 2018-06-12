@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { Button, Message } from 'tinper-bee';
 import { onRecall } from './common';
 import PropTypes from 'prop-types';
+
 const propTypes = {
     checkedArray: PropTypes.array,
     text: PropTypes.string,
@@ -12,7 +13,8 @@ const propTypes = {
     data: PropTypes.array,
     className: PropTypes.string,
     onSuccess: PropTypes.func,
-    onError: PropTypes.func
+    onError: PropTypes.func,
+    onStart: PropTypes.func
 };
 
 class BpmButtonRecall extends Component {
@@ -20,7 +22,10 @@ class BpmButtonRecall extends Component {
         super();
     }
     handlerBtn = async () => {
-        let { checkedArray, data } = this.props;
+        let { checkedArray, data, onStart } = this.props;
+        if (onStart) {
+            onStart();
+        }
         let recallArray = [];
         for (let i = 0; i < checkedArray.length; i++) {
             if (checkedArray[i]) {

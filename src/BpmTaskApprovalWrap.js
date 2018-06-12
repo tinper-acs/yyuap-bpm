@@ -14,7 +14,8 @@ const propTypes = {
     processDefinitionId: PropTypes.string,
     processInstanceId: PropTypes.string,
     onBpmFlowClick: PropTypes.func,
-    appType: PropTypes.string
+    appType: PropTypes.string,
+    onStart: PropTypes.func
 }
 class BpmTaskApprovalWrap extends Component {
     constructor() {
@@ -69,6 +70,7 @@ class BpmTaskApprovalWrap extends Component {
                             processDefinitionId={this.state.processDefinitionId}
                             processInstanceId={this.state.processInstanceId}
                             appType={this.props.appType}
+                            onStart={this.props.onStart}
                         />
                     </Col>
                 </Row>}

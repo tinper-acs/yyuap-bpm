@@ -73,6 +73,7 @@ import { BpmWrap } from 'yyuap-bpm';
 1|host|string|请求审批的接口前缀一般不需要设置默认走本地部署服务
 2|id|string|审批的任务ID
 3|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
+4|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
 ##### BpmButtonSubmit
@@ -88,6 +89,7 @@ import { BpmWrap } from 'yyuap-bpm';
 7|onSuccess|function|提交流程业务成功后回调
 8|onError|function|提交流程业务失败后回调
 9|className|string|传入class
+10|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
 ##### BpmButtonRecall
@@ -101,6 +103,7 @@ import { BpmWrap } from 'yyuap-bpm';
 5|onSuccess|function|提交流程业务成功后回调
 6|onError|function|提交流程业务失败后回调
 7|className|string|传入class
+8|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
 ##### BpmWrap
@@ -127,6 +130,7 @@ import { BpmWrap } from 'yyuap-bpm';
 3|processInstanceId|string|processInstanceId
 4|onBpmFlowClick|function|流程图按钮单击事件，一般用来给流程图页面跳转路由和参数使用
 5|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
+6|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
 ##### BpmTestCheckTable
