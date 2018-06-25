@@ -13,7 +13,18 @@
     "bpm",
     "tinper-bee"
   ],
-  "author": "Kvkens (yueming@yonyou.com)",
+  "author": {
+    "name": "Kvkens",
+    "email": "yueming@yonyou.com"
+  },
+  "bugs": {
+    "url": "https://github.com/tinper-acs/yyuap-bpm/issues"
+  },
+  "homepage": "https://github.com/tinper-acs/yyuap-bpm#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinper-acs/yyuap-bpm.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "axios": "^0.18.0",
