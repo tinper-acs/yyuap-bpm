@@ -53,7 +53,7 @@ class BpmButtonSubmit extends Component {
                 let flag = result["data"]["success"];
                 if (flag == "success") {
                     //正确
-                    Message.create({ content: `单据提交操作成功`, color: 'success', position: 'top' });
+                    //Message.create({ content: `单据提交操作成功`, color: 'success', position: 'top' });
                     if (this.props.onSuccess) {
                         this.props.onSuccess();
                     }

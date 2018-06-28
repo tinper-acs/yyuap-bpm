@@ -22,7 +22,7 @@ class BpmButtonRecall extends Component {
         super();
     }
     handlerBtn = async () => {
-        let { checkedArray, data, onStart } = this.props;
+        let { checkedArray, data, onStart, onSuccess, onError } = this.props;
         if (onStart) {
             onStart();
         }
@@ -39,9 +39,11 @@ class BpmButtonRecall extends Component {
         if (recallArray.length > 0) {
             let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray);
             if (success) {
-                Message.create({ content: detailMsg.data.message, color: 'info', position: 'top' });
+                onSuccess && onSuccess();
+                //Message.create({ content: detailMsg.data.message, color: 'info', position: 'top' });
             } else {
-                Message.create({ content: message, color: 'danger', position: 'top' });
+                onError && onError();
+                //Message.create({ content: message, color: 'danger', position: 'top' });
             }
         } else {
             // 弹出提示请选择数据
