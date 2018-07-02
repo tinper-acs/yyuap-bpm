@@ -1,9 +1,11 @@
-const path = require('path')
+const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-    entry: './src/index.js',
+    // mode: 'production',
+    entry: ['./src/index.js'],
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'build'),
         filename: 'yyuap-bpm.js',
         library: 'yyuap-bpm',
         libraryTarget: 'umd'
@@ -16,6 +18,34 @@ module.exports = {
                     path.resolve(__dirname, 'src')
                 ],
                 loader: 'babel-loader'
+            }, {
+                test: /\.less$/,
+                use: [{
+                    loader: MiniCssExtractPlugin.loader
+                },
+                {
+                    loader: ('css-loader'),
+                    options: {
+                        url: true,
+                        root: path.resolve('.')
+                    }
+                }, {
+                    loader: ('postcss-loader'),
+                    options: {
+                        ident: 'postcss',
+                        plugins: (loader) => [
+                            require('autoprefixer')({
+                                flexbox: 'no-2009',
+                                browsers: 'last 5 version'
+                            }),
+                            require('cssnano')()
+                        ]
+                    }
+                },
+                {
+                    loader: ('less-loader')
+                }
+                ]
             }
         ]
     },
@@ -25,5 +55,10 @@ module.exports = {
         'prop-types': 'PropTypes',
         'axios': 'axios',
         "tinper-bee": "TinperBee"
-    }
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: "ac-upload.css"
+        })
+    ]
 }

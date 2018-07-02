@@ -34,6 +34,9 @@ class BpmButtonSubmit extends Component {
                     submitArray.push({ "id": data[i]["id"] });
                 } else {
                     Message.create({ content: `单据${data[i]["code"]}不能重复提交`, color: 'danger', position: 'top' });
+                    if (this.props.onError) {
+                        this.props.onError();
+                    }
                 }
             }
         }

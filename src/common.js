@@ -233,3 +233,34 @@ export const onRecall = (url, data) => {
         data: data
     });
 }
+
+/**
+ * 审批状态类型返回默认审批文案
+ */
+export const approvetypeToText = (type) => {
+    switch (type) {
+        case 'agree':
+            return '审批同意';
+            break;
+        case 'unagree':
+            return '审批不同意';
+            break;
+        case 'rejectToActivity':
+            return '驳回到环节';
+            break;
+        case 'rejectToBillMaker':
+            return '驳回到制单人';
+            break;
+        case 'signAdd':
+            return '加签';
+            break;
+        case 'delegate':
+            return '改派';
+            break;
+        case 'withdraw':
+            return '';
+            break;
+        default:
+            break;
+    }
+}

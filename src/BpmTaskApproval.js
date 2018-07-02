@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { Radio, Row, Col, FormControl, Button, Modal, Message, Table, Checkbox, Pagination } from 'tinper-bee';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { getBpmTaskURL, sendBpmTaskAJAX } from './common';
+import { getBpmTaskURL, sendBpmTaskAJAX,approvetypeToText } from './common';
 
 const propTypes = {
     host: PropTypes.string,
@@ -21,7 +21,7 @@ class BpmTaskApproval extends Component {
         super(props);
         this.state = {
             approvetype: "agree",
-            comment: "",
+            comment: "审批同意",
             processDefinitionId: props.processDefinitionId,
             processInstanceId: props.processInstanceId,
             taskId: props.id,
@@ -207,7 +207,7 @@ class BpmTaskApproval extends Component {
     }
     //选择审批的类型
     handleChange = (value) => {
-        this.setState({ approvetype: value });
+        this.setState({ approvetype: value, comment: approvetypeToText(value) });
     }
     //绑定审批意见
     handlerCommentChange = (e) => {
@@ -432,10 +432,13 @@ class BpmTaskApproval extends Component {
                         {this.props.appType == "3" && <Button onClick={this.handlerFlow} style={{ "marginRight": "10px" }} colors="primary">流程图</Button>}
                     </Col>
                 </Row>
-                <div style={{ "background": "#eeeff1" }}>
+                <div style={{ "background": "#eeeff1", "padding": "20px" }}>
                     {this.props.appType == "1" && <div>
                         <Row>
-                            <Col md={12}>
+                            <Col style={{
+                                "height": "40px",
+                                "lineHeight": "20px"
+                            }} md={12}>
                                 <Radio.RadioGroup
                                     name="approvetype"
                                     selectedValue={this.state.approvetype}
@@ -453,14 +456,15 @@ class BpmTaskApproval extends Component {
                             <Col md={12}>
                                 <textarea
                                     style={{
-                                        "height": "200px",
-                                        "width": "99%",
+                                        "height": "100px",
+                                        "width": "90%",
                                         "outline": "none",
                                         "resize": "none",
-                                        "border": "1px solid #ececec",
+                                        "border": "1px solid #636363",
                                         "padding": "10px",
                                         "marginBottom": "20px"
                                     }}
+                                    value={this.state.comment}
                                     onChange={this.handlerCommentChange}
                                 />
                             </Col>

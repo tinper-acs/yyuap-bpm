@@ -1,0 +1,31 @@
+{
+    "proxy": [
+        {
+            "url": [
+                "/wbalone",
+                "/iuap_pap_quickstart",
+                "/iuap-example",
+                "/eiap-plus",
+                "/newref"
+            ],
+            "options": {
+                "target": "http://10.10.24.43:8080",
+                "headers": {
+                    "Referer": "http://10.10.24.43:8080/wbalone/index-view.html"
+                }
+            }
+        }
+    ],
+    "mock": {
+        "GET": [
+            {
+                "/nc/api/user": "./mock/nc/api/user.json"
+            }
+        ],
+        "POST": [
+            {
+                "/upload.do": "./upload.json"
+            }
+        ]
+    }
+}
