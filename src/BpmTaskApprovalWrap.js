@@ -61,7 +61,7 @@ class BpmTaskApprovalWrap extends Component {
 
     render() {
         return (
-            <div>
+            <div className="clearfix">
                 {this.state.processDefinitionId && <Row>
                     <Col md={12}>
                         <BpmTaskApproval
