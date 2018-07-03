@@ -47,7 +47,7 @@ class BpmButtonRecall extends Component {
             }
         } else {
             // 弹出提示请选择数据
-            Message.create({ content: `请选择撤回`, color: 'info', position: 'top' });
+            Message.create({ content: `请选择单据后撤回`, color: 'info', position: 'top' });
             onError && onError();
         }
 

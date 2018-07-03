@@ -69,6 +69,10 @@ class BpmButtonSubmit extends Component {
                     this.props.onError();
                 }
             }
+        } else {
+            // 弹出提示请选择数据
+            Message.create({ content: `请选择提交的单据`, color: 'info', position: 'top' });
+            this.props.onError && this.props.onError();
         }
 
     }

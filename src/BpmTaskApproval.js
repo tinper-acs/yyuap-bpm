@@ -6,14 +6,16 @@ import React, { Component } from 'react';
 import { Radio, Row, Col, FormControl, Button, Modal, Message, Table, Checkbox, Pagination } from 'tinper-bee';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { getBpmTaskURL, sendBpmTaskAJAX,approvetypeToText } from './common';
+import { getBpmTaskURL, sendBpmTaskAJAX, approvetypeToText } from './common';
 
 const propTypes = {
     host: PropTypes.string,
     id: PropTypes.string,
     appType: PropTypes.string,
     onBpmFlowClick: PropTypes.func,
-    onStart: PropTypes.func
+    onStart: PropTypes.func,
+    onSuccess: PropTypes.func,
+    onError: PropTypes.func
 };
 
 class BpmTaskApproval extends Component {
@@ -83,11 +85,11 @@ class BpmTaskApproval extends Component {
             width: "30%"
         }]
     }
-    componentWillMount = async () => {
+    componentWillMount = () => {
         //通过billID获得processDefinitionId,processInstanceId
         // let pID = await billidToIds('f39234a2-ed92-473f-b7c1-45f71559facb');
     }
-    componentDidMount = async () => {
+    componentDidMount = () => {
         //传入类型是弃审，那么直接设置2
         if (this.props.appType == "2") {
             this.setState({
@@ -221,18 +223,17 @@ class BpmTaskApproval extends Component {
         }
         //第一次请求审批，有的是直接一次请求，有的需要二次请求
         let result = await sendBpmTaskAJAX(this.state.approvetype, this.state);
+
         //检测需要二次请求并弹出Modal审批
         switch (this.state.approvetype) {
             //驳回到环节
             case 'rejectToActivity':
-
                 if (result.data.flag == 'success') {
                     this.setState({
                         rejectlist: result.data.rejectlist,
                         selectedRow: new Array(result.data.rejectlist.length),
                         rejectToActivityShow: true
                     });
-
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
                 }
@@ -269,8 +270,10 @@ class BpmTaskApproval extends Component {
             default:
                 if (result.data.flag == 'success') {
                     Message.create({ content: result.data.msg, color: 'info', position: 'top' });
+                    this.props.onSuccess && this.props.onSuccess();
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                    this.props.onError && this.props.onError();
                 }
                 break;
         }
@@ -336,6 +339,7 @@ class BpmTaskApproval extends Component {
             userIds: this.state.userIds
         }).catch((e) => {
             Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            this.props.onError && this.props.onError();
         });
 
         if (msg.data.flag == 'success') {
@@ -350,8 +354,10 @@ class BpmTaskApproval extends Component {
                 checkedAll: false,
                 name: ""
             });
+            this.props.onSuccess && this.props.onSuccess();
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
+            this.props.onError && this.props.onError();
         }
     }
     //改派
@@ -368,6 +374,7 @@ class BpmTaskApproval extends Component {
             userId: this.state.userId
         }).catch((e) => {
             Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            this.props.onError && this.props.onError();
         });
 
         if (msg.data.flag == 'success') {
@@ -383,8 +390,10 @@ class BpmTaskApproval extends Component {
                 delegateShow: false,
                 name: ""
             });
+            this.props.onSuccess && this.props.onSuccess();
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
+            this.props.onError && this.props.onError();
         }
     }
     handlerFlow = () => {
@@ -456,8 +465,8 @@ class BpmTaskApproval extends Component {
                             <Col md={12}>
                                 <textarea
                                     style={{
-                                        "height": "100px",
-                                        "width": "90%",
+                                        "height": "75px",
+                                        "width": "100%",
                                         "outline": "none",
                                         "resize": "none",
                                         "border": "1px solid #636363",
@@ -485,11 +494,11 @@ class BpmTaskApproval extends Component {
                             <Col md={12}>
                                 <textarea
                                     style={{
-                                        "height": "200px",
-                                        "width": "99%",
+                                        "height": "75px",
+                                        "width": "100%",
                                         "outline": "none",
                                         "resize": "none",
-                                        "border": "1px solid #ececec",
+                                        "border": "1px solid #636363",
                                         "padding": "10px",
                                         "marginBottom": "20px"
                                     }}
@@ -540,7 +549,7 @@ class BpmTaskApproval extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Row style={{ "paddingBottom": "10px" }}>
-                            <Col md={1}>
+                            <Col md={2}>
                                 <div style={{ "lineHeight": "30px" }}>名称：</div>
                             </Col>
                             <Col md={5}>
@@ -585,7 +594,7 @@ class BpmTaskApproval extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Row style={{ "paddingBottom": "10px" }}>
-                            <Col md={1}>
+                            <Col md={2}>
                                 <div style={{ "lineHeight": "30px" }}>名称：</div>
                             </Col>
                             <Col md={5}>

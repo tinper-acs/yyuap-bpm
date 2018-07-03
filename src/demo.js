@@ -24,7 +24,13 @@ class Demo extends Component {
     render() {
         return (
             <div>
-                <BpmTaskApproval />
+                <BpmTaskApproval
+                    onError={()=>console.log('error')}
+                />
+                <BpmFlowChart />
+                <BpmTable />
+                <BpmButtonSubmit />
+                <BpmButtonRecall />
             </div>
         );
     }

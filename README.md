@@ -74,6 +74,7 @@ import { BpmWrap } from 'yyuap-bpm';
 2|id|string|审批的任务ID
 3|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
 4|onStart|function|调用异步服务回调，一般用于请求Loading处理
+5|onSuccess|function|调用后端服务成功后的回调
 
 
 ##### BpmButtonSubmit
