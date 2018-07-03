@@ -433,7 +433,7 @@ class BpmTaskApproval extends Component {
     render() {
         let { processDefinitionId, processInstanceId, host } = this.props;
         return (
-            <div>
+            <div className="clearfix">
                 <Row style={{ "margin": "10px 0" }}>
                     <Col mdOffset={10} md={2}>
                         {this.props.appType != "3" && <Button onClick={this.handlerFlow} style={{ "marginRight": "10px" }} colors="primary">流程图</Button>}

@@ -1,12 +1,12 @@
 {
   "name": "yyuap-bpm",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "tinper-bee bpm component",
   "main": "./lib/index.js",
   "scripts": {
     "dev": "uba server --port=5171",
     "dist": "uba build",
-    "build": "rm -rf lib && rm -rf dist && babel src -d lib --no-comments",
+    "build": "rm -rf lib && rm -rf build && babel src -d lib --no-comments",
     "bundle": "webpack --progress --mode=development  && webpack --progress -p --output-filename yyuap-bpm.min.js"
   },
   "keywords": [
