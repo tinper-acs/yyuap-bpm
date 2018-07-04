@@ -1,6 +1,6 @@
 {
   "name": "yyuap-bpm",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "tinper-bee bpm component",
   "main": "./lib/index.js",
   "scripts": {

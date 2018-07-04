@@ -28,15 +28,26 @@ class BpmButtonSubmit extends Component {
             onStart();
         }
         let submitArray = [];
-        for (var i = 0; i < checkedArray.length; i++) {
-            if (checkedArray[i]) {
-                if (data[i]["status"] == 0) {
-                    submitArray.push({ "id": data[i]["id"] });
-                } else {
-                    Message.create({ content: `单据${data[i]["code"]}不能重复提交`, color: 'danger', position: 'top' });
-                    if (this.props.onError) {
-                        this.props.onError();
-                    }
+        debugger;
+        // for (var i = 0; i < checkedArray.length; i++) {
+        //     if (checkedArray[i]) {
+        //         if (data[i]["status"] == 0) {
+        //             submitArray.push({ "id": data[i]["id"] });
+        //         } else {
+        //             Message.create({ content: `单据${data[i]["code"]}不能重复提交`, color: 'danger', position: 'top' });
+        //             if (this.props.onError) {
+        //                 this.props.onError();
+        //             }
+        //         }
+        //     }
+        // }
+        for (let i = 0; i < checkedArray.length; i++) {
+            if (checkedArray[i].bpmState == 0) {
+                submitArray.push({ "id": checkedArray[i].id });
+            } else {
+                Message.create({ content: `单据不能重复提交`, color: 'danger', position: 'top' });
+                if (this.props.onError) {
+                    this.props.onError();
                 }
             }
         }

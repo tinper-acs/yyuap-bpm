@@ -27,12 +27,22 @@ class BpmButtonRecall extends Component {
             onStart();
         }
         let recallArray = [];
+        // for (let i = 0; i < checkedArray.length; i++) {
+        //     if (checkedArray[i]) {
+        //         if (data[i]["status"] == 1) {
+        //             recallArray.push({ "id": data[i]["id"] });
+        //         } else {
+        //             Message.create({ content: `单据${data[i]["code"]}未提交,不能执行撤回操作`, color: 'danger', position: 'top' });
+        //         }
+        //     }
+        // }
         for (let i = 0; i < checkedArray.length; i++) {
-            if (checkedArray[i]) {
-                if (data[i]["status"] == 1) {
-                    recallArray.push({ "id": data[i]["id"] });
-                } else {
-                    Message.create({ content: `单据${data[i]["code"]}未提交,不能执行撤回操作`, color: 'danger', position: 'top' });
+            if (checkedArray[i].bpmState != 0) {
+                recallArray.push({ "id": checkedArray[i].id });
+            } else {
+                Message.create({ content: `未提交,不能执行撤回操作`, color: 'danger', position: 'top' });
+                if (this.props.onError) {
+                    this.props.onError();
                 }
             }
         }
