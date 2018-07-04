@@ -28,7 +28,6 @@ class BpmButtonSubmit extends Component {
             onStart();
         }
         let submitArray = [];
-        debugger;
         // for (var i = 0; i < checkedArray.length; i++) {
         //     if (checkedArray[i]) {
         //         if (data[i]["status"] == 0) {
@@ -42,7 +41,7 @@ class BpmButtonSubmit extends Component {
         //     }
         // }
         for (let i = 0; i < checkedArray.length; i++) {
-            if (checkedArray[i].bpmState == 0) {
+            if (checkedArray[i].bpmState == null || checkedArray[i].bpmState == 0) {
                 submitArray.push({ "id": checkedArray[i].id });
             } else {
                 Message.create({ content: `单据不能重复提交`, color: 'danger', position: 'top' });
