@@ -27,40 +27,33 @@ class BpmButtonRecall extends Component {
             onStart();
         }
         let recallArray = [];
-        // for (let i = 0; i < checkedArray.length; i++) {
-        //     if (checkedArray[i]) {
-        //         if (data[i]["status"] == 1) {
-        //             recallArray.push({ "id": data[i]["id"] });
-        //         } else {
-        //             Message.create({ content: `单据${data[i]["code"]}未提交,不能执行撤回操作`, color: 'danger', position: 'top' });
-        //         }
-        //     }
-        // }
         for (let i = 0; i < checkedArray.length; i++) {
             if (checkedArray[i].bpmState != 0) {
                 recallArray.push({ "id": checkedArray[i].id });
             } else {
-                Message.create({ content: `未提交,不能执行撤回操作`, color: 'danger', position: 'top' });
-                if (this.props.onError) {
-                    this.props.onError();
-                }
+                onError && onError({
+                    type: 1,
+                    msg: `单据未提交,不能执行撤回操作`
+                });
             }
         }
         if (recallArray.length > 0) {
             let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray);
             if (success != 'fail_global') {
                 onSuccess && onSuccess();
-                //Message.create({ content: detailMsg.data.message, color: 'info', position: 'top' });
             } else {
-                onError && onError();
-                //Message.create({ content: message, color: 'danger', position: 'top' });
+                onError && onError({
+                    type : 2,
+                    msg : `单据撤回失败`
+                });
             }
         } else {
             // 弹出提示请选择数据
-            Message.create({ content: `请选择单据后撤回`, color: 'info', position: 'top' });
-            onError && onError();
+            onError && onError({
+                type : 1,
+                msg : `请选择单据才能撤回`
+            });
         }
-
     }
     render() {
         let { text } = this.props;

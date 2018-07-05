@@ -23,31 +23,19 @@ class BpmButtonSubmit extends Component {
         super();
     }
     handlerBtn = async () => {
-        let { checkedArray, data, onStart } = this.props;
+        let { checkedArray, data, onStart, onSuccess, onError } = this.props;
         if (onStart) {
             onStart();
         }
         let submitArray = [];
-        // for (var i = 0; i < checkedArray.length; i++) {
-        //     if (checkedArray[i]) {
-        //         if (data[i]["status"] == 0) {
-        //             submitArray.push({ "id": data[i]["id"] });
-        //         } else {
-        //             Message.create({ content: `单据${data[i]["code"]}不能重复提交`, color: 'danger', position: 'top' });
-        //             if (this.props.onError) {
-        //                 this.props.onError();
-        //             }
-        //         }
-        //     }
-        // }
         for (let i = 0; i < checkedArray.length; i++) {
             if (checkedArray[i].bpmState == null || checkedArray[i].bpmState == 0) {
                 submitArray.push({ "id": checkedArray[i].id });
             } else {
-                Message.create({ content: `单据不能重复提交`, color: 'danger', position: 'top' });
-                if (this.props.onError) {
-                    this.props.onError();
-                }
+                onError && onError({
+                    type: 1,
+                    msg: `单据 ${checkedArray[i].id} 不能重复提交`
+                });
             }
         }
         if (submitArray.length > 0) {
@@ -66,28 +54,27 @@ class BpmButtonSubmit extends Component {
                 let flag = result["data"]["success"];
                 if (flag == "success") {
                     //正确
-                    //Message.create({ content: `单据提交操作成功`, color: 'success', position: 'top' });
-                    if (this.props.onSuccess) {
-                        this.props.onSuccess();
-                    }
+                    onSuccess && onSuccess();
                 } else {
-                    // Message.create({ content: reconvert(result.data.message), color: 'danger', position: 'top' });
-                    if (this.props.onError) {
-                        this.props.onError();
-                    }
+                    onError && onError({
+                        type: 2,
+                        msg: `流程启动失败`
+                    });
                 }
             } else if (success == "fail_global") {
                 let { data: { message } } = result
                 //错误
-                // Message.create({ content: message, color: 'danger', position: 'top' });
-                if (this.props.onError) {
-                    this.props.onError();
-                }
+                onError && onError({
+                    type: 2,
+                    msg: `流程启动失败`
+                });
             }
         } else {
             // 弹出提示请选择数据
-            Message.create({ content: `请选择提交的单据`, color: 'info', position: 'top' });
-            this.props.onError && this.props.onError();
+            onError && onError({
+                type: 1,
+                msg: `请选择提交的单据`
+            });
         }
 
     }

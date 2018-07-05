@@ -82,15 +82,14 @@ import { BpmWrap } from 'yyuap-bpm';
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
 1|checkedArray|array|传入的选中状态数组(流程单据前面的选择框数据)
-2|data|array|单据表格的数据(流程单据表格的data数据)
-3|text|string|按钮的文本，默认提交
-4|funccode|string|功能节点编码
-5|nodekey|string|nodekey
-6|url|string|提交流程所需要的地址，必须传入
-7|onSuccess|function|提交流程业务成功后回调
-8|onError|function|提交流程业务失败后回调
-9|className|string|传入class
-10|onStart|function|调用异步服务回调，一般用于请求Loading处理
+2|text|string|按钮的文本，默认提交
+3|funccode|string|功能节点编码
+4|nodekey|string|nodekey
+5|url|string|提交流程所需要的地址，必须传入
+6|onSuccess|function|提交流程业务成功后回调
+7|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
+8|className|string|传入class
+9|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
 ##### BpmButtonRecall
@@ -98,13 +97,12 @@ import { BpmWrap } from 'yyuap-bpm';
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
 1|checkedArray|array|传入的选中状态数组(流程单据前面的选择框数据)
-2|data|array|单据表格的数据(流程单据表格的data数据)
-3|text|string|按钮的文本，默认提交
-4|url|string|提交流程所需要的地址，必须传入
-5|onSuccess|function|提交流程业务成功后回调
-6|onError|function|提交流程业务失败后回调
-7|className|string|传入class
-8|onStart|function|调用异步服务回调，一般用于请求Loading处理
+2|text|string|按钮的文本，默认提交
+3|url|string|提交流程所需要的地址，必须传入
+4|onSuccess|function|提交流程业务成功后回调
+5|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
+6|className|string|传入class
+7|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
 ##### BpmWrap
