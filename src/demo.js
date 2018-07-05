@@ -43,7 +43,7 @@ class Demo extends Component {
                                 "lastModifyUser": "9943304b46df4a85a4e43c95653159d2",
                                 "ts": "2018-07-04 08:00:46 163",
                                 "dr": 0,
-                                "bpmState": 0,
+                                "bpmState": 1,
                                 "taskKey": null,
                                 "taskId": null,
                                 "processInstanceId": null,

@@ -23,6 +23,7 @@ class BpmButtonSubmit extends Component {
         super();
     }
     handlerBtn = async () => {
+        let errFlag = false;
         let { checkedArray, data, onStart, onSuccess, onError } = this.props;
         if (onStart) {
             onStart();
@@ -31,12 +32,17 @@ class BpmButtonSubmit extends Component {
         for (let i = 0; i < checkedArray.length; i++) {
             if (checkedArray[i].bpmState == null || checkedArray[i].bpmState == 0) {
                 submitArray.push({ "id": checkedArray[i].id });
+                errFlag = false;
             } else {
+                errFlag = true;
                 onError && onError({
                     type: 1,
                     msg: `单据 ${checkedArray[i].id} 不能重复提交`
                 });
             }
+        }
+        if (errFlag) {
+            return;
         }
         if (submitArray.length > 0) {
             let { data: { success, detailMsg } } = await queryBpmTemplateAllocate({

@@ -22,6 +22,7 @@ class BpmButtonRecall extends Component {
         super();
     }
     handlerBtn = async () => {
+        let errFlag = false;
         let { checkedArray, data, onStart, onSuccess, onError } = this.props;
         if (onStart) {
             onStart();
@@ -30,12 +31,17 @@ class BpmButtonRecall extends Component {
         for (let i = 0; i < checkedArray.length; i++) {
             if (checkedArray[i].bpmState != 0) {
                 recallArray.push({ "id": checkedArray[i].id });
+                errFlag = false;
             } else {
                 onError && onError({
                     type: 1,
                     msg: `单据未提交,不能执行撤回操作`
                 });
+                errFlag = true;
             }
+        }
+        if (errFlag) {
+            return;
         }
         if (recallArray.length > 0) {
             let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray);
