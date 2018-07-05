@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import { Row, Col, Button, Message } from 'tinper-bee';
-import { queryBpmTemplateAllocate, onCommit } from './common';
+import { queryBpmTemplateAllocate, onCommit, reconvert } from './common';
 import PropTypes from 'prop-types';
 const propTypes = {
     checkedArray: PropTypes.array,
@@ -70,11 +70,16 @@ class BpmButtonSubmit extends Component {
                     if (this.props.onSuccess) {
                         this.props.onSuccess();
                     }
+                } else {
+                    // Message.create({ content: reconvert(result.data.message), color: 'danger', position: 'top' });
+                    if (this.props.onError) {
+                        this.props.onError();
+                    }
                 }
             } else if (success == "fail_global") {
                 let { data: { message } } = result
                 //错误
-                Message.create({ content: message, color: 'danger', position: 'top' });
+                // Message.create({ content: message, color: 'danger', position: 'top' });
                 if (this.props.onError) {
                     this.props.onError();
                 }

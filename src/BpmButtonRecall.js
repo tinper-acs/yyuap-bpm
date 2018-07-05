@@ -48,7 +48,7 @@ class BpmButtonRecall extends Component {
         }
         if (recallArray.length > 0) {
             let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray);
-            if (success) {
+            if (success != 'fail_global') {
                 onSuccess && onSuccess();
                 //Message.create({ content: detailMsg.data.message, color: 'info', position: 'top' });
             } else {

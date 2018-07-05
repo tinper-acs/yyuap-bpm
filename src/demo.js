@@ -30,6 +30,9 @@ class Demo extends Component {
                 <BpmFlowChart />
                 <BpmTable />
                 <BpmButtonSubmit
+                    funccode="react"
+                    nodekey="003"
+                    url={`/iuap_pap_quickstart/example_workorder/submit`}
                     checkedArray={
                         [
                             {
@@ -68,6 +71,7 @@ class Demo extends Component {
                     }
                 />
                 <BpmButtonRecall
+                    url={`/iuap_pap_quickstart/example_workorder/recall`}
                     checkedArray={
                         [
                             {
