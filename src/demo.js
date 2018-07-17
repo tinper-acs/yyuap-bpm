@@ -24,8 +24,11 @@ class Demo extends Component {
     render() {
         return (
             <div>
-                <BpmTaskApproval
+                <BpmTaskApprovalWrap
+                    onSuccess={() => console.log('success')}
                     onError={() => console.log('error')}
+                    appType="1"
+                    id="0e865c17-1bb7-4bf1-aefc-3557804df6aa"
                 />
                 <BpmFlowChart />
                 <BpmTable />

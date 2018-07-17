@@ -227,6 +227,29 @@ class BpmTaskApproval extends Component {
         //检测需要二次请求并弹出Modal审批
         switch (this.state.approvetype) {
             //驳回到环节
+            case 'agree':
+                //普通同意操作，没有后续操作，直接成功
+                if (result.data.flag == 'success') {
+                    Message.create({ content: result.data.msg, color: 'info', position: 'top' });
+                    this.props.onSuccess && this.props.onSuccess();
+                } else if (result.data.flag == 'faile') {
+                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                }
+                //普通同意操作，有后续操作，有加签人员判断
+                if (result.data.assignAble) {
+                    //可以是加签操作，拉取加签请求
+                    let second = await sendBpmTaskAJAX('signAdd', this.state);
+                    this.setState({
+                        signAddList: second.data.data.content,
+                        signAddShow: true,
+                        checkedArray: second.data.data.content,
+                        totalPages: second.data.data.totalPages
+                    });
+                } else {
+
+                }
+                break;
+            //驳回到环节
             case 'rejectToActivity':
                 if (result.data.flag == 'success') {
                     this.setState({
@@ -247,7 +270,6 @@ class BpmTaskApproval extends Component {
                         checkedArray: result.data.data.content,
                         totalPages: result.data.data.totalPages
                     });
-
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
                 }
@@ -331,33 +353,75 @@ class BpmTaskApproval extends Component {
     }
     //加签
     signAddOK = async () => {
-        let msg = await axios.post('eiap-plus/task/signaddtask/signadd', {
-            approvetype: this.state.approvetype,
-            comment: this.state.comment,
-            processInstanceId: this.state.processInstanceId,
-            taskId: this.state.taskId,
-            userIds: this.state.userIds
-        }).catch((e) => {
-            Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-            this.props.onError && this.props.onError();
-        });
+        switch (this.state.approvetype) {
+            case 'agree':
+                //同意后续的加签
+                var msg = await axios.post('/eiap-plus/task/assigntask/commit', {
+                    activityId: "ApproveUserTask3",
+                    activityName: "审批任务BB",
+                    comment: this.state.comment,
+                    taskId: this.state.taskId,
+                    participants: this.state.userIds
+                }).catch((e) => {
+                    Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                    this.props.onError && this.props.onError();
+                });
+                //确认加签
+                if (msg.data.flag == 'success') {
+                    Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
+                    this.setState({
+                        rejectToActivityShow: false,
+                        signAddShow: false,
+                        rejectlist: [],
+                        selectedRow: [],
+                        signAddList: [],
+                        checkedArray: [],
+                        checkedAll: false,
+                        name: ""
+                    });
+                    this.props.onSuccess && this.props.onSuccess();
+                } else {
+                    Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
+                    this.props.onError && this.props.onError();
+                }
+                break;
+            case 'unagree':
 
-        if (msg.data.flag == 'success') {
-            Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
-            this.setState({
-                rejectToActivityShow: false,
-                signAddShow: false,
-                rejectlist: [],
-                selectedRow: [],
-                signAddList: [],
-                checkedArray: [],
-                checkedAll: false,
-                name: ""
-            });
-            this.props.onSuccess && this.props.onSuccess();
-        } else {
-            Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-            this.props.onError && this.props.onError();
+                break;
+            case 'signAdd':
+                //执行最终加签操作
+                var msg = await axios.post('eiap-plus/task/signaddtask/signadd', {
+                    approvetype: this.state.approvetype,
+                    comment: this.state.comment,
+                    processInstanceId: this.state.processInstanceId,
+                    taskId: this.state.taskId,
+                    userIds: this.state.userIds
+                }).catch((e) => {
+                    Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                    this.props.onError && this.props.onError();
+                });
+                //判断加签最终是否成功
+                if (msg.data.flag == 'success') {
+                    Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
+                    this.setState({
+                        rejectToActivityShow: false,
+                        signAddShow: false,
+                        rejectlist: [],
+                        selectedRow: [],
+                        signAddList: [],
+                        checkedArray: [],
+                        checkedAll: false,
+                        name: ""
+                    });
+                    this.props.onSuccess && this.props.onSuccess();
+                } else {
+                    Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
+                    this.props.onError && this.props.onError();
+                }
+                break;
+
+            default:
+                break;
         }
     }
     //改派
@@ -407,7 +471,7 @@ class BpmTaskApproval extends Component {
         }
     }
     handlerSignAddSearch = async () => {
-        let result = await sendBpmTaskAJAX(this.state.approvetype, this.state);
+        let result = await sendBpmTaskAJAX('signAdd', this.state);
         this.setState({
             signAddList: result.data.data.content,
             delegateList: result.data.data.content,
@@ -441,7 +505,7 @@ class BpmTaskApproval extends Component {
                         {this.props.appType == "3" && <Button onClick={this.handlerFlow} style={{ "marginRight": "10px" }} colors="primary">流程图</Button>}
                     </Col>
                 </Row>
-                <div style={{ "background": "#eeeff1", "padding": "20px" }}>
+                <div style={{ "padding": "20px" }}>
                     {this.props.appType == "1" && <div>
                         <Row>
                             <Col style={{
@@ -469,9 +533,10 @@ class BpmTaskApproval extends Component {
                                         "width": "100%",
                                         "outline": "none",
                                         "resize": "none",
-                                        "border": "1px solid #636363",
+                                        "border": "1px solid #cecece",
                                         "padding": "10px",
-                                        "marginBottom": "20px"
+                                        "marginBottom": "20px",
+                                        "borderRadius": "4px"
                                     }}
                                     value={this.state.comment}
                                     onChange={this.handlerCommentChange}
