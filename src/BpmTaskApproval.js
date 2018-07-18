@@ -43,7 +43,9 @@ class BpmTaskApproval extends Component {
             name: "",
             pageNum: 1,
             pageSize: 20,
-            totalPages: 0
+            totalPages: 0,
+            HuoDongID: "",//新版活动ID
+            HuoDongName: ""//新版活动名字
         }
         //驳回到环节的Modal-Table
         this.rejectToActivityCol = [{
@@ -226,7 +228,7 @@ class BpmTaskApproval extends Component {
 
         //检测需要二次请求并弹出Modal审批
         switch (this.state.approvetype) {
-            //驳回到环节
+            //同意
             case 'agree':
                 //普通同意操作，没有后续操作，直接成功
                 if (result.data.flag == 'success') {
@@ -237,6 +239,43 @@ class BpmTaskApproval extends Component {
                 }
                 //普通同意操作，有后续操作，有加签人员判断
                 if (result.data.assignAble) {
+                    //判断是否有最新的活动id和name
+                    if (result.data.assignList.length > 0) {
+                        this.setState({
+                            HuoDongID: result.data.assignList[0].activityId,
+                            HuoDongName: result.data.assignList[0].activityName
+                        });
+                    }
+                    //可以是加签操作，拉取加签请求
+                    let second = await sendBpmTaskAJAX('signAdd', this.state);
+                    this.setState({
+                        signAddList: second.data.data.content,
+                        signAddShow: true,
+                        checkedArray: second.data.data.content,
+                        totalPages: second.data.data.totalPages
+                    });
+                } else {
+
+                }
+                break;
+            //不同意
+            case 'unagree':
+                //普通不同意操作，没有后续操作，直接成功
+                if (result.data.flag == 'success') {
+                    Message.create({ content: result.data.msg, color: 'info', position: 'top' });
+                    this.props.onSuccess && this.props.onSuccess();
+                } else if (result.data.flag == 'faile') {
+                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                }
+                //普通不同意操作，有后续操作，有加签人员判断
+                if (result.data.assignAble) {
+                    //判断是否有最新的活动id和name
+                    if (result.data.assignList.length > 0) {
+                        this.setState({
+                            HuoDongID: result.data.assignList[0].activityId,
+                            HuoDongName: result.data.assignList[0].activityName
+                        });
+                    }
                     //可以是加签操作，拉取加签请求
                     let second = await sendBpmTaskAJAX('signAdd', this.state);
                     this.setState({
@@ -355,13 +394,18 @@ class BpmTaskApproval extends Component {
     signAddOK = async () => {
         switch (this.state.approvetype) {
             case 'agree':
+                let agreeArrayObject = [];
+                //选择后的加签人员对象处理，包装成数组对象id形式
+                if (Array.isArray(this.state.userIds)) {
+                    agreeArrayObject = Array.from(this.state.userIds, x => ({ id: x }));
+                }
                 //同意后续的加签
                 var msg = await axios.post('/eiap-plus/task/assigntask/commit', {
-                    activityId: "ApproveUserTask3",
-                    activityName: "审批任务BB",
+                    activityId: this.state.HuoDongID,
+                    activityName: this.state.HuoDongName,
                     comment: this.state.comment,
                     taskId: this.state.taskId,
-                    participants: this.state.userIds
+                    participants: agreeArrayObject
                 }).catch((e) => {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                     this.props.onError && this.props.onError();
@@ -386,7 +430,40 @@ class BpmTaskApproval extends Component {
                 }
                 break;
             case 'unagree':
-
+                let unagreeArrayObject = [];
+                //选择后的加签人员对象处理，包装成数组对象id形式
+                if (Array.isArray(this.state.userIds)) {
+                    unagreeArrayObject = Array.from(this.state.userIds, x => ({ id: x }));
+                }
+                //同意后续的加签
+                var msg = await axios.post('/eiap-plus/task/assigntask/commit', {
+                    activityId: "ApproveUserTask3",
+                    activityName: "审批任务BB",
+                    comment: this.state.comment,
+                    taskId: this.state.taskId,
+                    participants: unagreeArrayObject
+                }).catch((e) => {
+                    Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                    this.props.onError && this.props.onError();
+                });
+                //确认加签
+                if (msg.data.flag == 'success') {
+                    Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
+                    this.setState({
+                        rejectToActivityShow: false,
+                        signAddShow: false,
+                        rejectlist: [],
+                        selectedRow: [],
+                        signAddList: [],
+                        checkedArray: [],
+                        checkedAll: false,
+                        name: ""
+                    });
+                    this.props.onSuccess && this.props.onSuccess();
+                } else {
+                    Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
+                    this.props.onError && this.props.onError();
+                }
                 break;
             case 'signAdd':
                 //执行最终加签操作
