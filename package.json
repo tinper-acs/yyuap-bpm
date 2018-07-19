@@ -48,7 +48,7 @@
     "react-dom": "^16.4.0",
     "style-loader": "^0.21.0",
     "tinper-bee": "^1.5.0",
-    "uba": "^4.0.1",
+    "uba": "^4.0.2",
     "uba-server-mock": "^2.0.2",
     "uba-server-proxy": "^2.0.3",
     "webpack": "^4.12.0",
