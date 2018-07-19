@@ -1,0 +1,67 @@
+{
+    "success": "success",
+    "assignAble": "true",
+    "assignedActivities": [
+      {
+        "id": "ApproveUserTask2",
+        "name": "审批任务AA",
+        "type": "userTask",
+        "properties": {
+          "extendAttributes": "[]",
+          "addsignAble": "true",
+          "multiInstance": "parallel",
+          "isFirst": true,
+          "default": null,
+          "canBeRejected": "true",
+          "documentation": null,
+          "addsignbehindAble": "true",
+          "name": "审批任务AA",
+          "type": "userTask",
+          "assignAble": "true",
+          "rejectAble": "true"
+        },
+        "participants": [
+          {
+            "id": "ebb667d69cf94d16b33590dcae09c4cb",
+            "code": null,
+            "name": null,
+            "org": null,
+            "org_name": null,
+            "pic": null,
+            "type": "USER",
+            "priority": 50
+          },
+          {
+            "id": "8a0dceb7d0214158980a7d4cca16204e",
+            "code": null,
+            "name": null,
+            "org": null,
+            "org_name": null,
+            "pic": null,
+            "type": "USER",
+            "priority": 50
+          }
+        ]
+      },
+      {
+        "id": "ApproveUserTask3",
+        "name": "审批任务BB",
+        "type": "userTask",
+        "properties": {
+          "extendAttributes": "[]",
+          "addsignAble": "true",
+          "multiInstance": "parallel",
+          "default": null,
+          "canBeRejected": "true",
+          "documentation": null,
+          "addsignbehindAble": "true",
+          "name": "审批任务BB",
+          "type": "userTask",
+          "assignAble": "true",
+          "rejectAble": "true"
+        },
+        "participants": null
+      }
+    ]
+  }
+  

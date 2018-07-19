@@ -22,12 +22,13 @@
         }
     ],
     "mock": {
-        "GET": [
+        "POST": [
             {
-                "/nc/api/user": "./mock/nc/api/user.json"
+                "/ygdemo_yw_info/submit": "./mock/submit.json",
+                "/ygdemo_yw_info/assignSubmit": "./mock/assignSubmit.json"
             }
         ],
-        "POST": [
+        "GET": [
             {
                 "/upload.do": "./upload.json"
             }
