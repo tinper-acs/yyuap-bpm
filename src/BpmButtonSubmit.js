@@ -308,7 +308,7 @@ class BpmButtonSubmit extends Component {
     signAddOK = () => {
         let _index = this.state.editRowIndex;//修改第几个数据
         let sourseArray = this.state.assignInfo.assignInfoItems.slice();
-        sourseArray[_index]['participants'] = this.state.userIds;
+        sourseArray[_index]['participants'] = Array.from(this.state.userIds, x => ({ id: x }));
         this.setState({
             assignInfo: {
                 assignInfoItems: sourseArray
