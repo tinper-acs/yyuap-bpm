@@ -90,6 +90,7 @@ import { BpmWrap } from 'yyuap-bpm';
 7|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
 8|className|string|传入class
 9|onStart|function|调用异步服务回调，一般用于请求Loading处理
+10|urlAssignSubmit|string|流程指派最后提交的接口
 
 
 ##### BpmButtonRecall
