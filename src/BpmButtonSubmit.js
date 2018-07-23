@@ -89,6 +89,14 @@ class BpmButtonSubmit extends Component {
             });
             return;
         }
+        //如果传来的数据状态bpmState==null or 0 那么直接给出错误重复提交
+        if (checkedArray[i].bpmState == null || checkedArray[i].bpmState == 0) {
+            onError && onError({
+                type: 1,
+                msg: `不能提交此单据，重复提交`
+            });
+            return;
+        }
         //处理数据提交第一次请求，然后发起二次请求
         if (checkedArray.length > 0) {
             let { data: { success, detailMsg } } = await queryBpmTemplateAllocate({
