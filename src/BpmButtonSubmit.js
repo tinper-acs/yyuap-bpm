@@ -396,7 +396,7 @@ class BpmButtonSubmit extends Component {
                 backdrop={false}
                 onHide={this.close}>
                 <Modal.Header closeButton>
-                    <Modal.Title> 加签人员列表 </Modal.Title>
+                    <Modal.Title> 人员列表 </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Row style={{ "paddingBottom": "10px" }}>
