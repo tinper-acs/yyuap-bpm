@@ -122,7 +122,7 @@ class BpmButtonSubmit extends Component {
                 //收集参数准备提交submit
                 let result = await onCommit(commitParam);
                 let flag = result.data.success;
-                if (flag == "success" && (typeof result.data.assignAble == 'undefined')) {
+                if (flag == "success" && (typeof result.data.detailMsg.data.assignAble == 'undefined')) {
                     //正确
                     onSuccess && onSuccess();
                 } else if (flag == "fail_global") {
@@ -132,16 +132,16 @@ class BpmButtonSubmit extends Component {
                     });
                 }
 
-                if (result.data.assignAble == 'true') {
+                if (result.data.detailMsg.data.assignAble == 'true') {
                     //判断是否有最新的活动id和name
-                    if (result.data.assignedActivities && result.data.assignedActivities.length > 0) {
+                    if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
                         //更新环节指派数据
                         this.setState({
                             huanjieShow: true,
-                            huanjieList: result.data.assignedActivities,
+                            huanjieList: result.data.detailMsg.data.assignedActivities,
                             obj: checkedArray[0],
                             assignInfo: {
-                                assignInfoItems: Array.from(result.data.assignedActivities, x => ({ activityId: x.id, activityName: x.name, participants: [] }))
+                                assignInfoItems: Array.from(result.data.detailMsg.data.assignedActivities, x => ({ activityId: x.id, activityName: x.name, participants: [] }))
                             }
                         });
                     }
