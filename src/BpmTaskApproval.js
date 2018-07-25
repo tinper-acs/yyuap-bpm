@@ -467,7 +467,7 @@ class BpmTaskApproval extends Component {
                 break;
             case 'signAdd':
                 //执行最终加签操作
-                var msg = await axios.post('eiap-plus/task/signaddtask/signadd', {
+                var msg = await axios.post('/eiap-plus/task/signaddtask/signadd', {
                     approvetype: this.state.approvetype,
                     comment: this.state.comment,
                     processInstanceId: this.state.processInstanceId,
@@ -507,7 +507,7 @@ class BpmTaskApproval extends Component {
             Message.create({ content: `请选择一条数据`, color: 'danger', position: 'top' });
             return;
         }
-        let msg = await axios.post('eiap-plus/task/delegatetask/delegate', {
+        let msg = await axios.post('/eiap-plus/task/delegatetask/delegate', {
             approvetype: this.state.approvetype,
             comment: this.state.comment,
             processInstanceId: this.state.processInstanceId,
