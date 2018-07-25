@@ -56,7 +56,6 @@ class BpmTaskApprovalWrap extends Component {
                 id: this.props.id
             });
         }
-
     }
 
     render() {
@@ -75,10 +74,8 @@ class BpmTaskApprovalWrap extends Component {
                     </Col>
                 </Row>}
                 {this.state.isShowFlowBtn && <Row>
-                    <Col md={12}>
-                        <Col mdOffset={10} md={2}>
-                            <Button onClick={this.props.onBpmFlowClick} style={{ "marginRight": "10px", "marginBottom": "20px" }} colors="primary">流程图</Button>
-                        </Col>
+                    <Col mdOffset={11} md={1} style={{ "textAlign": "right" }}>
+                        <Button onClick={this.props.onBpmFlowClick} style={{ "marginBottom": "4px" }} colors="primary">流程图</Button>
                     </Col>
                 </Row>}
             </div>

@@ -57,7 +57,11 @@ class BpmTable extends Component {
                 dataIndex: "endTime",
                 key: "endTime",
                 render: (text, record, index) => {
-                    return <div>{timestampToDate(text)}</div>
+                    if (text == null) {
+                        return <div>-</div>
+                    } else {
+                        return <div>{timestampToDate(text)}</div>
+                    }
                 }
             },
             {

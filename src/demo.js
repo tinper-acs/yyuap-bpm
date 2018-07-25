@@ -28,7 +28,7 @@ class Demo extends Component {
                     onSuccess={() => console.log('success')}
                     onError={() => console.log('error')}
                     appType="1"
-                    id="ea69b9bf-d8b5-47a7-a1fd-1114f36a9321"
+                    id="3be26f2debb442d9b5f8012ba40c3fa3"
                 />
                 <BpmFlowChart />
                 <BpmTable />

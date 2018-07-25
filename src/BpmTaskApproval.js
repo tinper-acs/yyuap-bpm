@@ -575,20 +575,13 @@ class BpmTaskApproval extends Component {
         let { processDefinitionId, processInstanceId, host } = this.props;
         return (
             <div className="clearfix">
-                <Row style={{ "margin": "10px 0" }}>
-                    <Col mdOffset={10} md={2}>
-                        {this.props.appType != "3" && <Button onClick={this.handlerFlow} style={{ "marginRight": "10px", "marginBottom": "20px" }} colors="primary">流程图</Button>}
-                        {this.props.appType != "3" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px", "marginBottom": "20px" }} colors="primary">提交</Button>}
-                        {this.props.appType == "3" && <Button onClick={this.handlerFlow} style={{ "marginRight": "10px", "marginBottom": "20px" }} colors="primary">流程图</Button>}
-                    </Col>
-                </Row>
-                <div style={{ "padding": "20px" }}>
+                <div style={{ "padding": "0px" }}>
                     {this.props.appType == "1" && <div>
-                        <Row>
-                            <Col style={{
-                                "height": "40px",
-                                "lineHeight": "20px"
-                            }} md={12}>
+                        <Row style={{
+                            "height": "46px",
+                            "lineHeight": "46px"
+                        }}>
+                            <Col md={8}>
                                 <Radio.RadioGroup
                                     name="approvetype"
                                     selectedValue={this.state.approvetype}
@@ -600,6 +593,11 @@ class BpmTaskApproval extends Component {
                                     <Radio value="signAdd">加签</Radio>
                                     <Radio value="delegate">改派</Radio>
                                 </Radio.RadioGroup>
+                            </Col>
+                            <Col md={4} style={{ "textAlign": "right" }}>
+                                {this.props.appType != "3" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}
+                                {this.props.appType != "3" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
+                                {this.props.appType == "3" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
                             </Col>
                         </Row>
                         <Row>
@@ -615,6 +613,7 @@ class BpmTaskApproval extends Component {
                                         "marginBottom": "20px",
                                         "borderRadius": "4px"
                                     }}
+                                    placeholder="请输入审批意见"
                                     value={this.state.comment}
                                     onChange={this.handlerCommentChange}
                                 />
