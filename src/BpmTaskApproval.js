@@ -639,10 +639,13 @@ class BpmTaskApproval extends Component {
                                         "width": "100%",
                                         "outline": "none",
                                         "resize": "none",
-                                        "border": "1px solid #636363",
+                                        "border": "1px solid #cecece",
                                         "padding": "10px",
-                                        "marginBottom": "20px"
+                                        "marginBottom": "20px",
+                                        "borderRadius": "4px"
                                     }}
+                                    placeholder="请输入弃审意见"
+                                    value={this.state.comment}
                                     onChange={this.handlerCommentChange}
                                 />
                             </Col>
