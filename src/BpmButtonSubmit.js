@@ -30,7 +30,8 @@ class BpmButtonSubmit extends Component {
         }
         let submitArray = [];
         for (let i = 0; i < checkedArray.length; i++) {
-            if (checkedArray[i].bpmState == null || checkedArray[i].bpmState == 0) {
+            // if (checkedArray[i].bpmState == 0) {
+            if (checkedArray[i]['status'] == 0) {
                 submitArray.push({ "id": checkedArray[i].id });
                 errFlag = false;
             } else {

@@ -29,7 +29,8 @@ class BpmButtonRecall extends Component {
         }
         let recallArray = [];
         for (let i = 0; i < checkedArray.length; i++) {
-            if (checkedArray[i].bpmState != 0) {
+            // if (checkedArray[i].bpmState != 0) {
+            if (checkedArray[i]['status'] != 0) {
                 recallArray.push({ "id": checkedArray[i].id });
                 errFlag = false;
             } else {
@@ -49,15 +50,15 @@ class BpmButtonRecall extends Component {
                 onSuccess && onSuccess();
             } else {
                 onError && onError({
-                    type : 2,
-                    msg : `单据撤回失败`
+                    type: 2,
+                    msg: `单据撤回失败`
                 });
             }
         } else {
             // 弹出提示请选择数据
             onError && onError({
-                type : 1,
-                msg : `请选择单据才能撤回`
+                type: 1,
+                msg: `请选择单据才能撤回`
             });
         }
     }
