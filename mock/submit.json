@@ -118,7 +118,7 @@
           "participants": null
         }
       ],
-      "assignAble": "true"
+      "assignAble": true
     }
   }
 }

@@ -94,7 +94,7 @@ class BpmButtonSubmit extends Component {
                     });
                 }
                 //当得知需要二次弹出环节面板
-                if (result.data.detailMsg.data.assignAble == 'true') {
+                if (result.data.detailMsg.data.assignAble == true) {
                     //判断是否有最新的活动id和name
                     if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
                         //更新环节指派数据
@@ -208,13 +208,22 @@ class BpmButtonSubmit extends Component {
                     onSave: function (sels, showVal) {//showVal="12;13;管理员"
                         console.log(sels);
                         var temp = sels.map(v => v.id);
+                        //显示值
                         let _showVal = self.state.showVal.slice();
                         _showVal[index] = showVal;
+                        //选中的值
                         let _childRefKey = self.state.childRefKey.slice();
                         _childRefKey[index] = temp;
+                        //副本原始对象
+                        let sourseArray = self.state.assignInfo.assignInfoItems.slice();
+                        //根据修改索引修改指定数据内容
+                        sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
                         self.setState({
                             childRefKey: _childRefKey,
-                            showVal: _showVal
+                            showVal: _showVal,
+                            assignInfo: {
+                                assignInfoItems: sourseArray
+                            }
                         });
                     },
                     showVal: self.state.showVal[index],
