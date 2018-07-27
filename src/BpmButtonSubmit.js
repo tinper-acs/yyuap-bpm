@@ -16,7 +16,8 @@ const propTypes = {
     className: PropTypes.string,
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
-    onStart: PropTypes.func
+    onStart: PropTypes.func,
+    onEnd: PropTypes.func
 };
 
 class BpmButtonSubmit extends Component {
@@ -58,29 +59,9 @@ class BpmButtonSubmit extends Component {
     }
     //提交流程按钮
     handlerBtn = async () => {
-        // let errFlag = false;
-        let { checkedArray, onStart, onSuccess, onError } = this.props;
-        //加载事件
-        if (onStart) {
-            onStart();
-        }
+        let { checkedArray, onStart,onEnd, onSuccess, onError } = this.props;
         //筛选选择单据
         let submitArray = [];
-        // for (let i = 0; i < checkedArray.length; i++) {
-        //     if (checkedArray[i].bpmState == null || checkedArray[i].bpmState == 0) {
-        //         submitArray.push({ "id": checkedArray[i].id });
-        //         errFlag = false;
-        //     } else {
-        //         errFlag = true;
-        //         onError && onError({
-        //             type: 1,
-        //             msg: `单据 ${checkedArray[i].id} 不能重复提交`
-        //         });
-        //     }
-        // }
-        // if (errFlag) {
-        //     return;
-        // }
         //检查只能一条单据提交流程
         if (checkedArray.length >= 2) {
             onError && onError({
@@ -100,10 +81,13 @@ class BpmButtonSubmit extends Component {
                 });
                 return;
             }
+            //加载事件
+            onStart && onStart();
             let { data: { success, detailMsg } } = await queryBpmTemplateAllocate({
                 funccode: this.props.funccode,
                 nodekey: this.props.nodekey
             });
+
             if (success == "success") {
                 let commitParam = {
                     "url": this.props.url,
@@ -129,6 +113,8 @@ class BpmButtonSubmit extends Component {
                 if (result.data.detailMsg.data.assignAble == true) {
                     //判断是否有最新的活动id和name
                     if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
+                        //停止事件
+                        onEnd && onEnd();
                         //更新环节指派数据
                         this.setState({
                             huanjieShow: true,
@@ -149,7 +135,7 @@ class BpmButtonSubmit extends Component {
                 });
             }
         } else {
-            // 弹出提示请选择数据
+            // 弹出提示
             onError && onError({
                 type: 1,
                 msg: `请选择提交的单据`
@@ -328,8 +314,10 @@ class BpmButtonSubmit extends Component {
     }
     //选择完所有加签后的确定事件
     huanjieHandlerOK = async () => {
-        let { onSuccess, onError } = this.props;
+        let { onSuccess, onError,onStart,onEnd } = this.props;
         let { processDefineCode, assignInfo, obj } = this.state;
+
+        onStart && onStart();
         let result = await axios.post(this.props.urlAssignSubmit, {
             processDefineCode,
             assignInfo,
