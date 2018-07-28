@@ -67,8 +67,11 @@ export const descriptionToText = (vApproveType) => {
         return '终止';
     }
     if (vApproveType == 'withdraw') {
-        //return  '弃审'   ;
+        //return  '弃审';
         return '删除';
+    }
+    if (vApproveType == 'postCompleted') {
+        return '审批';
     }
 }
 
