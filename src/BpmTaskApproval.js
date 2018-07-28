@@ -220,7 +220,7 @@ class BpmTaskApproval extends Component {
     }
     //审批提交
     handlerSubmitBtn = async () => {
-        let { onStart,onEnd,onSuccess,onError } = this.props;
+        let { onStart, onEnd, onSuccess, onError } = this.props;
         if (this.state.comment == "") {
             Message.create({ content: '不能为空', color: 'danger', position: 'top' });
             return;
@@ -387,7 +387,7 @@ class BpmTaskApproval extends Component {
     //eiap-plus/task/rejecttask/reject
     //
     rejectToActivityOK = async () => {
-        let { onStart,onEnd,onSuccess,onError } = this.props;
+        let { onStart, onEnd, onSuccess, onError } = this.props;
         onStart && onStart();
         let msg = await axios.post(getBpmTaskURL('rejectToBillMaker'), {
             activityId: this.state.activityId,
@@ -425,7 +425,7 @@ class BpmTaskApproval extends Component {
     }
     //加签
     signAddOK = async () => {
-        let { onStart,onEnd,onSuccess,onError } = this.props;
+        let { onStart, onEnd, onSuccess, onError } = this.props;
         switch (this.state.approvetype) {
             case 'agree':
                 let agreeArrayObject = [];
@@ -440,6 +440,8 @@ class BpmTaskApproval extends Component {
                     activityName: this.state.HuoDongName,
                     comment: this.state.comment,
                     taskId: this.state.taskId,
+                    approvetype: this.state.approvetype,
+                    processInstanceId: this.state.processInstanceId,
                     participants: agreeArrayObject
                 }).catch((e) => {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
@@ -558,7 +560,7 @@ class BpmTaskApproval extends Component {
     }
     //改派
     delegatedOK = async () => {
-        let { onStart,onEnd,onSuccess,onError } = this.props;
+        let { onStart, onEnd, onSuccess, onError } = this.props;
         if (this.state.userId == null) {
             Message.create({ content: `请选择一条数据`, color: 'danger', position: 'top' });
             return;
@@ -639,7 +641,7 @@ class BpmTaskApproval extends Component {
                         <Row style={{
                             "height": "46px",
                             "lineHeight": "46px",
-                            "padding":"0 10px"
+                            "padding": "0 10px"
                         }}>
                             <Col md={8}>
                                 <Radio.RadioGroup
@@ -661,7 +663,7 @@ class BpmTaskApproval extends Component {
                             </Col>
                         </Row>
                         <Row style={{
-                            "padding":"0 10px"
+                            "padding": "0 10px"
                         }}>
                             <Col md={12}>
                                 <textarea
