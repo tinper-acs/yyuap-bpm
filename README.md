@@ -75,6 +75,9 @@ import { BpmWrap } from 'yyuap-bpm';
 3|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
 4|onStart|function|调用异步服务回调，一般用于请求Loading处理
 5|onSuccess|function|调用后端服务成功后的回调
+6|onError|function|调用后端服务错误后的回调
+7|onEnd|function|结束的回调Loading
+
 
 
 ##### BpmButtonSubmit
@@ -91,6 +94,7 @@ import { BpmWrap } from 'yyuap-bpm';
 8|className|string|传入class
 9|onStart|function|调用异步服务回调，一般用于请求Loading处理
 10|urlAssignSubmit|string|流程指派最后提交的接口
+11|onEnd|function|结束的回调Loading
 
 
 ##### BpmButtonRecall
@@ -104,6 +108,7 @@ import { BpmWrap } from 'yyuap-bpm';
 5|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
 6|className|string|传入class
 7|onStart|function|调用异步服务回调，一般用于请求Loading处理
+8|onEnd|function|结束的回调Loading
 
 
 ##### BpmWrap
@@ -131,7 +136,9 @@ import { BpmWrap } from 'yyuap-bpm';
 4|onBpmFlowClick|function|流程图按钮单击事件，一般用来给流程图页面跳转路由和参数使用
 5|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
 6|onStart|function|调用异步服务回调，一般用于请求Loading处理
-
+7|onSuccess|function|调用后端服务成功后的回调
+8|onError|function|调用后端服务错误后的回调
+9|onEnd|function|结束的回调Loading
 
 ##### BpmTestCheckTable
 
