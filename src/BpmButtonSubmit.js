@@ -18,7 +18,8 @@ const propTypes = {
     className: PropTypes.string,
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
-    onStart: PropTypes.func
+    onStart: PropTypes.func,
+    onEnd: PropTypes.func
 };
 
 class BpmButtonSubmit extends Component {
@@ -39,11 +40,7 @@ class BpmButtonSubmit extends Component {
     }
     //提交流程按钮
     handlerBtn = async () => {
-        let { checkedArray, onStart, onSuccess, onError } = this.props;
-        //加载事件
-        if (onStart) {
-            onStart();
-        }
+        let { checkedArray, onStart, onEnd, onSuccess, onError } = this.props;
         //检查只能一条单据提交流程
         if (checkedArray.length >= 2) {
             onError && onError({
@@ -62,6 +59,8 @@ class BpmButtonSubmit extends Component {
         }
         //处理数据提交第一次请求，然后发起二次请求
         if (checkedArray.length > 0) {
+            //加载事件
+            onStart && onStart();
             //提交第一次请求，获得res_code通过funccode,nodekey
             let { data: { success, detailMsg } } = await queryBpmTemplateAllocate({
                 funccode: this.props.funccode,
@@ -97,6 +96,8 @@ class BpmButtonSubmit extends Component {
                 if (result.data.detailMsg.data.assignAble == true) {
                     //判断是否有最新的活动id和name
                     if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
+                        //停止事件
+                        onEnd && onEnd();
                         //更新环节指派数据
                         this.setState({
                             huanjieShow: true,
@@ -117,7 +118,7 @@ class BpmButtonSubmit extends Component {
                 });
             }
         } else {
-            // 弹出提示请选择数据
+            // 弹出提示
             onError && onError({
                 type: 1,
                 msg: `请选择提交的单据`
@@ -148,8 +149,10 @@ class BpmButtonSubmit extends Component {
     }
     //选择完所有加签后的确定事件
     huanjieHandlerOK = async () => {
-        let { onSuccess, onError } = this.props;
+        let { onSuccess, onError, onStart, onEnd } = this.props;
         let { processDefineCode, assignInfo, obj } = this.state;
+        //加载事件
+        onStart && onStart();
         let result = await axios.post(this.props.urlAssignSubmit, {
             processDefineCode,
             assignInfo,

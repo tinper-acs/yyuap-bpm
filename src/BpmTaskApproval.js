@@ -14,6 +14,7 @@ const propTypes = {
     appType: PropTypes.string,
     onBpmFlowClick: PropTypes.func,
     onStart: PropTypes.func,
+    onEnd: PropTypes.func,
     onSuccess: PropTypes.func,
     onError: PropTypes.func
 };
@@ -219,10 +220,12 @@ class BpmTaskApproval extends Component {
     }
     //审批提交
     handlerSubmitBtn = async () => {
+        let { onStart,onEnd,onSuccess,onError } = this.props;
         if (this.state.comment == "") {
             Message.create({ content: '不能为空', color: 'danger', position: 'top' });
             return;
         }
+        onStart && onStart();
         //第一次请求审批，有的是直接一次请求，有的需要二次请求
         let result = await sendBpmTaskAJAX(this.state.approvetype, this.state);
 
@@ -233,9 +236,13 @@ class BpmTaskApproval extends Component {
                 //普通同意操作，没有后续操作，直接成功
                 if (result.data.flag == 'success') {
                     Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-                    this.props.onSuccess && this.props.onSuccess();
+                    onSuccess && onSuccess();
                 } else if (result.data.flag == 'faile') {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                    onError && onError({
+                        type: 2,
+                        msg: result.data.msg
+                    });
                 }
                 //普通同意操作，有后续操作，有加签人员判断
                 if (result.data.assignAble) {
@@ -246,16 +253,16 @@ class BpmTaskApproval extends Component {
                             HuoDongName: result.data.assignList[0].activityName
                         });
                     }
+                    onStart && onStart();
                     //可以是加签操作，拉取加签请求
                     let second = await sendBpmTaskAJAX('signAdd', this.state);
+                    onEnd && onEnd();
                     this.setState({
                         signAddList: second.data.data.content,
                         signAddShow: true,
                         checkedArray: second.data.data.content,
                         totalPages: second.data.data.totalPages
                     });
-                } else {
-
                 }
                 break;
             //不同意
@@ -263,9 +270,13 @@ class BpmTaskApproval extends Component {
                 //普通不同意操作，没有后续操作，直接成功
                 if (result.data.flag == 'success') {
                     Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-                    this.props.onSuccess && this.props.onSuccess();
+                    onSuccess && onSuccess();
                 } else if (result.data.flag == 'faile') {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                    onError && onError({
+                        type: 2,
+                        msg: result.data.msg
+                    });
                 }
                 //普通不同意操作，有后续操作，有加签人员判断
                 if (result.data.assignAble) {
@@ -276,21 +287,22 @@ class BpmTaskApproval extends Component {
                             HuoDongName: result.data.assignList[0].activityName
                         });
                     }
+                    onStart && onStart();
                     //可以是加签操作，拉取加签请求
                     let second = await sendBpmTaskAJAX('signAdd', this.state);
+                    onEnd && onEnd();
                     this.setState({
                         signAddList: second.data.data.content,
                         signAddShow: true,
                         checkedArray: second.data.data.content,
                         totalPages: second.data.data.totalPages
                     });
-                } else {
-
                 }
                 break;
             //驳回到环节
             case 'rejectToActivity':
                 if (result.data.flag == 'success') {
+                    onEnd && onEnd();
                     this.setState({
                         rejectlist: result.data.rejectlist,
                         selectedRow: new Array(result.data.rejectlist.length),
@@ -298,11 +310,16 @@ class BpmTaskApproval extends Component {
                     });
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                    onError && onError({
+                        type: 2,
+                        msg: result.data.msg
+                    });
                 }
                 break;
             //加签
             case 'signAdd':
                 if (result.data.status == 1) {
+                    onEnd && onEnd();
                     this.setState({
                         signAddList: result.data.data.content,
                         signAddShow: true,
@@ -311,11 +328,16 @@ class BpmTaskApproval extends Component {
                     });
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                    onError && onError({
+                        type: 2,
+                        msg: result.data.msg
+                    });
                 }
                 break;
             //改派
             case 'delegate':
                 if (result.data.status == 1) {
+                    onEnd && onEnd();
                     this.setState({
                         delegateList: result.data.data.content,
                         delegateShow: true,
@@ -324,6 +346,10 @@ class BpmTaskApproval extends Component {
 
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
+                    onError && onError({
+                        type: 2,
+                        msg: result.data.msg
+                    });
                 }
                 break;
 
@@ -331,20 +357,16 @@ class BpmTaskApproval extends Component {
             default:
                 if (result.data.flag == 'success') {
                     Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-                    this.props.onSuccess && this.props.onSuccess();
+                    onSuccess && onSuccess();
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-                    this.props.onError && this.props.onError();
+                    onError && onError({
+                        type: 2,
+                        msg: result.data.msg
+                    });
                 }
                 break;
         }
-
-        // if (result.data.flag == 'success') {
-        //     Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-        // }else{
-        //     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-        // }
-
     }
     //通用关闭方法
     close = () => {
@@ -365,6 +387,8 @@ class BpmTaskApproval extends Component {
     //eiap-plus/task/rejecttask/reject
     //
     rejectToActivityOK = async () => {
+        let { onStart,onEnd,onSuccess,onError } = this.props;
+        onStart && onStart();
         let msg = await axios.post(getBpmTaskURL('rejectToBillMaker'), {
             activityId: this.state.activityId,
             approvetype: this.state.approvetype,
@@ -373,9 +397,14 @@ class BpmTaskApproval extends Component {
             taskId: this.state.taskId,
         }).catch((e) => {
             Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            onError && onError({
+                type: 2,
+                msg: `服务器请求错误`
+            });
         });
 
         if (msg.data.flag == 'success') {
+            onSuccess && onSuccess();
             Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
             this.setState({
                 rejectToActivityShow: false,
@@ -388,10 +417,15 @@ class BpmTaskApproval extends Component {
             });
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
+            onError && onError({
+                type: 2,
+                msg: msg.data.msg
+            });
         }
     }
     //加签
     signAddOK = async () => {
+        let { onStart,onEnd,onSuccess,onError } = this.props;
         switch (this.state.approvetype) {
             case 'agree':
                 let agreeArrayObject = [];
@@ -399,6 +433,7 @@ class BpmTaskApproval extends Component {
                 if (Array.isArray(this.state.userIds)) {
                     agreeArrayObject = Array.from(this.state.userIds, x => ({ id: x }));
                 }
+                onStart && onStart();
                 //同意后续的加签
                 var msg = await axios.post('/eiap-plus/task/assigntask/commit', {
                     activityId: this.state.HuoDongID,
@@ -408,7 +443,10 @@ class BpmTaskApproval extends Component {
                     participants: agreeArrayObject
                 }).catch((e) => {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                    this.props.onError && this.props.onError();
+                    onError && onError({
+                        type: 2,
+                        msg: `服务器请求出错`
+                    });
                 });
                 //确认加签
                 if (msg.data.flag == 'success') {
@@ -423,10 +461,13 @@ class BpmTaskApproval extends Component {
                         checkedAll: false,
                         name: ""
                     });
-                    this.props.onSuccess && this.props.onSuccess();
+                    onSuccess && onSuccess();
                 } else {
                     Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-                    this.props.onError && this.props.onError();
+                    onError && onError({
+                        type: 2,
+                        msg: msg.data.msg
+                    });
                 }
                 break;
             case 'unagree':
@@ -435,6 +476,7 @@ class BpmTaskApproval extends Component {
                 if (Array.isArray(this.state.userIds)) {
                     unagreeArrayObject = Array.from(this.state.userIds, x => ({ id: x }));
                 }
+                onStart && onStart();
                 //同意后续的加签
                 var msg = await axios.post('/eiap-plus/task/assigntask/commit', {
                     activityId: "ApproveUserTask3",
@@ -444,7 +486,10 @@ class BpmTaskApproval extends Component {
                     participants: unagreeArrayObject
                 }).catch((e) => {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                    this.props.onError && this.props.onError();
+                    onError && onError({
+                        type: 2,
+                        msg: `服务器请求出错`
+                    });
                 });
                 //确认加签
                 if (msg.data.flag == 'success') {
@@ -459,13 +504,17 @@ class BpmTaskApproval extends Component {
                         checkedAll: false,
                         name: ""
                     });
-                    this.props.onSuccess && this.props.onSuccess();
+                    onSuccess && onSuccess();
                 } else {
                     Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-                    this.props.onError && this.props.onError();
+                    onError && onError({
+                        type: 2,
+                        msg: msg.data.msg
+                    });
                 }
                 break;
             case 'signAdd':
+                onStart && onStart();
                 //执行最终加签操作
                 var msg = await axios.post('/eiap-plus/task/signaddtask/signadd', {
                     approvetype: this.state.approvetype,
@@ -475,7 +524,10 @@ class BpmTaskApproval extends Component {
                     userIds: this.state.userIds
                 }).catch((e) => {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                    this.props.onError && this.props.onError();
+                    onError && onError({
+                        type: 2,
+                        msg: `服务器请求出错`
+                    });
                 });
                 //判断加签最终是否成功
                 if (msg.data.flag == 'success') {
@@ -490,10 +542,13 @@ class BpmTaskApproval extends Component {
                         checkedAll: false,
                         name: ""
                     });
-                    this.props.onSuccess && this.props.onSuccess();
+                    onSuccess && onSuccess();
                 } else {
                     Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-                    this.props.onError && this.props.onError();
+                    onError && onError({
+                        type: 2,
+                        msg: msg.data.msg
+                    });
                 }
                 break;
 
@@ -503,10 +558,12 @@ class BpmTaskApproval extends Component {
     }
     //改派
     delegatedOK = async () => {
+        let { onStart,onEnd,onSuccess,onError } = this.props;
         if (this.state.userId == null) {
             Message.create({ content: `请选择一条数据`, color: 'danger', position: 'top' });
             return;
         }
+        onStart && onStart();
         let msg = await axios.post('/eiap-plus/task/delegatetask/delegate', {
             approvetype: this.state.approvetype,
             comment: this.state.comment,
@@ -515,7 +572,10 @@ class BpmTaskApproval extends Component {
             userId: this.state.userId
         }).catch((e) => {
             Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-            this.props.onError && this.props.onError();
+            onError && onError({
+                type: 2,
+                msg: `服务器请求出错`
+            });
         });
 
         if (msg.data.flag == 'success') {
@@ -531,17 +591,16 @@ class BpmTaskApproval extends Component {
                 delegateShow: false,
                 name: ""
             });
-            this.props.onSuccess && this.props.onSuccess();
+            onSuccess && onSuccess();
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-            this.props.onError && this.props.onError();
+            onError && onError({
+                type: 2,
+                msg: msg.data.msg
+            });
         }
     }
     handlerFlow = () => {
-        let onStart = this.props.onStart;
-        if (onStart) {
-            onStart();
-        }
         let onBpmFlowClick = this.props.onBpmFlowClick;
         if (onBpmFlowClick) {
             onBpmFlowClick();
@@ -579,7 +638,8 @@ class BpmTaskApproval extends Component {
                     {this.props.appType == "1" && <div>
                         <Row style={{
                             "height": "46px",
-                            "lineHeight": "46px"
+                            "lineHeight": "46px",
+                            "padding":"0 10px"
                         }}>
                             <Col md={8}>
                                 <Radio.RadioGroup
@@ -600,7 +660,9 @@ class BpmTaskApproval extends Component {
                                 {this.props.appType == "3" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
                             </Col>
                         </Row>
-                        <Row>
+                        <Row style={{
+                            "padding":"0 10px"
+                        }}>
                             <Col md={12}>
                                 <textarea
                                     style={{
@@ -680,7 +742,7 @@ class BpmTaskApproval extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.rejectToActivityOK}> 确定 </Button>
-                        <Button colors="primary" onClick={this.close}> 关闭 </Button>
+                        <Button onClick={this.close}> 关闭 </Button>
                     </Modal.Footer>
                 </Modal>
 
@@ -725,7 +787,7 @@ class BpmTaskApproval extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.signAddOK}> 确定 </Button>
-                        <Button colors="primary" onClick={this.close}> 关闭 </Button>
+                        <Button onClick={this.close}> 关闭 </Button>
                     </Modal.Footer>
                 </Modal>
 
@@ -783,7 +845,7 @@ class BpmTaskApproval extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.delegatedOK}> 确定 </Button>
-                        <Button colors="primary" onClick={this.close}> 关闭 </Button>
+                        <Button onClick={this.close}> 关闭 </Button>
                     </Modal.Footer>
                 </Modal>
             </div>

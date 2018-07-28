@@ -14,7 +14,8 @@ const propTypes = {
     className: PropTypes.string,
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
-    onStart: PropTypes.func
+    onStart: PropTypes.func,
+    onEnd: PropTypes.func
 };
 
 class BpmButtonRecall extends Component {
@@ -23,13 +24,11 @@ class BpmButtonRecall extends Component {
     }
     handlerBtn = async () => {
         let errFlag = false;
-        let { checkedArray, data, onStart, onSuccess, onError } = this.props;
-        if (onStart) {
-            onStart();
-        }
+        let { checkedArray, onStart,onEnd, onSuccess, onError } = this.props;
+        onStart && onStart();
         let recallArray = [];
         for (let i = 0; i < checkedArray.length; i++) {
-            if (checkedArray[i].bpmState != 0) {
+            if (checkedArray[i].bpmState != 0 && checkedArray[i].bpmState != null) {
                 recallArray.push({ "id": checkedArray[i].id });
                 errFlag = false;
             } else {
@@ -45,12 +44,12 @@ class BpmButtonRecall extends Component {
         }
         if (recallArray.length > 0) {
             let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray);
-            if (success != 'fail_global') {
+            if (detailMsg.data['success'] && detailMsg.data.success == 'success') {
                 onSuccess && onSuccess();
             } else {
                 onError && onError({
                     type : 2,
-                    msg : `单据撤回失败`
+                    msg : detailMsg.data.message
                 });
             }
         } else {
