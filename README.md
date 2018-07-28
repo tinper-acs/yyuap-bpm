@@ -34,15 +34,49 @@
 如果使用流程图相关组件那么导入:
 
 ```js
-import { BpmWrap } from 'yyuap-bpm';
+import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap } from 'yyuap-bpm';
 ```
 然后在render使用的时候传入相应组件需要的参数即可：
 
 ```js
-<BpmWrap
-    id={id}
-    processDefinitionId={processDefinitionId}
-    processInstanceId={processInstanceId}
+
+//提交流程按钮使用
+
+<BpmButtonSubmit
+    className="ml5"
+    checkedArray={[{"id":"02a128d65c47405494f8f2baf087117e"}]}
+    funccode="react"
+    nodekey="003"
+    url={`/sany_order/submit`}
+    urlAssignSubmit={`/sany_order/assignSubmit`}
+    onSuccess={() => console.log('success')}
+    onError={(err) => console.log(err)}
+    onStart={() => console.log('start loading')}
+    onEnd={() => console.log('end loading')}
+/>
+
+//收回流程按钮使用
+
+<BpmButtonRecall
+    className="ml5"
+    checkedArray={[{"id":"02a128d65c47405494f8f2baf087117e"}]}
+    url={`/sany_order/recall`}
+    onSuccess={() => console.log('success')}
+    onError={(err) => console.log(err)}
+    onStart={() => console.log('start loading')}
+    onEnd={() => console.log('end loading')}
+/>
+
+//流程审批面板使用
+
+<BpmTaskApprovalWrap
+    id={rowData.id}
+    onBpmFlowClick={() => console.log('这里是流程图按钮的事件，用于跳转到流程图组件页面') }
+    appType={"1"}
+    onSuccess={() => console.log('success')}
+    onError={(err) => console.log(err)}
+    onStart={() => console.log('start loading')}
+    onEnd={() => console.log('end loading')}
 />
 ```
 
