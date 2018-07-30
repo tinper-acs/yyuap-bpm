@@ -474,6 +474,7 @@ class BpmTaskApproval extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Table
+                            emptyText={()=>(<div>暂无数据</div>)}
                             rowClassName={(record, index, indent) => {
                                 if (this.state.selectedRow[index]) {
                                     return 'selected';
