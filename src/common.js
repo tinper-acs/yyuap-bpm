@@ -78,10 +78,10 @@ export const descriptionToText = (vApproveType) => {
 export const getBpmTaskURL = (type, root = "/eiap-plus/") => {
     switch (type) {
         case 'agree':
-            return root + 'task/completetask/approveCard';
+            return root + '/task/completetask/approveCard';
             break;
         case 'unagree':
-            return root + 'task/completetask/approveCard';
+            return root + '/task/completetask/approveCard';
             break;
         case 'rejectToActivity':
             return root + 'task/rejecttask/bfreject';
@@ -155,10 +155,7 @@ export const sendBpmTaskAJAX = (type, data) => {
                 comment: data.comment,
                 processDefinitionId: data.processDefinitionId,
                 processInstanceId: data.processInstanceId,
-                taskId: data.taskId,
-                name: data.name,
-                pageNum: data.pageNum,
-                pageSize: data.pageSize
+                taskId: data.taskId
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
@@ -168,10 +165,7 @@ export const sendBpmTaskAJAX = (type, data) => {
                 comment: data.comment,
                 processDefinitionId: data.processDefinitionId,
                 processInstanceId: data.processInstanceId,
-                taskId: data.taskId,
-                name: data.name,
-                pageNum: data.pageNum,
-                pageSize: data.pageSize
+                taskId: data.taskId
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })

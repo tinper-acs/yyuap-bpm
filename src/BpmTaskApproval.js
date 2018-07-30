@@ -84,7 +84,6 @@ class BpmTaskApproval extends Component {
         onStart && onStart();
         //第一次请求审批，有的是直接一次请求，有的需要二次请求
         let result = await sendBpmTaskAJAX(this.state.approvetype, this.state);
-
         //检测需要二次请求并弹出Modal审批
         switch (this.state.approvetype) {
             case 'agree'://同意
@@ -111,7 +110,6 @@ class BpmTaskApproval extends Component {
                     }
                     // onStart && onStart();
                     //可以是加签操作，拉取加签请求
-                    //let second = await sendBpmTaskAJAX('signAdd', this.state);
                     onEnd && onEnd();
                     //配置参照需要参数
                     var options = Object.assign(JSON.parse(refOptions), {
@@ -154,7 +152,6 @@ class BpmTaskApproval extends Component {
                             if (agreeeMsg.data.flag == 'success') {
                                 Message.create({ content: `${agreeeMsg.data.msg}`, color: 'info', position: 'top' });
                                 this.setState({
-                                    rejectToActivityShow: false,
                                     rejectlist: [],
                                     selectedRow: []
                                 });
@@ -506,12 +503,7 @@ class BpmTaskApproval extends Component {
 BpmTaskApproval.propTypes = propTypes;
 BpmTaskApproval.defaultProps = {
     host: "",
-    prefixCls: "bee-table",
-    appType: "1",
-    multiSelect: {
-        type: "checkbox",
-        param: "key"
-    }
+    appType: "1"
 }
 
 export default BpmTaskApproval;
