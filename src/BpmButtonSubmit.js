@@ -129,7 +129,9 @@ class BpmButtonSubmit extends Component {
     //通用关闭方法
     closeHuanjie = () => {
         this.setState({
-            huanjieShow: false
+            huanjieShow: false,
+            childRefKey: [],
+            showVal: []
         });
     }
     //选择人员后的确定事件
@@ -198,6 +200,7 @@ class BpmButtonSubmit extends Component {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
                     title: '人员选择',
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                    isRadio: false,
                     className: '',
                     param: {//url请求参数
                         refCode: 'app_user',
