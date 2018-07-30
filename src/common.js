@@ -78,10 +78,10 @@ export const descriptionToText = (vApproveType) => {
 export const getBpmTaskURL = (type, root = "/eiap-plus/") => {
     switch (type) {
         case 'agree':
-            return root + '/task/completetask/approveCard';
+            return root + 'task/completetask/approveCard';
             break;
         case 'unagree':
-            return root + '/task/completetask/approveCard';
+            return root + 'task/completetask/approveCard';
             break;
         case 'rejectToActivity':
             return root + 'task/rejecttask/bfreject';
