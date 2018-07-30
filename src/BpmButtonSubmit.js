@@ -199,6 +199,7 @@ class BpmButtonSubmit extends Component {
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
                     title: '人员选择',
+                    backdrop: false,
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
                     isRadio: false,
                     className: '',

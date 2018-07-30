@@ -3,7 +3,9 @@
  */
 
 import React, { Component } from 'react';
-import { Radio, Row, Col, FormControl, Button, Modal, Message, Table, Checkbox, Pagination } from 'tinper-bee';
+import { Radio, Row, Col, Button, Modal, Message, Table } from 'tinper-bee';
+import createModal from 'yyuap-ref';
+import refOptions from './refOptions';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { getBpmTaskURL, sendBpmTaskAJAX, approvetypeToText } from './common';
@@ -30,21 +32,10 @@ class BpmTaskApproval extends Component {
             taskId: props.id,
             activityId: "markerbill",
             rejectToActivityShow: false,
-            signAddShow: false,
             rejectlist: [],
             selectedRow: [],
-            signAddList: [],
-            checkedArray: [],
-            checkedAll: false,
             userIds: [],
-            delegateList: [],
-            delegateShow: false,
             userId: null,
-            signAddSearchValue: "",
-            name: "",
-            pageNum: 1,
-            pageSize: 20,
-            totalPages: 0,
             HuoDongID: "",//新版活动ID
             HuoDongName: ""//新版活动名字
         }
@@ -61,32 +52,6 @@ class BpmTaskApproval extends Component {
             key: "activityName",
             width: "30%"
         }]
-        //驳回到环节的Modal-Table
-        this.signAddCol = [{
-            title: "名称",
-            dataIndex: "name",
-            key: "name",
-            width: "30%"
-        },
-        {
-            title: "编码",
-            dataIndex: "code",
-            key: "code",
-            width: "30%"
-        }]
-        //改派 人员列表
-        this.delegateCol = [{
-            title: "名称",
-            dataIndex: "name",
-            key: "name",
-            width: "30%"
-        },
-        {
-            title: "编码",
-            dataIndex: "code",
-            key: "id",
-            width: "30%"
-        }]
     }
     componentWillMount = () => {
         //通过billID获得processDefinitionId,processInstanceId
@@ -100,116 +65,7 @@ class BpmTaskApproval extends Component {
             });
         }
     }
-    onAllCheckChange = () => {
-        let self = this;
-        let checkedArray = self.state.checkedArray;
 
-        let listData = self.state.signAddList.concat();
-        let selIds = [];
-        // let id = self.props.multiSelect.param;
-        for (var i = 0; i < self.state.checkedArray.length; i++) {
-            checkedArray[i].isChecked = !self.state.checkedAll;
-        }
-        // if (self.state.checkedAll) {
-        //   selIds = [];
-        // } else {
-        //   for (var i = 0; i < listData.length; i++) {
-        //     selIds[i] = listData[i][id];
-        //   }
-        // }
-        self.setState({
-            checkedAll: !self.state.checkedAll,
-            checkedArray: checkedArray,
-            // selIds: selIds
-        });
-        // self.props.onSelIds(selIds);
-        let userIdArr = checkedArray.filter((item) => item.isChecked);
-        let userIdsArray = [];
-        userIdArr.map((item) => {
-            userIdsArray.push(item.id);
-        });
-        this.setState({
-            userIds: userIdsArray
-        });
-    };
-    onCheckboxChange = (text, record, index) => {
-        let self = this;
-        let allFlag = false;
-        // let selIds = self.state.selIds;
-        // let id = self.props.postId;
-        let checkedArray = self.state.checkedArray.concat();
-        // if (self.state.checkedArray[index]) {
-        // selIds.remove(record[id]);
-        // } else {
-        // selIds.push(record[id]);
-        // }
-        checkedArray[index].isChecked = !self.state.checkedArray[index].isChecked;
-        checkedArray[index].id = record.id;
-        for (var i = 0; i < self.state.checkedArray.length; i++) {
-            if (!checkedArray[i].isChecked) {
-                allFlag = false;
-                break;
-            } else {
-                allFlag = true;
-            }
-        }
-        self.setState({
-            checkedAll: allFlag,
-            checkedArray: checkedArray,
-            // selIds: selIds
-        });
-        // self.props.onSelIds(selIds);
-        let userIdArr = checkedArray.filter((item) => item.isChecked);
-        let userIdsArray = [];
-        userIdArr.map((item) => {
-            userIdsArray.push(item.id);
-        });
-        this.setState({
-            userIds: userIdsArray
-        });
-    };
-    renderColumnsMultiSelect(columns) {
-        const { checkedArray } = this.state;
-        const { multiSelect } = this.props;
-        let select_column = {};
-        let indeterminate_bool = false;
-        // let indeterminate_bool1 = true;
-        if (multiSelect && multiSelect.type === "checkbox") {
-            let i = checkedArray.length;
-            while (i--) {
-                if (checkedArray[i].isChecked) {
-                    indeterminate_bool = true;
-                    break;
-                }
-            }
-            let defaultColumns = [
-                {
-                    title: (
-                        <Checkbox
-                            className="table-checkbox"
-                            checked={this.state.checkedAll}
-                            indeterminate={indeterminate_bool && !this.state.checkedAll}
-                            onChange={this.onAllCheckChange}
-                        />
-                    ),
-                    key: "checkbox",
-                    dataIndex: "checkbox",
-                    width: "5%",
-                    render: (text, record, index) => {
-                        return (
-                            <Checkbox
-                                className="table-checkbox"
-                                checked={this.state.checkedArray[index].isChecked}
-                                onChange={this.onCheckboxChange.bind(this, text, record, index)}
-                            />
-                        );
-                    }
-                }
-            ];
-            columns = defaultColumns.concat(columns);
-        }
-        return columns;
-    }
     //选择审批的类型
     handleChange = (value) => {
         this.setState({ approvetype: value, comment: approvetypeToText(value) });
@@ -231,8 +87,8 @@ class BpmTaskApproval extends Component {
 
         //检测需要二次请求并弹出Modal审批
         switch (this.state.approvetype) {
-            //同意
-            case 'agree':
+            case 'agree'://同意
+            case 'unagree'://不同意
                 //普通同意操作，没有后续操作，直接成功
                 if (result.data.flag == 'success') {
                     Message.create({ content: result.data.msg, color: 'info', position: 'top' });
@@ -253,50 +109,70 @@ class BpmTaskApproval extends Component {
                             HuoDongName: result.data.assignList[0].activityName
                         });
                     }
-                    onStart && onStart();
+                    // onStart && onStart();
                     //可以是加签操作，拉取加签请求
-                    let second = await sendBpmTaskAJAX('signAdd', this.state);
+                    //let second = await sendBpmTaskAJAX('signAdd', this.state);
                     onEnd && onEnd();
-                    this.setState({
-                        signAddList: second.data.data.content,
-                        signAddShow: true,
-                        checkedArray: second.data.data.content,
-                        totalPages: second.data.data.totalPages
+                    //配置参照需要参数
+                    var options = Object.assign(JSON.parse(refOptions), {
+                        title: '人员选择',
+                        backdrop: false,
+                        hasPage: true,
+                        refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        isRadio: false,
+                        className: '',
+                        param: {//url请求参数
+                            refCode: 'app_user',
+                            tenantId: '',
+                            sysId: '',
+                            transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                        },
+                        //选择中的数据
+                        keyList: [],
+                        //保存回调sels选中的行数据showVal显示的字
+                        onSave: async (sels, showVal) => {//showVal="12;13;管理员"
+                            //回调
+                            onStart && onStart();
+                            //同意后续的加签
+                            //TO DO:重构URL
+                            var agreeeMsg = await axios.post('/eiap-plus/task/assigntask/commit', {
+                                activityId: this.state.HuoDongID,
+                                activityName: this.state.HuoDongName,
+                                comment: this.state.comment,
+                                taskId: this.state.taskId,
+                                approvetype: this.state.approvetype,
+                                processInstanceId: this.state.processInstanceId,
+                                participants: Array.from(sels, x => ({ id: x.id }))
+                            }).catch((e) => {
+                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                                onError && onError({
+                                    type: 2,
+                                    msg: `服务器请求出错`
+                                });
+                            });
+                            //确认加签后的处理
+                            if (agreeeMsg.data.flag == 'success') {
+                                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'info', position: 'top' });
+                                this.setState({
+                                    rejectToActivityShow: false,
+                                    rejectlist: [],
+                                    selectedRow: []
+                                });
+                                onSuccess && onSuccess();
+                            } else {
+                                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'danger', position: 'top' });
+                                onError && onError({
+                                    type: 2,
+                                    msg: agreeeMsg.data.msg
+                                });
+                            }
+                        },
+                        showVal: '',
+                        showKey: 'name',
+                        verification: false
                     });
-                }
-                break;
-            //不同意
-            case 'unagree':
-                //普通不同意操作，没有后续操作，直接成功
-                if (result.data.flag == 'success') {
-                    Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
-                } else if (result.data.flag == 'faile') {
-                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: result.data.msg
-                    });
-                }
-                //普通不同意操作，有后续操作，有加签人员判断
-                if (result.data.assignAble) {
-                    //判断是否有最新的活动id和name
-                    if (result.data.assignList.length > 0) {
-                        this.setState({
-                            HuoDongID: result.data.assignList[0].activityId,
-                            HuoDongName: result.data.assignList[0].activityName
-                        });
-                    }
-                    onStart && onStart();
-                    //可以是加签操作，拉取加签请求
-                    let second = await sendBpmTaskAJAX('signAdd', this.state);
-                    onEnd && onEnd();
-                    this.setState({
-                        signAddList: second.data.data.content,
-                        signAddShow: true,
-                        checkedArray: second.data.data.content,
-                        totalPages: second.data.data.totalPages
-                    });
+                    //弹出参照组件
+                    createModal(options);
                 }
                 break;
             //驳回到环节
@@ -320,12 +196,59 @@ class BpmTaskApproval extends Component {
             case 'signAdd':
                 if (result.data.status == 1) {
                     onEnd && onEnd();
-                    this.setState({
-                        signAddList: result.data.data.content,
-                        signAddShow: true,
-                        checkedArray: result.data.data.content,
-                        totalPages: result.data.data.totalPages
+                    //配置参照需要参数
+                    var options = Object.assign(JSON.parse(refOptions), {
+                        title: '加签人员',
+                        backdrop: false,
+                        hasPage: true,
+                        refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        isRadio: false,
+                        className: '',
+                        param: {//url请求参数
+                            refCode: 'app_user',
+                            tenantId: '',
+                            sysId: '',
+                            transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                        },
+                        //选择中的数据
+                        keyList: [],
+                        //保存回调sels选中的行数据showVal显示的字
+                        onSave: async (sels, showVal) => {//showVal="12;13;管理员"
+                            //回调
+                            onStart && onStart();
+                            //TO DO:重构URL
+                            //执行最终加签操作
+                            var signAddMsg = await axios.post('/eiap-plus/task/signaddtask/signadd', {
+                                approvetype: this.state.approvetype,
+                                comment: this.state.comment,
+                                processInstanceId: this.state.processInstanceId,
+                                taskId: this.state.taskId,
+                                userIds: Array.from(sels, x => x.id)
+                            }).catch((e) => {
+                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                                onError && onError({
+                                    type: 2,
+                                    msg: `服务器请求出错`
+                                });
+                            });
+                            //判断加签最终是否成功
+                            if (signAddMsg.data.flag == 'success') {
+                                Message.create({ content: `${signAddMsg.data.msg}`, color: 'info', position: 'top' });
+                                onSuccess && onSuccess();
+                            } else {
+                                Message.create({ content: `${signAddMsg.data.msg}`, color: 'danger', position: 'top' });
+                                onError && onError({
+                                    type: 2,
+                                    msg: signAddMsg.data.msg
+                                });
+                            }
+                        },
+                        showVal: '',
+                        showKey: 'name',
+                        verification: false
                     });
+                    //弹出参照组件
+                    createModal(options);
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
                     onError && onError({
@@ -338,12 +261,58 @@ class BpmTaskApproval extends Component {
             case 'delegate':
                 if (result.data.status == 1) {
                     onEnd && onEnd();
-                    this.setState({
-                        delegateList: result.data.data.content,
-                        delegateShow: true,
-                        selectedRow: new Array(result.data.data.content.length)
+                    //配置参照需要参数
+                    var options = Object.assign(JSON.parse(refOptions), {
+                        title: '改派人员',
+                        backdrop: false,
+                        hasPage: true,
+                        refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        isRadio: true,
+                        className: '',
+                        param: {//url请求参数
+                            refCode: 'app_user',
+                            tenantId: '',
+                            sysId: '',
+                            transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                        },
+                        //选择中的数据
+                        keyList: [],
+                        //保存回调sels选中的行数据showVal显示的字
+                        onSave: async (sels, showVal) => {//showVal="12;13;管理员"
+                            //回调
+                            onStart && onStart();
+                            //TO DO:重构URL
+                            let delegateMsg = await axios.post('/eiap-plus/task/delegatetask/delegate', {
+                                approvetype: this.state.approvetype,
+                                comment: this.state.comment,
+                                processInstanceId: this.state.processInstanceId,
+                                taskId: this.state.taskId,
+                                userId: Array.isArray(sels) ? sels[0].id : ""
+                            }).catch((e) => {
+                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                                onError && onError({
+                                    type: 2,
+                                    msg: `服务器请求出错`
+                                });
+                            });
+                            //处理后续的操作
+                            if (delegateMsg.data.flag == 'success') {
+                                Message.create({ content: `${delegateMsg.data.msg}`, color: 'info', position: 'top' });
+                                onSuccess && onSuccess();
+                            } else {
+                                Message.create({ content: `${delegateMsg.data.msg}`, color: 'danger', position: 'top' });
+                                onError && onError({
+                                    type: 2,
+                                    msg: delegateMsg.data.msg
+                                });
+                            }
+                        },
+                        showVal: '',
+                        showKey: 'name',
+                        verification: false
                     });
-
+                    //弹出参照组件
+                    createModal(options);
                 } else {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
                     onError && onError({
@@ -369,23 +338,14 @@ class BpmTaskApproval extends Component {
         }
     }
     //通用关闭方法
-    close = () => {
+    activityModalClose = () => {
         this.setState({
             rejectToActivityShow: false,
-            signAddShow: false,
             rejectlist: [],
-            selectedRow: [],
-            signAddList: [],
-            checkedArray: [],
-            checkedAll: false,
-            delegateShow: false,
-            name: ""
+            selectedRow: []
         });
     }
     //驳回到环节的最终提交
-    //需要URL,参数：
-    //eiap-plus/task/rejecttask/reject
-    //
     rejectToActivityOK = async () => {
         let { onStart, onEnd, onSuccess, onError } = this.props;
         onStart && onStart();
@@ -408,12 +368,8 @@ class BpmTaskApproval extends Component {
             Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
             this.setState({
                 rejectToActivityShow: false,
-                signAddShow: false,
                 rejectlist: [],
-                selectedRow: [],
-                signAddList: [],
-                checkedArray: [],
-                checkedAll: false
+                selectedRow: []
             });
         } else {
             Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
@@ -423,214 +379,10 @@ class BpmTaskApproval extends Component {
             });
         }
     }
-    //加签
-    signAddOK = async () => {
-        let { onStart, onEnd, onSuccess, onError } = this.props;
-        switch (this.state.approvetype) {
-            case 'agree':
-                let agreeArrayObject = [];
-                //选择后的加签人员对象处理，包装成数组对象id形式
-                if (Array.isArray(this.state.userIds)) {
-                    agreeArrayObject = Array.from(this.state.userIds, x => ({ id: x }));
-                }
-                onStart && onStart();
-                //同意后续的加签
-                var msg = await axios.post('/eiap-plus/task/assigntask/commit', {
-                    activityId: this.state.HuoDongID,
-                    activityName: this.state.HuoDongName,
-                    comment: this.state.comment,
-                    taskId: this.state.taskId,
-                    approvetype: this.state.approvetype,
-                    processInstanceId: this.state.processInstanceId,
-                    participants: agreeArrayObject
-                }).catch((e) => {
-                    Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: `服务器请求出错`
-                    });
-                });
-                //确认加签
-                if (msg.data.flag == 'success') {
-                    Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
-                    this.setState({
-                        rejectToActivityShow: false,
-                        signAddShow: false,
-                        rejectlist: [],
-                        selectedRow: [],
-                        signAddList: [],
-                        checkedArray: [],
-                        checkedAll: false,
-                        name: ""
-                    });
-                    onSuccess && onSuccess();
-                } else {
-                    Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: msg.data.msg
-                    });
-                }
-                break;
-            case 'unagree':
-                let unagreeArrayObject = [];
-                //选择后的加签人员对象处理，包装成数组对象id形式
-                if (Array.isArray(this.state.userIds)) {
-                    unagreeArrayObject = Array.from(this.state.userIds, x => ({ id: x }));
-                }
-                onStart && onStart();
-                //同意后续的加签
-                var msg = await axios.post('/eiap-plus/task/assigntask/commit', {
-                    activityId: "ApproveUserTask3",
-                    activityName: "审批任务BB",
-                    comment: this.state.comment,
-                    taskId: this.state.taskId,
-                    participants: unagreeArrayObject
-                }).catch((e) => {
-                    Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: `服务器请求出错`
-                    });
-                });
-                //确认加签
-                if (msg.data.flag == 'success') {
-                    Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
-                    this.setState({
-                        rejectToActivityShow: false,
-                        signAddShow: false,
-                        rejectlist: [],
-                        selectedRow: [],
-                        signAddList: [],
-                        checkedArray: [],
-                        checkedAll: false,
-                        name: ""
-                    });
-                    onSuccess && onSuccess();
-                } else {
-                    Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: msg.data.msg
-                    });
-                }
-                break;
-            case 'signAdd':
-                onStart && onStart();
-                //执行最终加签操作
-                var msg = await axios.post('/eiap-plus/task/signaddtask/signadd', {
-                    approvetype: this.state.approvetype,
-                    comment: this.state.comment,
-                    processInstanceId: this.state.processInstanceId,
-                    taskId: this.state.taskId,
-                    userIds: this.state.userIds
-                }).catch((e) => {
-                    Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: `服务器请求出错`
-                    });
-                });
-                //判断加签最终是否成功
-                if (msg.data.flag == 'success') {
-                    Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
-                    this.setState({
-                        rejectToActivityShow: false,
-                        signAddShow: false,
-                        rejectlist: [],
-                        selectedRow: [],
-                        signAddList: [],
-                        checkedArray: [],
-                        checkedAll: false,
-                        name: ""
-                    });
-                    onSuccess && onSuccess();
-                } else {
-                    Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: msg.data.msg
-                    });
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-    //改派
-    delegatedOK = async () => {
-        let { onStart, onEnd, onSuccess, onError } = this.props;
-        if (this.state.userId == null) {
-            Message.create({ content: `请选择一条数据`, color: 'danger', position: 'top' });
-            return;
-        }
-        onStart && onStart();
-        let msg = await axios.post('/eiap-plus/task/delegatetask/delegate', {
-            approvetype: this.state.approvetype,
-            comment: this.state.comment,
-            processInstanceId: this.state.processInstanceId,
-            taskId: this.state.taskId,
-            userId: this.state.userId
-        }).catch((e) => {
-            Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-            onError && onError({
-                type: 2,
-                msg: `服务器请求出错`
-            });
-        });
-
-        if (msg.data.flag == 'success') {
-            Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
-            this.setState({
-                rejectToActivityShow: false,
-                signAddShow: false,
-                rejectlist: [],
-                selectedRow: [],
-                signAddList: [],
-                checkedArray: [],
-                checkedAll: false,
-                delegateShow: false,
-                name: ""
-            });
-            onSuccess && onSuccess();
-        } else {
-            Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
-            onError && onError({
-                type: 2,
-                msg: msg.data.msg
-            });
-        }
-    }
+    //流程图函数调用
     handlerFlow = () => {
         let onBpmFlowClick = this.props.onBpmFlowClick;
-        if (onBpmFlowClick) {
-            onBpmFlowClick();
-        }
-    }
-    handlerSignAddSearch = async () => {
-        let result = await sendBpmTaskAJAX('signAdd', this.state);
-        this.setState({
-            signAddList: result.data.data.content,
-            delegateList: result.data.data.content,
-            totalPages: result.data.data.totalPages
-        });
-    }
-    handlerSignAddSearchValue = (value) => {
-        this.setState({
-            name: value
-        })
-    }
-    handlerSignAddPage = (page) => {
-        this.setState({
-            pageNum: page
-        }, async () => {
-            let result = await sendBpmTaskAJAX(this.state.approvetype, this.state);
-            this.setState({
-                signAddList: result.data.data.content,
-                totalPages: result.data.data.totalPages
-            });
-        });
+        onBpmFlowClick && onBpmFlowClick();
     }
     render() {
         let { processDefinitionId, processInstanceId, host } = this.props;
@@ -719,7 +471,7 @@ class BpmTaskApproval extends Component {
                 <Modal
                     show={this.state.rejectToActivityShow}
                     backdrop={false}
-                    onHide={this.close}>
+                    onHide={this.activityModalClose}>
                     <Modal.Header closeButton>
                         <Modal.Title> 活动列表 </Modal.Title>
                     </Modal.Header>
@@ -744,110 +496,7 @@ class BpmTaskApproval extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.rejectToActivityOK}> 确定 </Button>
-                        <Button onClick={this.close}> 关闭 </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal
-                    show={this.state.signAddShow}
-                    backdrop={false}
-                    onHide={this.close}>
-                    <Modal.Header closeButton>
-                        <Modal.Title> 人员列表 </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Row style={{ "paddingBottom": "10px" }}>
-                            <Col md={2}>
-                                <div style={{ "lineHeight": "30px" }}>名称：</div>
-                            </Col>
-                            <Col md={5}>
-                                <FormControl
-                                    value={this.state.name}
-                                    onChange={this.handlerSignAddSearchValue}
-                                />
-                            </Col>
-                            <Col md={2}>
-                                <Button
-                                    style={{ "marginLeft": "10px" }}
-                                    onClick={this.handlerSignAddSearch}
-                                    colors="primary">查询</Button>
-                            </Col>
-                        </Row>
-                        <Table
-                            scroll={{ y: 200 }}
-                            rowKey={record => record.code}
-                            columns={this.renderColumnsMultiSelect(this.signAddCol)}
-                            data={this.state.signAddList}
-                        />
-                        <Pagination
-                            boundaryLinks
-                            prev
-                            next
-                            items={this.state.totalPages}
-                            activePage={this.state.pageNum}
-                            onSelect={this.handlerSignAddPage} />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.signAddOK}> 确定 </Button>
-                        <Button onClick={this.close}> 关闭 </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal
-                    show={this.state.delegateShow}
-                    backdrop={false}
-                    onHide={this.close}>
-                    <Modal.Header closeButton>
-                        <Modal.Title> 人员列表 </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Row style={{ "paddingBottom": "10px" }}>
-                            <Col md={2}>
-                                <div style={{ "lineHeight": "30px" }}>名称：</div>
-                            </Col>
-                            <Col md={5}>
-                                <FormControl
-                                    value={this.state.name}
-                                    onChange={this.handlerSignAddSearchValue}
-                                />
-                            </Col>
-                            <Col md={2}>
-                                <Button
-                                    style={{ "marginLeft": "10px" }}
-                                    onClick={this.handlerSignAddSearch}
-                                    colors="primary">查询</Button>
-                            </Col>
-                        </Row>
-                        <Table
-                            rowClassName={(record, index, indent) => {
-                                if (this.state.selectedRow[index]) {
-                                    return 'selected';
-                                } else {
-                                    return '';
-                                }
-                            }}
-                            onRowClick={(record, index, indent) => {
-                                let selectedRow = new Array(this.state.delegateList.length);
-                                selectedRow[index] = true;
-                                this.setState({
-                                    userId: record.id,
-                                    selectedRow: selectedRow
-                                });
-                            }}
-                            rowKey={record => record.code}
-                            scroll={{ y: 200 }}
-                            columns={this.delegateCol} data={this.state.delegateList} />
-                        <Pagination
-                            boundaryLinks
-                            prev
-                            next
-                            items={this.state.totalPages}
-                            activePage={this.state.pageNum}
-                            onSelect={this.handlerSignAddPage} />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.delegatedOK}> 确定 </Button>
-                        <Button onClick={this.close}> 关闭 </Button>
+                        <Button onClick={this.activityModalClose}> 关闭 </Button>
                     </Modal.Footer>
                 </Modal>
             </div>

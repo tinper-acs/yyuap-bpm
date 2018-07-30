@@ -25,7 +25,8 @@
         "POST": [
             {
                 "/ygdemo_yw_info/submit": "./mock/submit.json",
-                "/ygdemo_yw_info/assignSubmit": "./mock/assignSubmit.json"
+                "/ygdemo_yw_info/assignSubmit": "./mock/assignSubmit.json",
+                "/eiap-plus1/task/completetask/approveCard": "./mock/approveCard.json"
             }
         ],
         "GET": [

@@ -1,0 +1,32 @@
+{
+    "assignList": [
+        {
+            "activityId": "ApproveUserTask2",
+            "activityName": "审批任务2",
+            "condition": null,
+            "participants": [
+                {
+                    "id": "1ded95d84ac946b7ba2c3ab7bc49dbf8",
+                    "code": "06",
+                    "name": "user6",
+                    "pic": null,
+                    "type": "USER",
+                    "priority": 50,
+                    "org": null,
+                    "org_name": null
+                },
+                {
+                    "id": "ebb667d69cf94d16b33590dcae09c4cb",
+                    "code": "03",
+                    "name": "user3",
+                    "pic": null,
+                    "type": "USER",
+                    "priority": 50,
+                    "org": null,
+                    "org_name": null
+                }
+            ]
+        }
+    ],
+    "assignAble": true
+}

@@ -26,12 +26,12 @@ class Demo extends Component {
             <div>
                 <BpmTaskApprovalWrap
                     onSuccess={() => console.log('success')}
-                    onError={() => console.log('error')}
+                    onError={(err) => console.log(err)}
                     appType="1"
                     id="3be26f2debb442d9b5f8012ba40c3fa3"
                 />
-                <BpmFlowChart />
-                <BpmTable />
+                {/* <BpmFlowChart /> */}
+                {/* <BpmTable /> */}
                 <BpmButtonSubmit
                     funccode="ygdemo_yw_info"
                     nodekey="003"
