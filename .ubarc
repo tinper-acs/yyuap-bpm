@@ -14,9 +14,9 @@
                 "/newref/"
             ],
             "options": {
-                "target": "http://10.10.24.43:8080",
+                "target": "http://172.20.15.155:8888",
                 "headers": {
-                    "Referer": "http://10.10.24.43:8080/wbalone/index-view.html"
+                    "Referer": "http://172.20.15.155:8888/wbalone/index-view.html"
                 }
             }
         }
