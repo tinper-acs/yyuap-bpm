@@ -168,7 +168,9 @@ class BpmButtonSubmit extends Component {
         if (result.data.success == 'success') {
             onSuccess && onSuccess();
             this.setState({
-                huanjieShow: false
+                huanjieShow: false,
+                childRefKey: [],
+                showVal: []
             });
         } else if (result.data.success == 'fail_global') {
             onError && onError({
@@ -202,9 +204,10 @@ class BpmButtonSubmit extends Component {
                     backdrop: false,
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
                     isRadio: false,
+                    filterRefUrl: "/wbalone/newusernRef/filterRef",
                     className: '',
                     param: {//url请求参数
-                        refCode: 'app_user',
+                        refCode: 'newuser',
                         tenantId: '',
                         sysId: '',
                         transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -234,7 +237,7 @@ class BpmButtonSubmit extends Component {
                         });
                     },
                     showVal: self.state.showVal[index],
-                    showKey: 'name',
+                    showKey: 'refname',
                     verification: false
                 })} />
             }
@@ -269,12 +272,9 @@ BpmButtonSubmit.defaultProps = {
     checkedArray: [],
     text: "提交",
     nodekey: "003",
+    funccode: "react",
     url: "/example/ygdemo_yw_info/submit",
     urlAssignSubmit: "/example/ygdemo_yw_info/assignSubmit",
-    className: "",
-    multiSelect: {
-        type: "checkbox",
-        param: "key"
-    }
+    className: ""
 }
 export default BpmButtonSubmit;

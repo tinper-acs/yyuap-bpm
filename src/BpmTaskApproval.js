@@ -120,7 +120,7 @@ class BpmTaskApproval extends Component {
                         isRadio: false,
                         className: '',
                         param: {//url请求参数
-                            refCode: 'app_user',
+                            refCode: 'newuser',
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -165,7 +165,7 @@ class BpmTaskApproval extends Component {
                             }
                         },
                         showVal: '',
-                        showKey: 'name',
+                        showKey: 'refname',
                         verification: false
                     });
                     //弹出参照组件
@@ -202,7 +202,7 @@ class BpmTaskApproval extends Component {
                         isRadio: false,
                         className: '',
                         param: {//url请求参数
-                            refCode: 'app_user',
+                            refCode: 'newuser',
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -241,7 +241,7 @@ class BpmTaskApproval extends Component {
                             }
                         },
                         showVal: '',
-                        showKey: 'name',
+                        showKey: 'refname',
                         verification: false
                     });
                     //弹出参照组件
@@ -267,7 +267,7 @@ class BpmTaskApproval extends Component {
                         isRadio: true,
                         className: '',
                         param: {//url请求参数
-                            refCode: 'app_user',
+                            refCode: 'newuser',
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -305,7 +305,7 @@ class BpmTaskApproval extends Component {
                             }
                         },
                         showVal: '',
-                        showKey: 'name',
+                        showKey: 'refname',
                         verification: false
                     });
                     //弹出参照组件
