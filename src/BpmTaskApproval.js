@@ -474,7 +474,8 @@ class BpmTaskApproval extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Table
-                            emptyText={()=>(<div>暂无数据</div>)}
+                            rowKey={(r) => r.activityId}
+                            emptyText={() => (<div>暂无数据</div>)}
                             rowClassName={(record, index, indent) => {
                                 if (this.state.selectedRow[index]) {
                                     return 'selected';
@@ -493,7 +494,7 @@ class BpmTaskApproval extends Component {
                             columns={this.rejectToActivityCol} data={this.state.rejectlist} />
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.rejectToActivityOK}> 确定 </Button>
+                        <Button colors="danger" style={{ "marginRight": "10px" }} onClick={this.rejectToActivityOK}> 确定 </Button>
                         <Button onClick={this.activityModalClose}> 关闭 </Button>
                     </Modal.Footer>
                 </Modal>
