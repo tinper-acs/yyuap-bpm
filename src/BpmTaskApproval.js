@@ -2,16 +2,14 @@
  * bpm流程任务审批组件
  */
 
-import React, { Component } from 'react';
-import { Radio, Row, Col, Button, Modal, Message, Table } from 'tinper-bee';
-import createModal from 'yyuap-ref';
-import refOptions from './refOptions';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import { getBpmTaskURL, sendBpmTaskAJAX, approvetypeToText } from './common';
+import React, { Component } from 'react';
+import { Button, Col, Message, Modal, Radio, Row, Table } from 'tinper-bee';
+import createModal from 'yyuap-ref';
+import { approvetypeToText, sendBpmTaskAJAX } from './common';
+import refOptions from './refOptions';
 
 const propTypes = {
-    host: PropTypes.string,
     id: PropTypes.string,
     appType: PropTypes.string,
     onBpmFlowClick: PropTypes.func,
@@ -61,7 +59,8 @@ class BpmTaskApproval extends Component {
         //传入类型是弃审，那么直接设置2
         if (this.props.appType == "2") {
             this.setState({
-                approvetype: "withdraw"
+                approvetype: "withdraw",
+                comment: approvetypeToText("withdraw")
             });
         }
     }
@@ -133,7 +132,7 @@ class BpmTaskApproval extends Component {
                             onStart && onStart();
                             //同意后续的加签
                             //TO DO:重构URL
-                            var agreeeMsg = await axios.post('/eiap-plus/task/assigntask/commit', {
+                            var agreeeMsg = await sendBpmTaskAJAX('commit', {
                                 activityId: this.state.HuoDongID,
                                 activityName: this.state.HuoDongName,
                                 comment: this.state.comment,
@@ -215,7 +214,7 @@ class BpmTaskApproval extends Component {
                             onStart && onStart();
                             //TO DO:重构URL
                             //执行最终加签操作
-                            var signAddMsg = await axios.post('/eiap-plus/task/signaddtask/signadd', {
+                            var signAddMsg = await sendBpmTaskAJAX('signaddtask', {
                                 approvetype: this.state.approvetype,
                                 comment: this.state.comment,
                                 processInstanceId: this.state.processInstanceId,
@@ -279,7 +278,7 @@ class BpmTaskApproval extends Component {
                             //回调
                             onStart && onStart();
                             //TO DO:重构URL
-                            let delegateMsg = await axios.post('/eiap-plus/task/delegatetask/delegate', {
+                            let delegateMsg = await sendBpmTaskAJAX('delegatetask', {
                                 approvetype: this.state.approvetype,
                                 comment: this.state.comment,
                                 processInstanceId: this.state.processInstanceId,
@@ -346,12 +345,12 @@ class BpmTaskApproval extends Component {
     rejectToActivityOK = async () => {
         let { onStart, onEnd, onSuccess, onError } = this.props;
         onStart && onStart();
-        let msg = await axios.post(getBpmTaskURL('rejectToBillMaker'), {
+        let rejectToBillMakerMsg = await sendBpmTaskAJAX('rejectToBillMaker', {
             activityId: this.state.activityId,
             approvetype: this.state.approvetype,
             comment: this.state.comment,
             processInstanceId: this.state.processInstanceId,
-            taskId: this.state.taskId,
+            taskId: this.state.taskId
         }).catch((e) => {
             Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             onError && onError({
@@ -360,19 +359,19 @@ class BpmTaskApproval extends Component {
             });
         });
 
-        if (msg.data.flag == 'success') {
+        if (rejectToBillMakerMsg.data.flag == 'success') {
             onSuccess && onSuccess();
-            Message.create({ content: `${msg.data.msg}`, color: 'info', position: 'top' });
+            Message.create({ content: `${rejectToBillMakerMsg.data.msg}`, color: 'info', position: 'top' });
             this.setState({
                 rejectToActivityShow: false,
                 rejectlist: [],
                 selectedRow: []
             });
         } else {
-            Message.create({ content: `${msg.data.msg}`, color: 'danger', position: 'top' });
+            Message.create({ content: `${rejectToBillMakerMsg.data.msg}`, color: 'danger', position: 'top' });
             onError && onError({
                 type: 2,
-                msg: msg.data.msg
+                msg: rejectToBillMakerMsg.data.msg
             });
         }
     }
@@ -382,7 +381,6 @@ class BpmTaskApproval extends Component {
         onBpmFlowClick && onBpmFlowClick();
     }
     render() {
-        let { processDefinitionId, processInstanceId, host } = this.props;
         return (
             <div className="clearfix">
                 <div style={{ "padding": "0px" }}>
@@ -406,9 +404,8 @@ class BpmTaskApproval extends Component {
                                 </Radio.RadioGroup>
                             </Col>
                             <Col md={4} style={{ "textAlign": "right" }}>
-                                {this.props.appType != "3" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}
-                                {this.props.appType != "3" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
-                                {this.props.appType == "3" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
+                                {this.props.appType == "1" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}
+                                {this.props.appType == "1" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
                             </Col>
                         </Row>
                         <Row style={{
@@ -426,7 +423,7 @@ class BpmTaskApproval extends Component {
                                         "marginBottom": "20px",
                                         "borderRadius": "4px"
                                     }}
-                                    placeholder="请输入审批意见"
+                                    placeholder="请输入处理意见"
                                     value={this.state.comment}
                                     onChange={this.handlerCommentChange}
                                 />
@@ -434,8 +431,12 @@ class BpmTaskApproval extends Component {
                         </Row>
                     </div>}
                     {this.props.appType == "2" && <div>
-                        <Row>
-                            <Col md={12}>
+                        <Row style={{
+                            "height": "46px",
+                            "lineHeight": "46px",
+                            "padding": "0 10px"
+                        }}>
+                            <Col md={8}>
                                 <Radio.RadioGroup
                                     name="approvetype"
                                     selectedValue={this.state.approvetype}
@@ -443,8 +444,14 @@ class BpmTaskApproval extends Component {
                                     <Radio value="withdraw">弃审</Radio>
                                 </Radio.RadioGroup>
                             </Col>
+                            <Col md={4} style={{ "textAlign": "right" }}>
+                                {this.props.appType == "2" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}
+                                {this.props.appType == "2" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
+                            </Col>
                         </Row>
-                        <Row>
+                        <Row style={{
+                            "padding": "0 10px"
+                        }}>
                             <Col md={12}>
                                 <textarea
                                     style={{
@@ -504,7 +511,6 @@ class BpmTaskApproval extends Component {
 }
 BpmTaskApproval.propTypes = propTypes;
 BpmTaskApproval.defaultProps = {
-    host: "",
     appType: "1"
 }
 

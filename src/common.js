@@ -93,6 +93,12 @@ export const getBpmTaskURL = (type, root = "/eiap-plus/") => {
             return root + 'task/withdrawtask/withdraw';
         case 'hisTasklist':
             return root + 'process/hisTasklist';
+        case 'commit':
+            return root + 'task/assigntask/commit';
+        case 'signaddtask':
+            return root + 'task/signaddtask/signadd';
+        case 'delegatetask':
+            return root + 'task/delegatetask/delegate';
         default:
             return "/"
             break;
@@ -136,12 +142,11 @@ export const sendBpmTaskAJAX = (type, data) => {
             })
         case 'rejectToBillMaker':
             return axios.post(getBpmTaskURL(type), {
+                activityId: data.activityId,
                 approvetype: data.approvetype,
                 comment: data.comment,
-                processDefinitionId: data.processDefinitionId,
                 processInstanceId: data.processInstanceId,
-                taskId: data.taskId,
-                activityId: "markerbill"
+                taskId: data.taskId
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
@@ -179,6 +184,38 @@ export const sendBpmTaskAJAX = (type, data) => {
             return axios.post(getBpmTaskURL(type), {
                 processDefinitionId: data.processDefinitionId,
                 processInstanceId: data.processInstanceId
+            }).catch((e) => {
+                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            })
+        case 'commit':
+            return axios.post(getBpmTaskURL(type), {
+                activityId: data.activityId,
+                activityName: data.activityName,
+                comment: data.comment,
+                taskId: data.taskId,
+                approvetype: data.approvetype,
+                processInstanceId: data.processInstanceId,
+                participants: data.participants
+            }).catch((e) => {
+                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            })
+        case 'signaddtask':
+            return axios.post(getBpmTaskURL(type), {
+                approvetype: data.approvetype,
+                comment: data.comment,
+                processInstanceId: data.processInstanceId,
+                taskId: data.taskId,
+                userIds: data.userIds
+            }).catch((e) => {
+                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            })
+        case 'delegatetask':
+            return axios.post(getBpmTaskURL(type), {
+                approvetype: data.approvetype,
+                comment: data.comment,
+                processInstanceId: data.processInstanceId,
+                taskId: data.taskId,
+                userId: data.userId
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
@@ -256,7 +293,7 @@ export const approvetypeToText = (type) => {
             return '改派';
             break;
         case 'withdraw':
-            return '';
+            return '弃审';
             break;
         default:
             break;

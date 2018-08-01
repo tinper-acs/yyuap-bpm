@@ -1,13 +1,13 @@
 /**
  * bpm 提交流程按钮
  */
-import React, { Component } from 'react';
 import axios from 'axios';
-import { Radio, Row, Col, FormControl, Button, Modal, Message, Table, Checkbox, Pagination } from 'tinper-bee';
-import RefWithInput from 'yyuap-ref/dist2/refWithInput';
-import refOptions from './refOptions';
-import { queryBpmTemplateAllocate, onCommit, reconvert, sendBpmTaskAJAX } from './common';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { Button, Modal, Table } from 'tinper-bee';
+import RefWithInput from 'yyuap-ref/dist2/refWithInput';
+import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
+import refOptions from './refOptions';
 const propTypes = {
     checkedArray: PropTypes.array,
     text: PropTypes.string,

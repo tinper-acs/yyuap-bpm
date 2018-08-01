@@ -27,11 +27,18 @@ class Demo extends Component {
                 <BpmTaskApprovalWrap
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}
-                    appType="1"
+                    appType="2"
                     id="3be26f2debb442d9b5f8012ba40c3fa3"
                 />
-                {/* <BpmFlowChart /> */}
-                {/* <BpmTable /> */}
+                <BpmFlowChart
+                    processDefinitionId={"eiap350694:3:e2e70948-9559-11e8-b376-02420cbf1b08"}
+                    processInstanceId={"1352ad87-955e-11e8-b376-02420cbf1b08"}
+                />
+                <BpmTable
+                    processDefinitionId={"eiap350694:3:e2e70948-9559-11e8-b376-02420cbf1b08"}
+                    processInstanceId={"1352ad87-955e-11e8-b376-02420cbf1b08"}
+                />
+                <BpmTestCheckTable />
                 <BpmButtonSubmit
                     funccode="ygdemo_yw_info"
                     nodekey="003"
