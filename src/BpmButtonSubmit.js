@@ -112,10 +112,10 @@ class BpmButtonSubmit extends Component {
                 }
             } else if (success == "fail_global") {
                 let { data: { message } } = result
-                //错误
+                //流程提交错误
                 onError && onError({
                     type: 2,
-                    msg: `流程启动失败`
+                    msg: reconvert(message) || '流程启动失败'
                 });
             }
         } else {
@@ -152,11 +152,11 @@ class BpmButtonSubmit extends Component {
     }
     //选择完所有加签后的确定事件
     huanjieHandlerOK = async () => {
-        let { onSuccess, onError, onStart, onEnd } = this.props;
+        let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
         let { processDefineCode, assignInfo, obj } = this.state;
         //加载事件
         onStart && onStart();
-        let result = await axios.post(this.props.urlAssignSubmit, {
+        let result = await axios.post(urlAssignSubmit, {
             processDefineCode,
             assignInfo,
             obj

@@ -79,26 +79,22 @@ export const getBpmTaskURL = (type, root = "/eiap-plus/") => {
     switch (type) {
         case 'agree':
             return root + 'task/completetask/approveCard';
-            break;
         case 'unagree':
             return root + 'task/completetask/approveCard';
-            break;
         case 'rejectToActivity':
             return root + 'task/rejecttask/bfreject';
-            break;
         case 'rejectToBillMaker':
             return root + 'task/rejecttask/reject';
-            break;
         case 'signAdd':
             return root + 'task/assignee/getlist';
-            break;
         case 'delegate':
             return root + 'task/assignee/getlist';
-            break;
         case 'withdraw':
             return root + 'task/withdrawtask/withdraw';
-            break;
+        case 'hisTasklist':
+            return root + 'process/hisTasklist';
         default:
+            return "/"
             break;
     }
 }
@@ -179,6 +175,14 @@ export const sendBpmTaskAJAX = (type, data) => {
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
+        case 'hisTasklist':
+            return axios.post(getBpmTaskURL(type), {
+                processDefinitionId: data.processDefinitionId,
+                processInstanceId: data.processInstanceId
+            }).catch((e) => {
+                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            })
+
         default:
             break;
     }

@@ -2,15 +2,13 @@
  * bpm流程数据历史表格
  */
 
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Row, Col } from 'tinper-bee';
-import axios from 'axios';
-import { timestampToDate, descriptionToText } from './common';
+import React, { Component } from 'react';
+import { Table } from 'tinper-bee';
+import { descriptionToText, sendBpmTaskAJAX, timestampToDate } from './common';
 const propTypes = {
     processDefinitionId: PropTypes.string,
-    processInstanceId: PropTypes.string,
-    host: PropTypes.string
+    processInstanceId: PropTypes.string
 };
 
 class BpmTable extends Component {
@@ -77,9 +75,8 @@ class BpmTable extends Component {
         ];
     }
     componentDidMount = async () => {
-        let { processDefinitionId, processInstanceId, host } = this.props;
-        let hisTasklist = `${host}/eiap-plus/process/hisTasklist`;
-        let hisTasklistData = await axios.post(hisTasklist, {
+        let { processDefinitionId, processInstanceId } = this.props;
+        let hisTasklistData = await sendBpmTaskAJAX('hisTasklist', {
             processDefinitionId,
             processInstanceId
         });
@@ -99,7 +96,6 @@ class BpmTable extends Component {
 BpmTable.propTypes = propTypes;
 BpmTable.defaultProps = {
     processDefinitionId: "eiap508870:4:c3bc57e8-631a-11e8-8d04-0686c4000fcf",
-    processInstanceId: "d5c3ab59-631a-11e8-8d04-0686c4000fcf",
-    host: ""
+    processInstanceId: "d5c3ab59-631a-11e8-8d04-0686c4000fcf"
 }
 export default BpmTable;

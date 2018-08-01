@@ -62,9 +62,8 @@ import { BpmWrap } from 'yyuap-bpm';
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
-1|host|string|请求流程图的接口前缀一般不需要设置默认走本地部署服务
-2|processDefinitionId|string|流程图服务必备参数
-3|processInstanceId|string|流程图服务必备参数
+1|processDefinitionId|string|流程图服务必备参数
+2|processInstanceId|string|流程图服务必备参数
 
 ##### BpmTaskApproval
 
