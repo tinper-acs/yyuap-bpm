@@ -27,7 +27,7 @@ class Demo extends Component {
                 <BpmTaskApprovalWrap
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}
-                    appType="2"
+                    appType="1"
                     id="3be26f2debb442d9b5f8012ba40c3fa3"
                 />
                 <BpmFlowChart

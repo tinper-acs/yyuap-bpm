@@ -192,3 +192,62 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
 > 用来开发的时候测试任务中心表格，禁止用于生产阶段切记！！！
 
 
+### 5. 指南
+
+1. 审批面板内的流程图按钮事件如何编写？
+首先使用审批面板组件
+```js
+//导入流程审批面板整合组件
+import { BpmTaskApprovalWrap } from 'yyuap-bpm';
+```
+导入组件后，使用我们的组件，传入对应的props，这里主要讲解流程图按钮的后续事件如何做`onBpmFlowClick`
+```js
+<BpmTaskApprovalWrap
+    id={rowData.id}
+    onBpmFlowClick={() => { this.onClickToBPM(rowData) }}//拿到我们的行数据，主要用id
+    appType={appType}
+    onStart={this.onBpmStart}
+    onEnd={this.onBpmEnd}
+    onSuccess={this.onBpmSuccess}
+    onError={this.onBpmError}
+/>
+```
+这里面的`onBpmFlowClick`就是我们需要传入的事件，也就是点击流程图按钮，触发页面跳转带着相应的参数传给我们的流程图页面去使用
+
+编写按钮内的事件
+```js
+    // 跳转到流程图
+    onClickToBPM = (rowData) => {
+        actions.routing.push({
+            pathname: 'example-chart',//跳转到我们写好的路由流程图那里 /#/templates/example-chart?id=46652dd9900a4f0ca6372eb42a890c83
+            search: `?id=${rowData.id}`//构建我们需要的单据ID传入即可，组件内部会请求对应的参数
+        })
+    }
+```
+上面就设置好我们流程图按钮带着单据id跳转到流程图路由页面了，接下来去编写最终的流程图页面，一般来说脚手架工程里面已经写好了
+
+```js
+//导入我们需要的流程图整合组件，包含流程图和历史审批面板表格
+import { BpmWrap } from 'yyuap-bpm';
+//以及我们需要使用的参数解析组件
+import queryString from 'query-string';
+```
+然后在我们的render里就可以写组件的使用
+
+**注意这里，如果用户传入id那么processDefinitionId和processInstanceId就无需设置，它会发送请求查询该参数**
+**如果三个参数都传递了，那么就不会发送请求，直接调用最终后台接口显示流程图和历史数据表格**
+```js
+    render() {
+        let { id, processDefinitionId, processInstanceId } = queryString.parse(this.props.location.search);
+        return (
+            <div>
+                <BpmWrap
+                    id={id}
+                    processDefinitionId={processDefinitionId}
+                    processInstanceId={processInstanceId}
+                />
+            </div>
+        );
+    }
+```
+
