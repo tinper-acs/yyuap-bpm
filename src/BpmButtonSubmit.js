@@ -176,7 +176,12 @@ class BpmButtonSubmit extends Component {
         } else if (result.data.success == 'fail_global') {
             onError && onError({
                 type: 2,
-                msg: `提交发生了错误`
+                msg: reconvert(result.data.message) || '流程启动失败'
+            });
+            this.setState({
+                huanjieShow: false,
+                childRefKey: [],
+                showVal: []
             });
         }
     }
