@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 
 const propTypes = {
     checkedArray: PropTypes.array,
-    text: PropTypes.string,
     url: PropTypes.string,
     data: PropTypes.array,
     className: PropTypes.string,
@@ -24,7 +23,7 @@ class BpmButtonRecall extends Component {
     }
     handlerBtn = async () => {
         let errFlag = false;
-        let { checkedArray, onStart,onEnd, onSuccess, onError } = this.props;
+        let { checkedArray, onStart, onEnd, onSuccess, onError } = this.props;
         onStart && onStart();
         let recallArray = [];
         for (let i = 0; i < checkedArray.length; i++) {
@@ -48,29 +47,29 @@ class BpmButtonRecall extends Component {
                 onSuccess && onSuccess();
             } else {
                 onError && onError({
-                    type : 2,
-                    msg : detailMsg.data.message
+                    type: 2,
+                    msg: detailMsg.data.message
                 });
             }
         } else {
             // 弹出提示请选择数据
             onError && onError({
-                type : 1,
-                msg : `请选择单据才能撤回`
+                type: 1,
+                msg: `请选择单据才能撤回`
             });
         }
     }
     render() {
-        let { text } = this.props;
-        return (
-            <Button className={this.props.className} size="sm" onClick={this.handlerBtn} colors="primary">{text}</Button>
-        );
+        return (<span onClick={this.handlerBtn}>
+            {
+                this.props.children
+            }
+        </span>);
     }
 }
 BpmButtonRecall.propTypes = propTypes;
 BpmButtonRecall.defaultProps = {
     checkedArray: [],
-    text: "收回",
     url: "/example/ygdemo_yw_info/unsubmit",
     data: [],
     className: ""

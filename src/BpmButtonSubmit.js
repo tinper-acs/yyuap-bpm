@@ -10,7 +10,6 @@ import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
 const propTypes = {
     checkedArray: PropTypes.array,
-    text: PropTypes.string,
     funccode: PropTypes.string,
     nodekey: PropTypes.string,
     url: PropTypes.string,
@@ -186,7 +185,6 @@ class BpmButtonSubmit extends Component {
         }
     }
     render() {
-        let { text } = this.props;
         let self = this;
         let huanjieCol = [{
             title: "名称",
@@ -249,7 +247,11 @@ class BpmButtonSubmit extends Component {
             }
         }]
         return (<span>
-            <Button className={this.props.className} size="sm" onClick={this.handlerBtn} colors="primary">{text}</Button>
+            <span onClick={this.handlerBtn}>
+                {
+                    this.props.children
+                }
+            </span>
             <Modal
                 show={this.state.huanjieShow}
                 backdrop={false}
@@ -276,7 +278,6 @@ class BpmButtonSubmit extends Component {
 BpmButtonSubmit.propTypes = propTypes;
 BpmButtonSubmit.defaultProps = {
     checkedArray: [],
-    text: "提交",
     nodekey: "003",
     funccode: "react",
     url: "/example/ygdemo_yw_info/submit",

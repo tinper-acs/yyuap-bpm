@@ -51,7 +51,11 @@ class Demo extends Component {
                     }
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}
-                />
+                >
+                    <Button size='sm' shape="border" className="admin">
+                        <i className='uf uf-arrow-c-o-down'></i>提交
+                    </Button>
+                </BpmButtonSubmit>
                 <BpmButtonRecall
                     url={`/iuap_pap_quickstart/example_workorder/recall`}
                     checkedArray={
@@ -90,7 +94,11 @@ class Demo extends Component {
                             }
                         ]
                     }
-                />
+                >
+                    <Button size='sm' shape="border" className="admin">
+                        <i className='uf uf-arrow-c-o-down'></i>收回
+                    </Button>
+                </BpmButtonRecall>
             </div>
         );
     }

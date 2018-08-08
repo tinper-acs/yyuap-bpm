@@ -1,6 +1,6 @@
 {
   "name": "yyuap-bpm",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "tinper-bee bpm component",
   "main": "./lib/index.js",
   "scripts": {
@@ -28,6 +28,9 @@
     "url": "git+https://github.com/tinper-acs/yyuap-bpm.git"
   },
   "license": "MIT",
+  "peerDependencies": {
+    "yyuap-ref": "^1.x.x"
+  },
   "devDependencies": {
     "autoprefixer": "^8.6.4",
     "axios": "^0.18.0",

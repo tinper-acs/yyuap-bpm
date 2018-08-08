@@ -54,7 +54,11 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
     onError={(err) => console.log(err)}
     onStart={() => console.log('start loading')}
     onEnd={() => console.log('end loading')}
-/>
+>
+    <Button size='sm' shape="border">
+        <Icon type='uf-arrow-c-o-up' />提交
+    </Button>
+</BpmButtonSubmit>
 
 //收回流程按钮使用
 
@@ -66,7 +70,11 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
     onError={(err) => console.log(err)}
     onStart={() => console.log('start loading')}
     onEnd={() => console.log('end loading')}
-/>
+>
+    <Button size='sm' shape="border">
+        <Icon type='uf-arrow-c-o-down' />收回
+    </Button>
+</BpmButtonRecall>
 
 //流程审批面板使用
 
@@ -132,16 +140,15 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
 1|checkedArray|array|传入的选中状态数组(流程单据前面的选择框数据)
-2|text|string|按钮的文本，默认提交
-3|funccode|string|功能节点编码
-4|nodekey|string|nodekey
-5|url|string|提交流程所需要的地址，必须传入
-6|urlAssignSubmit|string|流程指派最后提交的接口
-7|onSuccess|function|提交流程业务成功后回调
-8|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
-9|className|string|传入class
-10|onStart|function|调用异步服务回调，一般用于请求Loading处理
-11|onEnd|function|结束的回调Loading
+2|funccode|string|功能节点编码
+3|nodekey|string|nodekey
+4|url|string|提交流程所需要的地址，必须传入
+5|urlAssignSubmit|string|流程指派最后提交的接口
+6|onSuccess|function|提交流程业务成功后回调
+7|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
+8|className|string|传入class
+9|onStart|function|调用异步服务回调，一般用于请求Loading处理
+10|onEnd|function|结束的回调Loading
 
 
 ##### BpmButtonRecall(流程收回)
@@ -149,13 +156,12 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
 1|checkedArray|array|传入的选中状态数组(流程单据前面的选择框数据)
-2|text|string|按钮的文本，默认提交
-3|url|string|提交流程所需要的地址，必须传入
-4|onSuccess|function|提交流程业务成功后回调
-5|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
-6|className|string|传入class
-7|onStart|function|调用异步服务回调，一般用于请求Loading处理
-8|onEnd|function|结束的回调Loading
+2|url|string|提交流程所需要的地址，必须传入
+3|onSuccess|function|提交流程业务成功后回调
+4|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
+5|className|string|传入class
+6|onStart|function|调用异步服务回调，一般用于请求Loading处理
+7|onEnd|function|结束的回调Loading
 
 
 ##### BpmWrap(流程图+历史表格)
