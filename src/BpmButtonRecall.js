@@ -1,10 +1,9 @@
 /**
  * bpm 收回流程按钮
  */
-import React, { Component } from 'react';
-import { Button, Message } from 'tinper-bee';
-import { onRecall } from './common';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { onRecall } from './common';
 
 const propTypes = {
     checkedArray: PropTypes.array,
@@ -21,27 +20,41 @@ class BpmButtonRecall extends Component {
     constructor() {
         super();
     }
+    /**
+     * 收回操作事件
+     */
     handlerBtn = async () => {
-        let errFlag = false;
         let { checkedArray, onStart, onEnd, onSuccess, onError } = this.props;
-        onStart && onStart();
         let recallArray = [];
-        for (let i = 0; i < checkedArray.length; i++) {
-            if (checkedArray[i].bpmState != 0 && checkedArray[i].bpmState != null) {
-                recallArray.push({ "id": checkedArray[i].id });
-                errFlag = false;
+
+        //检查只能一条单据提交流程
+        if (checkedArray.length >= 2) {
+            onError && onError({
+                type: 2,
+                msg: `请选择单条数据收回`
+            });
+            return;
+        }
+        //操作数据至少有一个
+        if (checkedArray.length > 0) {
+            if (checkedArray[0].bpmState != 0 && checkedArray[0].bpmState != null) {
+                recallArray.push({ id: checkedArray[0].id });
             } else {
                 onError && onError({
                     type: 1,
-                    msg: `单据未提交,不能执行撤回操作`
+                    msg: `流程没有启动无法撤回`
                 });
-                errFlag = true;
             }
-        }
-        if (errFlag) {
+        } else {
+            // 弹出提示请选择数据
+            onError && onError({
+                type: 1,
+                msg: `请选择单据才能撤回`
+            });
             return;
         }
         if (recallArray.length > 0) {
+            onStart && onStart();
             let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray);
             if (detailMsg.data['success'] && detailMsg.data.success == 'success') {
                 onSuccess && onSuccess();
@@ -51,12 +64,6 @@ class BpmButtonRecall extends Component {
                     msg: detailMsg.data.message
                 });
             }
-        } else {
-            // 弹出提示请选择数据
-            onError && onError({
-                type: 1,
-                msg: `请选择单据才能撤回`
-            });
         }
     }
     render() {
