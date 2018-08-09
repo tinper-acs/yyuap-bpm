@@ -89,7 +89,7 @@ class BpmButtonSubmit extends Component {
                     //后端错误
                     onError && onError({
                         type: 2,
-                        msg: `流程启动失败`
+                        msg: reconvert(result.data.message) || '流程启动失败'
                     });
                 }
                 //当得知需要二次弹出环节面板
