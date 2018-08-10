@@ -48,8 +48,10 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
     checkedArray={[{"id":"02a128d65c47405494f8f2baf087117e"}]}
     funccode="react"
     nodekey="003"
+    refCode="newuser"
     url={`/sany_order/submit`}
     urlAssignSubmit={`/sany_order/assignSubmit`}
+    filterRefUrl="/wbalone/common/filterRef"
     onSuccess={() => console.log('success')}
     onError={(err) => console.log(err)}
     onStart={() => console.log('start loading')}
@@ -127,11 +129,12 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
 1|id|string|审批的任务ID
-2|appType|string|审批面板类型1=待审批、2=弃审
-3|onStart|function|调用异步服务回调，一般用于请求Loading处理
-4|onSuccess|function|调用后端服务成功后的回调
-5|onError|function|调用后端服务错误后的回调
-6|onEnd|function|结束的回调Loading
+2|refCode|string|参照组件需要的refCode
+3|appType|string|审批面板类型1=待审批、2=弃审
+4|onStart|function|调用异步服务回调，一般用于请求Loading处理
+5|onSuccess|function|调用后端服务成功后的回调
+6|onError|function|调用后端服务错误后的回调
+7|onEnd|function|结束的回调Loading
 
 
 
@@ -142,13 +145,15 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
 1|checkedArray|array|传入的选中状态数组(流程单据前面的选择框数据)
 2|funccode|string|功能节点编码
 3|nodekey|string|nodekey
-4|url|string|提交流程所需要的地址，必须传入
-5|urlAssignSubmit|string|流程指派最后提交的接口
-6|onSuccess|function|提交流程业务成功后回调
-7|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
-8|className|string|传入class
-9|onStart|function|调用异步服务回调，一般用于请求Loading处理
-10|onEnd|function|结束的回调Loading
+4|refCode|string|参照组件需要的refCode
+5|url|string|提交流程所需要的地址，必须传入
+6|urlAssignSubmit|string|流程指派最后提交的接口
+7|filterRefUrl|string|参照组件需要的URL
+8|onSuccess|function|提交流程业务成功后回调
+9|onError|function|提交流程业务失败后回调{type:1,msg:"错误消息"}type=1代表逻辑错误，type=2代表服务器错误
+10|className|string|传入class
+11|onStart|function|调用异步服务回调，一般用于请求Loading处理
+12|onEnd|function|结束的回调Loading
 
 
 ##### BpmButtonRecall(流程收回)
@@ -184,14 +189,15 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
 1|id|string|传入的ID(注：只传ID的话，就是单据ID组件会去请求getbillid接口拿到流程需要的参数，如果传递3个参数的话ID就是TaskID,processDefinitionId,processInstanceId)
-2|processDefinitionId|string|processDefinitionId
-3|processInstanceId|string|processInstanceId
-4|onBpmFlowClick|function|流程图按钮单击事件，一般用来给流程图页面跳转路由和参数使用
-5|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
-6|onStart|function|调用异步服务回调，一般用于请求Loading处理
-7|onSuccess|function|调用后端服务成功后的回调
-8|onError|function|调用后端服务错误后的回调
-9|onEnd|function|结束的回调Loading
+2|refCode|string|参照组件需要的refCode
+3|processDefinitionId|string|processDefinitionId
+4|processInstanceId|string|processInstanceId
+5|onBpmFlowClick|function|流程图按钮单击事件，一般用来给流程图页面跳转路由和参数使用
+6|appType|string|审批面板类型1=待审批、2=弃审、3=无显示
+7|onStart|function|调用异步服务回调，一般用于请求Loading处理
+8|onSuccess|function|调用后端服务成功后的回调
+9|onError|function|调用后端服务错误后的回调
+10|onEnd|function|结束的回调Loading
 
 ##### BpmTestCheckTable(测试用不要使用在项目里)
 
@@ -257,3 +263,7 @@ import queryString from 'query-string';
     }
 ```
 
+
+### 6. Change Log
+
+[Change Log](https://github.com/tinper-acs/yyuap-bpm/releases)

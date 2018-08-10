@@ -12,6 +12,7 @@ import refOptions from './refOptions';
 const propTypes = {
     id: PropTypes.string,
     appType: PropTypes.string,
+    refCode: PropTypes.string,
     onBpmFlowClick: PropTypes.func,
     onStart: PropTypes.func,
     onEnd: PropTypes.func,
@@ -119,7 +120,7 @@ class BpmTaskApproval extends Component {
                         isRadio: false,
                         className: '',
                         param: {//url请求参数
-                            refCode: 'newuser',
+                            refCode: this.props.refCode,
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -201,7 +202,7 @@ class BpmTaskApproval extends Component {
                         isRadio: false,
                         className: '',
                         param: {//url请求参数
-                            refCode: 'newuser',
+                            refCode: this.props.refCode,
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -266,7 +267,7 @@ class BpmTaskApproval extends Component {
                         isRadio: true,
                         className: '',
                         param: {//url请求参数
-                            refCode: 'newuser',
+                            refCode: this.props.refCode,
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -511,7 +512,8 @@ class BpmTaskApproval extends Component {
 }
 BpmTaskApproval.propTypes = propTypes;
 BpmTaskApproval.defaultProps = {
-    appType: "1"
+    appType: "1",
+    refCode: "newuser"
 }
 
 export default BpmTaskApproval;

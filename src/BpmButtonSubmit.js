@@ -15,6 +15,8 @@ const propTypes = {
     url: PropTypes.string,
     urlAssignSubmit: PropTypes.string,
     className: PropTypes.string,
+    filterRefUrl: PropTypes.string,
+    refCode: PropTypes.string,
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
     onStart: PropTypes.func,
@@ -206,12 +208,13 @@ class BpmButtonSubmit extends Component {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
                     title: '人员选择',
                     backdrop: false,
+                    hasPage: true,
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
                     isRadio: false,
-                    filterRefUrl: "/wbalone/newusernRef/filterRef",
+                    filterRefUrl: self.props.filterRefUrl,
                     className: '',
                     param: {//url请求参数
-                        refCode: 'newuser',
+                        refCode: self.props.refCode,
                         tenantId: '',
                         sysId: '',
                         transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -282,6 +285,8 @@ BpmButtonSubmit.defaultProps = {
     funccode: "react",
     url: "/example/ygdemo_yw_info/submit",
     urlAssignSubmit: "/example/ygdemo_yw_info/assignSubmit",
-    className: ""
+    className: "",
+    filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
+    refCode: "newuser"
 }
 export default BpmButtonSubmit;

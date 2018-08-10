@@ -11,6 +11,7 @@ import { billidToIds } from './common';
 
 const propTypes = {
     id: PropTypes.string,
+    refCode: PropTypes.string,
     processDefinitionId: PropTypes.string,
     processInstanceId: PropTypes.string,
     onBpmFlowClick: PropTypes.func,
@@ -68,6 +69,7 @@ class BpmTaskApprovalWrap extends Component {
                     <Col md={12}>
                         <BpmTaskApproval
                             id={this.state.id}
+                            refCode={this.props.refCode}
                             onBpmFlowClick={this.props.onBpmFlowClick}
                             processDefinitionId={this.state.processDefinitionId}
                             processInstanceId={this.state.processInstanceId}
@@ -91,6 +93,7 @@ class BpmTaskApprovalWrap extends Component {
 BpmTaskApprovalWrap.propTypes = propTypes;
 BpmTaskApprovalWrap.defaultProps = {
     id: "",
-    appType: "1"
+    appType: "1",
+    refCode: "newuser"
 }
 export default BpmTaskApprovalWrap;
