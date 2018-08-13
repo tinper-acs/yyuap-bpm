@@ -87,7 +87,7 @@ class BpmTable extends Component {
     render() {
         return (<Table
             bordered
-            emptyText={() => <span>暂时没有数据</span>}
+            emptyText={() => <span>暂时没有流程历史数据</span>}
             columns={this.columns}
             data={this.state.data}
         />);

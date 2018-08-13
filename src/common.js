@@ -67,8 +67,10 @@ export const descriptionToText = (vApproveType) => {
         return '终止';
     }
     if (vApproveType == 'withdraw') {
-        //return  '弃审'   ;
         return '删除';
+    }
+    if (vApproveType == 'postCompleted') {
+        return '审批';
     }
 }
 
@@ -276,30 +278,26 @@ export const approvetypeToText = (type) => {
     switch (type) {
         case 'agree':
             return '审批同意';
-            break;
         case 'unagree':
             return '审批不同意';
-            break;
         case 'rejectToActivity':
             return '驳回到环节';
-            break;
         case 'rejectToBillMaker':
             return '驳回到制单人';
-            break;
         case 'signAdd':
             return '加签';
-            break;
         case 'delegate':
             return '改派';
-            break;
         case 'withdraw':
             return '弃审';
-            break;
         default:
             break;
     }
 }
 
+/**
+ * Unicode编码转换
+ */
 export const reconvert = (str) => {
     str = str.replace(/(\\u)(\w{1,4})/gi, function ($0) {
         return (String.fromCharCode(parseInt((escape($0).replace(/(%5Cu)(\w{1,4})/g, "$2")), 16)));
