@@ -6,6 +6,8 @@ import BpmWrap from './BpmWrap';
 import BpmTaskApprovalWrap from './BpmTaskApprovalWrap';
 import BpmButtonSubmit from './BpmButtonSubmit';
 import BpmButtonRecall from './BpmButtonRecall';
+import BpmLinkAssign from './BpmLinkAssign';
+
 
 export {
     BpmTable,
@@ -15,5 +17,6 @@ export {
     BpmWrap,
     BpmTaskApprovalWrap,
     BpmButtonSubmit,
-    BpmButtonRecall
+    BpmButtonRecall,
+    BpmLinkAssign
 }
