@@ -32,30 +32,20 @@
     "yyuap-ref": "^1.x.x"
   },
   "devDependencies": {
-    "autoprefixer": "^8.6.4",
     "axios": "^0.18.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
-    "css-loader": "^0.28.11",
-    "less": "^3.0.4",
-    "less-loader": "^4.1.0",
-    "mini-css-extract-plugin": "^0.4.1",
-    "postcss-loader": "^2.1.5",
     "prop-types": "^15.6.1",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "style-loader": "^0.21.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "tinper-bee": "^1.5.4",
     "uba": "4.0.3",
     "uba-server-mock": "2.0.2",
     "uba-server-proxy": "2.0.3",
-    "webpack": "^4.16.3",
-    "webpack-cli": "^3.1.0",
-    "yyuap-ref": "1.0.93"
+    "yyuap-ref": "1.1.0"
   }
 }
