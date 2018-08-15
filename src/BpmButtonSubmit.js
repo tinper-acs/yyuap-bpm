@@ -17,6 +17,9 @@ const propTypes = {
     className: PropTypes.string,
     filterRefUrl: PropTypes.string,
     refCode: PropTypes.string,
+    size: PropTypes.string,
+    scrollY: PropTypes.number,
+    isOne: PropTypes.bool,
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
     onStart: PropTypes.func,
@@ -33,17 +36,18 @@ class BpmButtonSubmit extends Component {
             assignInfo: {
                 assignInfoItems: []
             },
-            obj: {},//单据数据
+            obj: [],//单据数据
             huanjieShow: false,//环节指派显示
+            huanjieList: [],
             editRowIndex: 0,
             showVal: []
         }
     }
     //提交流程按钮
     handlerBtn = async () => {
-        let { checkedArray, onStart, onEnd, onSuccess, onError } = this.props;
-        //检查只能一条单据提交流程
-        if (checkedArray.length >= 2) {
+        let { checkedArray, isOne, onStart, onEnd, onSuccess, onError } = this.props;
+        //检查是否多单据提交
+        if (isOne && checkedArray.length >= 2) {
             onError && onError({
                 type: 2,
                 msg: `请选择单条数据提交`
@@ -104,7 +108,7 @@ class BpmButtonSubmit extends Component {
                         this.setState({
                             huanjieShow: true,
                             huanjieList: result.data.detailMsg.data.assignedActivities,
-                            obj: checkedArray[0],
+                            obj: checkedArray,
                             assignInfo: {
                                 assignInfoItems: Array.from(result.data.detailMsg.data.assignedActivities, x => ({ activityId: x.id, activityName: x.name, participants: [] }))
                             }
@@ -192,18 +196,18 @@ class BpmButtonSubmit extends Component {
             title: "名称",
             dataIndex: "name",
             key: "name",
-            width: "30%"
+            width: "40%"
         },
         {
             title: "编码",
             dataIndex: "id",
             key: "id",
-            width: "30%"
+            width: "40%"
         }, {
             title: "指派",
             dataIndex: "1",
             key: "1",
-            width: "30%",
+            width: "20%",
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
                     title: '人员选择',
@@ -256,6 +260,7 @@ class BpmButtonSubmit extends Component {
                 }
             </span>
             <Modal
+                size={this.props.size}
                 show={this.state.huanjieShow}
                 backdrop={false}
                 enforceFocus={false}
@@ -265,6 +270,8 @@ class BpmButtonSubmit extends Component {
                 </Modal.Header>
                 <Modal.Body>
                     <Table
+                        scroll={{ y: this.props.scrollY }}
+                        emptyText={() => (<span>暂无环节</span>)}
                         rowKey={record => record.id}
                         columns={huanjieCol}
                         data={this.state.huanjieList}
@@ -287,6 +294,9 @@ BpmButtonSubmit.defaultProps = {
     urlAssignSubmit: "/example/ygdemo_yw_info/assignSubmit",
     className: "",
     filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
-    refCode: "newuser"
+    refCode: "newuser",
+    size: "",
+    scrollY: 270,
+    isOne: false
 }
 export default BpmButtonSubmit;

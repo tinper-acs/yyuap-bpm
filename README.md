@@ -154,6 +154,9 @@ import { BpmButtonSubmit,BpmButtonRecall,BpmTaskApprovalWrap,BpmFlowChart,BpmTab
 10|className|string|传入class
 11|onStart|function|调用异步服务回调，一般用于请求Loading处理
 12|onEnd|function|结束的回调Loading
+13|size|string|指派弹出modal的尺寸`sm`,`lg`,`xlg`
+14|scrollY|number|指派演出modal内的表格滚动高度
+15|isOne|bool|是否为一条单据提交默认是多条提交
 
 
 ##### BpmButtonRecall(流程收回)
