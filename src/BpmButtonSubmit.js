@@ -4,10 +4,11 @@
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Button, Modal, Table } from 'tinper-bee';
+import { Button, Modal, Table ,Row,Label,Checkbox } from 'tinper-bee';
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
+import './bpm.less';
 const propTypes = {
     checkedArray: PropTypes.array,
     funccode: PropTypes.string,
@@ -39,8 +40,12 @@ class BpmButtonSubmit extends Component {
             obj: [],//单据数据
             huanjieShow: false,//环节指派显示
             huanjieList: [],
+            chaosongShow:false,//抄送显示
             editRowIndex: 0,
-            showVal: []
+            showVal: [],
+            copyusers:[],   //抄送数据
+            copyuserShowVal:[], //抄送显示
+            intersection:false  //是否交集
         }
     }
     //提交流程按钮
@@ -107,6 +112,7 @@ class BpmButtonSubmit extends Component {
                         //更新环节指派数据
                         this.setState({
                             huanjieShow: true,
+                            chaosongShow:true,
                             huanjieList: result.data.detailMsg.data.assignedActivities,
                             obj: checkedArray,
                             assignInfo: {
@@ -136,6 +142,7 @@ class BpmButtonSubmit extends Component {
     closeHuanjie = () => {
         this.setState({
             huanjieShow: false,
+            chaosongShow:false,
             childRefKey: [],
             showVal: []
         });
@@ -158,13 +165,21 @@ class BpmButtonSubmit extends Component {
     //选择完所有加签后的确定事件
     huanjieHandlerOK = async () => {
         let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
-        let { processDefineCode, assignInfo, obj } = this.state;
+        let { processDefineCode, assignInfo, obj,copyusers,intersection } = this.state;
+        let users = Array.from(copyusers[3], x => ({ id: x ,type:`USER`}));
+        let usergroup =Array.from(copyusers[2], x => ({ id: x ,type:`USERGROUP`}));
+        let posts =Array.from(copyusers[1], x => ({ id: x ,type:`POSTS`}));
+        let depts =Array.from(copyusers[0], x => ({ id: x ,type:`DEPTS`}));
+        copyusers = users.concat(usergroup,posts,depts);
         //加载事件
         onStart && onStart();
         let result = await axios.post(urlAssignSubmit, {
             processDefineCode,
             assignInfo,
-            obj
+            obj,
+            copyusers,
+            intersection
+
         }).catch((e) => {
             onError && onError({
                 type: 2,
@@ -175,6 +190,7 @@ class BpmButtonSubmit extends Component {
             onSuccess && onSuccess();
             this.setState({
                 huanjieShow: false,
+                chaosongShow:false,
                 childRefKey: [],
                 showVal: []
             });
@@ -185,10 +201,14 @@ class BpmButtonSubmit extends Component {
             });
             this.setState({
                 huanjieShow: false,
+                chaosongShow:false,
                 childRefKey: [],
                 showVal: []
             });
         }
+    }
+    changeCheck=()=> {
+        this.setState({intersection:!this.state.intersection});
     }
     render() {
         let self = this;
@@ -210,7 +230,7 @@ class BpmButtonSubmit extends Component {
             width: "20%",
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
-                    title: '人员选择',
+                    title: '指派人员选择',
                     backdrop: false,
                     hasPage: true,
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
@@ -253,6 +273,150 @@ class BpmButtonSubmit extends Component {
                 })} />
             }
         }]
+        let organRef ={
+            title: '抄送组织选择',
+            backdrop: false,
+            hasPage: true,
+            refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            isRadio: false,
+            filterRefUrl: self.props.filterRefUrl,
+            className: '',
+            param: {//url请求参数
+                refCode: self.props.organrefCode,
+                tenantId: '',
+                sysId: '',
+                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+            },
+            //选择中的数据
+            keyList: self.state.copyusers[0]?self.state.copyusers[0]:[],
+            //保存回调sels选中的行数据showVal显示的字
+            onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                console.log(sels);
+                var temp = sels.map(v => v.id);
+                //显示值
+                let copyuserShowVal = self.state.copyuserShowVal.slice();
+                copyuserShowVal[0] = showVal;
+                //选中的值
+                let copyusers = self.state.copyusers.slice();
+                copyusers[0] = temp;
+                self.setState({
+                    copyusers: copyusers,
+                    copyuserShowVal: copyuserShowVal,
+
+                });
+            },
+            showVal: self.state.copyuserShowVal[0],
+            showKey: 'refname',
+            verification: false
+        }
+        let positonRef ={
+            title: '抄送岗位选择',
+            backdrop: false,
+            hasPage: true,
+            refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            isRadio: false,
+            filterRefUrl: self.props.filterRefUrl,
+            className: '',
+            param: {//url请求参数
+                refCode: self.props.positonrefCode,
+                tenantId: '',
+                sysId: '',
+                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+            },
+            //选择中的数据
+            keyList: self.state.copyusers[1]?self.state.copyusers[1]:[],
+            //保存回调sels选中的行数据showVal显示的字
+            onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                console.log(sels);
+                var temp = sels.map(v => v.id);
+                //显示值
+                let copyuserShowVal = self.state.copyuserShowVal.slice();
+                copyuserShowVal[1] = showVal;
+                //选中的值
+                let copyusers = self.state.copyusers.slice();
+                copyusers[1] = temp;
+                self.setState({
+                    copyusers: copyusers,
+                    copyuserShowVal: copyuserShowVal,
+
+                });
+            },
+            showVal: self.state.copyuserShowVal[1],
+            showKey: 'refname',
+            verification: false
+        }
+        let roleRef={
+            title: '抄送角色选择',
+            backdrop: false,
+            hasPage: true,
+            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            isRadio: false,
+            filterRefUrl: self.props.filterRefUrl,
+            className: '',
+            param: {//url请求参数
+                refCode: self.props.refCode,
+                tenantId: '',
+                sysId: '',
+                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+            },
+            //选择中的数据
+            keyList: self.state.copyusers[2]?self.state.copyusers[2]:[],
+            //保存回调sels选中的行数据showVal显示的字
+            onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                console.log(sels);
+                var temp = sels.map(v => v.id);
+                //显示值
+                let copyuserShowVal = self.state.copyuserShowVal.slice();
+                copyuserShowVal[2] = showVal;
+                //选中的值
+                let copyusers = self.state.copyusers.slice();
+                copyusers[2] = temp;
+                self.setState({
+                    copyusers: copyusers,
+                    copyuserShowVal: copyuserShowVal,
+
+                });
+            },
+            showVal: self.state.copyuserShowVal[2],
+            showKey: 'refname',
+            verification: false
+        }
+        let userRef ={
+            title: '抄送人员选择',
+            backdrop: false,
+            hasPage: true,
+            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            isRadio: false,
+            filterRefUrl: self.props.filterRefUrl,
+            className: '',
+            param: {//url请求参数
+                refCode: self.props.refCode,
+                tenantId: '',
+                sysId: '',
+                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+            },
+            //选择中的数据
+            keyList: self.state.copyusers[3]?self.state.copyusers[3]:[],
+            //保存回调sels选中的行数据showVal显示的字
+            onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                console.log(sels);
+                var temp = sels.map(v => v.id);
+                //显示值
+                let copyuserShowVal = self.state.copyuserShowVal.slice();
+                copyuserShowVal[3] = showVal;
+                //选中的值
+                let copyusers = self.state.copyusers.slice();
+                copyusers[3] = temp;
+                self.setState({
+                    copyusers: copyusers,
+                    copyuserShowVal: copyuserShowVal,
+
+                });
+            },
+            showVal: self.state.copyuserShowVal[3],
+            showKey: 'refname',
+            verification: false
+        }
         return (<span>
             <span onClick={this.handlerBtn}>
                 {
@@ -261,25 +425,53 @@ class BpmButtonSubmit extends Component {
             </span>
             <Modal
                 size={this.props.size}
-                show={this.state.huanjieShow}
+                show={this.state.huanjieShow||this.state.chaosongShow}
                 backdrop={false}
                 enforceFocus={false}
                 onHide={this.closeHuanjie}>
                 <Modal.Header closeButton>
-                    <Modal.Title> 环节指派 </Modal.Title>
+                    <Modal.Title> {this.state.huanjieShow?'环节指派':'抄送'}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                {this.state.huanjieShow?<Modal.Body>
                     <Table
-                        scroll={{ y: this.props.scrollY }}
-                        emptyText={() => (<span>暂无环节</span>)}
                         rowKey={record => record.id}
                         columns={huanjieCol}
                         data={this.state.huanjieList}
+                        scroll={{ x: "100%", y: 240 }}
                     />
-                </Modal.Body>
+                </Modal.Body>:""}
+                {this.state.huanjieShow?
+                <Modal.Header>
+                    <Modal.Title> 抄送 </Modal.Title>
+                </Modal.Header>:""}
+                {this.state.chaosongShow?
+                    <Modal.Body>
+                        <Row>
+                            <Label className={`refLabel`}>按部门:</Label>
+                            <div className={`refcon`}>
+                                <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),organRef)} />
+                            </div>
+                            <Label className={`refLabel`}>按岗位:</Label>
+                            <div className={`refcon`}>
+                                <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),positonRef)} />
+                            </div>
+                        </Row>
+                        <Row  style={{'marginTop':'15px','marginBottom':'15px'}}>
+                            <Label className={`refLabel`}>按角色:</Label>
+                            <div className={`refcon`}>
+                                <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),roleRef)} />
+                            </div>
+                            <Label className={`refLabel`}>按用户:</Label>
+                            <div className={`refcon`}>
+                                <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />
+                            </div>
+                        </Row>
+                        <Checkbox className={`intersection`} checked={this.state.intersection} onChange={this.changeCheck}>是否交集</Checkbox>
+                    </Modal.Body>:""}
                 <Modal.Footer>
-                    <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.huanjieHandlerOK}> 确定 </Button>
-                    <Button onClick={this.closeHuanjie}> 关闭 </Button>
+                    <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>
+                    <Button colors="primary"  onClick={this.huanjieHandlerOK}> 确定 </Button>
+
                 </Modal.Footer>
             </Modal>
         </span>);
@@ -297,6 +489,10 @@ BpmButtonSubmit.defaultProps = {
     refCode: "newuser",
     size: "",
     scrollY: 270,
-    isOne: false
+    isOne: false,
+    organrefCode:"newdept",
+    positonrefCode:"newposition",
+    roleRef:"newrole",
+    userRef:"newuser"
 }
 export default BpmButtonSubmit;
