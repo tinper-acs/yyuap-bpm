@@ -45,7 +45,7 @@ class BpmButtonSubmit extends Component {
             showVal: [],
             copyusers:[],   //抄送数据
             copyuserShowVal:[], //抄送显示
-            intersection:false  //是否交集
+            intersection:true  //是否交集
         }
     }
     //提交流程按钮
@@ -166,11 +166,11 @@ class BpmButtonSubmit extends Component {
     huanjieHandlerOK = async () => {
         let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
         let { processDefineCode, assignInfo, obj,copyusers,intersection } = this.state;
-        let users = Array.from(copyusers[3], x => ({ id: x ,type:`USER`}));
-        let usergroup =Array.from(copyusers[2], x => ({ id: x ,type:`USERGROUP`}));
-        let posts =Array.from(copyusers[1], x => ({ id: x ,type:`POSTS`}));
-        let depts =Array.from(copyusers[0], x => ({ id: x ,type:`DEPTS`}));
-        copyusers = users.concat(usergroup,posts,depts);
+        let arr=[];
+        copyusers.map(function(value) {
+            arr=arr.concat(value);
+        });
+        copyusers=arr;
         //加载事件
         onStart && onStart();
         let result = await axios.post(urlAssignSubmit, {
@@ -274,9 +274,10 @@ class BpmButtonSubmit extends Component {
             }
         }]
         let organRef ={
-            title: '抄送组织选择',
+            title: '抄送部门选择',
             backdrop: false,
             hasPage: true,
+            multiple:true,
             refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: false,
             filterRefUrl: self.props.filterRefUrl,
@@ -298,7 +299,7 @@ class BpmButtonSubmit extends Component {
                 copyuserShowVal[0] = showVal;
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
-                copyusers[0] = temp;
+                copyusers[0]=Array.from(temp, x => ({ id: x ,type:`DEPTS`}));
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
@@ -313,6 +314,7 @@ class BpmButtonSubmit extends Component {
             title: '抄送岗位选择',
             backdrop: false,
             hasPage: true,
+            multiple:true,
             refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: false,
             filterRefUrl: self.props.filterRefUrl,
@@ -334,7 +336,7 @@ class BpmButtonSubmit extends Component {
                 copyuserShowVal[1] = showVal;
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
-                copyusers[1] = temp;
+                copyusers[1] = Array.from(temp, x => ({ id: x ,type:`POSTS`}));
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
@@ -370,7 +372,7 @@ class BpmButtonSubmit extends Component {
                 copyuserShowVal[2] = showVal;
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
-                copyusers[2] = temp;
+                copyusers[2] = Array.from(temp, x => ({ id: x ,type:`USERGROUP`}));
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
@@ -406,7 +408,7 @@ class BpmButtonSubmit extends Component {
                 copyuserShowVal[3] = showVal;
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
-                copyusers[3] = temp;
+                copyusers[3] = Array.from(temp, x => ({ id: x ,type:`USER`}));
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
