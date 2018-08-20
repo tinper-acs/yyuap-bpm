@@ -166,6 +166,7 @@ class BpmButtonSubmit extends Component {
     huanjieHandlerOK = async () => {
         let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
         let { processDefineCode, assignInfo, obj,copyusers,intersection } = this.state;
+        obj=obj[0];
         let arr=[];
         copyusers.map(function(value) {
             arr=arr.concat(value);
