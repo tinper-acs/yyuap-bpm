@@ -478,7 +478,7 @@ class BpmButtonSubmit extends Component {
                                 <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />
                             </div>
                         </Row>
-                        <Checkbox className={`intersection`} checked={this.state.intersection} onChange={this.changeCheck}>是否交集</Checkbox>
+                        <Checkbox style={{ "margin": 0}} checked={this.state.intersection} onChange={this.changeCheck}>是否交集</Checkbox>
                     </Modal.Body>:""}
                 <Modal.Footer>
                     <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>
