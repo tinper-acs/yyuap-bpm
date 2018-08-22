@@ -8,7 +8,6 @@ import { Button, Modal, Table ,Row,Label,Checkbox } from 'tinper-bee';
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
-import './bpm.less';
 const propTypes = {
     checkedArray: PropTypes.array,
     funccode: PropTypes.string,
@@ -274,6 +273,16 @@ class BpmButtonSubmit extends Component {
                 })} />
             }
         }]
+        const labelStyle={
+            "height": "30px",
+            "lineHeight": "30px",
+            "width": "10%",
+            "padding": "15px"
+        }
+        const refcon={
+            "display": "inline-block",
+            "width": "36%"
+        }
         let organRef ={
             title: '抄送部门选择',
             backdrop: false,
@@ -357,7 +366,7 @@ class BpmButtonSubmit extends Component {
             filterRefUrl: self.props.filterRefUrl,
             className: '',
             param: {//url请求参数
-                refCode: self.props.refCode,
+                refCode: self.props.roleRef,
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
@@ -450,22 +459,22 @@ class BpmButtonSubmit extends Component {
                 {this.state.chaosongShow?
                     <Modal.Body>
                         <Row>
-                            <Label className={`refLabel`}>按部门:</Label>
-                            <div className={`refcon`}>
+                            <Label style={labelStyle} className={`refLabel`}>按部门:</Label>
+                            <div style={refcon}>
                                 <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),organRef)} />
                             </div>
-                            <Label className={`refLabel`}>按岗位:</Label>
-                            <div className={`refcon`}>
+                            <Label style={labelStyle} className={`refLabel`}>按岗位:</Label>
+                            <div style={refcon}>
                                 <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),positonRef)} />
                             </div>
                         </Row>
-                        <Row  style={{'marginTop':'15px','marginBottom':'15px'}}>
-                            <Label className={`refLabel`}>按角色:</Label>
-                            <div className={`refcon`}>
+                        <Row   style={{'marginTop':'15px','marginBottom':'15px'}}>
+                            <Label style={labelStyle} className={`refLabel`}>按角色:</Label>
+                            <div style={refcon}>
                                 <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),roleRef)} />
                             </div>
-                            <Label className={`refLabel`}>按用户:</Label>
-                            <div className={`refcon`}>
+                            <Label style={labelStyle} className={`refLabel`}>按用户:</Label>
+                            <div style={refcon}>
                                 <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />
                             </div>
                         </Row>
@@ -495,7 +504,7 @@ BpmButtonSubmit.defaultProps = {
     isOne: false,
     organrefCode:"newdept",
     positonrefCode:"newposition",
-    roleRef:"newrole",
+    roleRef:"role_new_table",
     userRef:"newuser"
 }
 export default BpmButtonSubmit;
