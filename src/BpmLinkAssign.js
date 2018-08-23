@@ -21,8 +21,134 @@ const propTypes = {
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
     onStart: PropTypes.func,
-    onEnd: PropTypes.func
+    onEnd: PropTypes.func,
+    linkAssignType:PropTypes.string,
 };
+
+let huanjieCol = [{
+    title: "名称",
+    dataIndex: "name",
+    key: "name",
+    width: "40%"
+},
+{
+    title: "编码",
+    dataIndex: "id",
+    key: "id",
+    width: "40%"
+}, {
+    title: "指派",
+    dataIndex: "1",
+    key: "1",
+    width: "20%",
+    render(text, record, index) {
+        return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
+            title: '人员选择',
+            backdrop: false,
+            hasPage: true,
+            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            isRadio: false,
+            filterRefUrl: this.props.filterRefUrl,
+            className: '',
+            param: {//url请求参数
+                refCode: this.props.refCode,
+                tenantId: '',
+                sysId: '',
+                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+            },
+            //选择中的数据
+            keyList: this.state.childRefKey[index] || [],
+            //保存回调sels选中的行数据showVal显示的字 
+            onSave:(sels, showVal)=> {//showVal="12;13;管理员"
+                console.log(sels);
+                var temp = sels.map(v => v.id);
+                //显示值
+                let _showVal = this.state.showVal.slice();
+                _showVal[index] = showVal;
+                //选中的值
+                let _childRefKey = this.state.childRefKey.slice();
+                _childRefKey[index] = temp;
+                //副本原始对象
+                let sourseArray = this.state.assignInfo.assignInfoItems.slice();
+                //根据修改索引修改指定数据内容
+                sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
+                this.setState({
+                    childRefKey: _childRefKey,
+                    showVal: _showVal,
+                    assignInfo: {
+                        assignInfoItems: sourseArray
+                    }
+                });
+            },
+            showVal: this.state.showVal[index],
+            showKey: 'refname',
+            verification: false
+        })} />
+    }
+}]
+ 
+let columnsWarp = [{
+    title: "名称",
+    dataIndex: "name",
+    key: "name",
+    width: "40%"
+},
+{
+    title: "执行者",
+    dataIndex: "id",
+    key: "id",
+    width: "40%"
+}, {
+    title: "指派",
+    dataIndex: "1",
+    key: "1",
+    width: "20%",
+    render(text, record, index) {
+        return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
+            title: '人员选择',
+            backdrop: false,
+            hasPage: true,
+            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            isRadio: false,
+            filterRefUrl: this.props.filterRefUrl,
+            className: '',
+            param: {//url请求参数
+                refCode: this.props.refCode,
+                tenantId: '',
+                sysId: '',
+                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+            },
+            //选择中的数据
+            keyList: this.state.childRefKey[index] || [],
+            //保存回调sels选中的行数据showVal显示的字 
+            onSave:(sels, showVal)=> {//showVal="12;13;管理员"
+                console.log(sels);
+                var temp = sels.map(v => v.id);
+                //显示值
+                let _showVal = this.state.showVal.slice();
+                _showVal[index] = showVal;
+                //选中的值
+                let _childRefKey = this.state.childRefKey.slice();
+                _childRefKey[index] = temp;
+                //副本原始对象
+                let sourseArray = this.state.assignInfo.assignInfoItems.slice();
+                //根据修改索引修改指定数据内容
+                sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
+                this.setState({
+                    childRefKey: _childRefKey,
+                    showVal: _showVal,
+                    assignInfo: {
+                        assignInfoItems: sourseArray
+                    }
+                });
+            },
+            showVal: this.state.showVal[index],
+            showKey: 'refname',
+            verification: false
+        })} />
+    }
+}]
+
 
 class BpmLinkAssign extends Component {
     constructor() {
@@ -199,74 +325,12 @@ class BpmLinkAssign extends Component {
         }
     }
     render() {
-        let self = this;
-        let huanjieCol = [{
-            title: "名称",
-            dataIndex: "name",
-            key: "name",
-            width: "40%"
-        },
-        {
-            title: "编码",
-            dataIndex: "id",
-            key: "id",
-            width: "40%"
-        }, {
-            title: "指派",
-            dataIndex: "1",
-            key: "1",
-            width: "20%",
-            render(text, record, index) {
-                return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
-                    title: '人员选择',
-                    backdrop: false,
-                    hasPage: true,
-                    refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                    isRadio: false,
-                    filterRefUrl: self.props.filterRefUrl,
-                    className: '',
-                    param: {//url请求参数
-                        refCode: self.props.refCode,
-                        tenantId: '',
-                        sysId: '',
-                        transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                    },
-                    //选择中的数据
-                    keyList: self.state.childRefKey[index] || [],
-                    //保存回调sels选中的行数据showVal显示的字
-                    onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                        console.log(sels);
-                        var temp = sels.map(v => v.id);
-                        //显示值
-                        let _showVal = self.state.showVal.slice();
-                        _showVal[index] = showVal;
-                        //选中的值
-                        let _childRefKey = self.state.childRefKey.slice();
-                        _childRefKey[index] = temp;
-                        //副本原始对象
-                        let sourseArray = self.state.assignInfo.assignInfoItems.slice();
-                        //根据修改索引修改指定数据内容
-                        sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
-                        self.setState({
-                            childRefKey: _childRefKey,
-                            showVal: _showVal,
-                            assignInfo: {
-                                assignInfoItems: sourseArray
-                            }
-                        });
-                    },
-                    showVal: self.state.showVal[index],
-                    showKey: 'refname',
-                    verification: false
-                })} />
-            }
-        }]
         return (<Table
             loading={false}
             scroll={{ y: this.props.scrollY }}
             emptyText={() => (<span>暂无环节</span>)}
             rowKey={record => record.id}
-            columns={huanjieCol}
+            columns={linkAssignType === "linkAssignWrap"?columnsWarp:huanjieCol}
             data={this.state.huanjieList}
         />);
     }
@@ -281,6 +345,7 @@ BpmLinkAssign.defaultProps = {
     className: "",
     filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
     refCode: "newuser",
-    scrollY: 270
+    scrollY: 270,
+    linkAssignType:"linkAssign"  //普通的指派环节linkAssign，linkAssignWrap，其他指派环节
 }
 export default BpmLinkAssign;
