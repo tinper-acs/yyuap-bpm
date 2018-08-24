@@ -8,7 +8,8 @@ import { Table } from 'tinper-bee';
 import { descriptionToText, sendBpmTaskAJAX, timestampToDate } from './common';
 const propTypes = {
     processDefinitionId: PropTypes.string,
-    processInstanceId: PropTypes.string
+    processInstanceId: PropTypes.string,
+    axiosType:PropTypes.string,//默认查询历史记录
 };
 
 class BpmTable extends Component {
@@ -75,8 +76,8 @@ class BpmTable extends Component {
         ];
     }
     componentDidMount = async () => {
-        let { processDefinitionId, processInstanceId } = this.props;
-        let hisTasklistData = await sendBpmTaskAJAX('hisTasklist', {
+        let { processDefinitionId, processInstanceId ,axiosType} = this.props;
+        let hisTasklistData = await sendBpmTaskAJAX(axiosType, {
             processDefinitionId,
             processInstanceId
         });
@@ -96,6 +97,7 @@ class BpmTable extends Component {
 BpmTable.propTypes = propTypes;
 BpmTable.defaultProps = {
     processDefinitionId: "eiap508870:4:c3bc57e8-631a-11e8-8d04-0686c4000fcf",
-    processInstanceId: "d5c3ab59-631a-11e8-8d04-0686c4000fcf"
+    processInstanceId: "d5c3ab59-631a-11e8-8d04-0686c4000fcf",
+    axiosType:'hisTasklist' //默认查询历史记录
 }
 export default BpmTable;
