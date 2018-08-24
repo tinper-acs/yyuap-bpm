@@ -8,6 +8,7 @@ import { Button, Modal, Table ,Row,Label,Checkbox } from 'tinper-bee';
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
+import BpmCopyContent from "./BpmCopyContent";
 const propTypes = {
     checkedArray: PropTypes.array,
     funccode: PropTypes.string,
@@ -111,7 +112,7 @@ class BpmButtonSubmit extends Component {
                         //更新环节指派数据
                         this.setState({
                             huanjieShow: true,
-                            chaosongShow:true,
+                            chaosongShow:result.data.detailMsg.data.assignedActivities[0].properties.iscopytouser,
                             huanjieList: result.data.detailMsg.data.assignedActivities,
                             obj: checkedArray,
                             assignInfo: {
@@ -273,162 +274,8 @@ class BpmButtonSubmit extends Component {
                 })} />
             }
         }]
-        const labelStyle={
-            "height": "30px",
-            "lineHeight": "30px",
-            "width": "10%",
-            "padding": "15px"
-        }
-        const refcon={
-            "display": "inline-block",
-            "width": "36%"
-        }
-        let organRef ={
-            title: '抄送部门选择',
-            backdrop: false,
-            hasPage: true,
-            multiple:true,
-            refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
-            isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
-            className: '',
-            param: {//url请求参数
-                refCode: self.props.organrefCode,
-                tenantId: '',
-                sysId: '',
-                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-            },
-            //选择中的数据
-            keyList: self.state.copyusers[0]?self.state.copyusers[0]:[],
-            //保存回调sels选中的行数据showVal显示的字
-            onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                console.log(sels);
-                var temp = sels.map(v => v.id);
-                //显示值
-                let copyuserShowVal = self.state.copyuserShowVal.slice();
-                copyuserShowVal[0] = showVal;
-                //选中的值
-                let copyusers = self.state.copyusers.slice();
-                copyusers[0]=Array.from(temp, x => ({ id: x ,type:`DEPTS`}));
-                self.setState({
-                    copyusers: copyusers,
-                    copyuserShowVal: copyuserShowVal,
 
-                });
-            },
-            showVal: self.state.copyuserShowVal[0],
-            showKey: 'refname',
-            verification: false
-        }
-        let positonRef ={
-            title: '抄送岗位选择',
-            backdrop: false,
-            hasPage: true,
-            multiple:true,
-            refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
-            isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
-            className: '',
-            param: {//url请求参数
-                refCode: self.props.positonrefCode,
-                tenantId: '',
-                sysId: '',
-                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-            },
-            //选择中的数据
-            keyList: self.state.copyusers[1]?self.state.copyusers[1]:[],
-            //保存回调sels选中的行数据showVal显示的字
-            onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                console.log(sels);
-                var temp = sels.map(v => v.id);
-                //显示值
-                let copyuserShowVal = self.state.copyuserShowVal.slice();
-                copyuserShowVal[1] = showVal;
-                //选中的值
-                let copyusers = self.state.copyusers.slice();
-                copyusers[1] = Array.from(temp, x => ({ id: x ,type:`POSTS`}));
-                self.setState({
-                    copyusers: copyusers,
-                    copyuserShowVal: copyuserShowVal,
 
-                });
-            },
-            showVal: self.state.copyuserShowVal[1],
-            showKey: 'refname',
-            verification: false
-        }
-        let roleRef={
-            title: '抄送角色选择',
-            backdrop: false,
-            hasPage: true,
-            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-            isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
-            className: '',
-            param: {//url请求参数
-                refCode: self.props.roleRef,
-                tenantId: '',
-                sysId: '',
-                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-            },
-            //选择中的数据
-            keyList: self.state.copyusers[2]?self.state.copyusers[2]:[],
-            //保存回调sels选中的行数据showVal显示的字
-            onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                console.log(sels);
-                var temp = sels.map(v => v.id);
-                //显示值
-                let copyuserShowVal = self.state.copyuserShowVal.slice();
-                copyuserShowVal[2] = showVal;
-                //选中的值
-                let copyusers = self.state.copyusers.slice();
-                copyusers[2] = Array.from(temp, x => ({ id: x ,type:`USERGROUP`}));
-                self.setState({
-                    copyusers: copyusers,
-                    copyuserShowVal: copyuserShowVal,
-
-                });
-            },
-            showVal: self.state.copyuserShowVal[2],
-            showKey: 'refname',
-            verification: false
-        }
-        let userRef ={
-            title: '抄送人员选择',
-            backdrop: false,
-            hasPage: true,
-            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-            isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
-            className: '',
-            param: {//url请求参数
-                refCode: self.props.refCode,
-                tenantId: '',
-                sysId: '',
-                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-            },
-            //选择中的数据
-            keyList: self.state.copyusers[3]?self.state.copyusers[3]:[],
-            //保存回调sels选中的行数据showVal显示的字
-            onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                console.log(sels);
-                var temp = sels.map(v => v.id);
-                //显示值
-                let copyuserShowVal = self.state.copyuserShowVal.slice();
-                copyuserShowVal[3] = showVal;
-                //选中的值
-                let copyusers = self.state.copyusers.slice();
-                copyusers[3] = Array.from(temp, x => ({ id: x ,type:`USER`}));
-                self.setState({
-                    copyusers: copyusers,
-                    copyuserShowVal: copyuserShowVal,
-
-                });
-            },
-            showVal: self.state.copyuserShowVal[3],
-            showKey: 'refname',
-            verification: false
-        }
         return (<span>
             <span onClick={this.handlerBtn}>
                 {
@@ -449,7 +296,7 @@ class BpmButtonSubmit extends Component {
                         rowKey={record => record.id}
                         columns={huanjieCol}
                         data={this.state.huanjieList}
-                        scroll={{ x: "100%", y: 240 }}
+                        scroll={{ x: "100%", y: 200 }}
                     />
                 </Modal.Body>:""}
                 {this.state.huanjieShow?
@@ -458,27 +305,15 @@ class BpmButtonSubmit extends Component {
                 </Modal.Header>:""}
                 {this.state.chaosongShow?
                     <Modal.Body>
-                        <Row>
-                            <Label style={labelStyle} className={`refLabel`}>按部门:</Label>
-                            <div style={refcon}>
-                                <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),organRef)} />
-                            </div>
-                            <Label style={labelStyle} className={`refLabel`}>按岗位:</Label>
-                            <div style={refcon}>
-                                <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),positonRef)} />
-                            </div>
-                        </Row>
-                        <Row   style={{'marginTop':'15px','marginBottom':'15px'}}>
-                            <Label style={labelStyle} className={`refLabel`}>按角色:</Label>
-                            <div style={refcon}>
-                                <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),roleRef)} />
-                            </div>
-                            <Label style={labelStyle} className={`refLabel`}>按用户:</Label>
-                            <div style={refcon}>
-                                <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />
-                            </div>
-                        </Row>
-                        <Checkbox style={{ "margin": 0}} checked={this.state.intersection} onChange={this.changeCheck}>是否交集</Checkbox>
+                        <BpmCopyContent
+                            onCopyusersChange={(s)=>{
+                                self.setState({copyusers:s})
+                            }}
+                            {...self.props}
+                            onintersectionChange={(s)=>{
+                                self.setState({intersection:s});
+                            }}
+                        />
                     </Modal.Body>:""}
                 <Modal.Footer>
                     <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>

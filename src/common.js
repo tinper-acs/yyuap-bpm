@@ -119,6 +119,8 @@ export const sendBpmTaskAJAX = (type, data) => {
                 processDefinitionId: data.processDefinitionId,
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId,
+                copyusers:data.copyusers,
+                intersection:data.intersection
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
@@ -129,6 +131,8 @@ export const sendBpmTaskAJAX = (type, data) => {
                 processDefinitionId: data.processDefinitionId,
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId,
+                copyusers:data.copyusers,
+                intersection:data.intersection
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
@@ -148,7 +152,9 @@ export const sendBpmTaskAJAX = (type, data) => {
                 approvetype: data.approvetype,
                 comment: data.comment,
                 processInstanceId: data.processInstanceId,
-                taskId: data.taskId
+                taskId: data.taskId,
+                copyusers:data.copyusers,
+                intersection:data.intersection
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
@@ -207,7 +213,9 @@ export const sendBpmTaskAJAX = (type, data) => {
                 comment: data.comment,
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId,
-                userIds: data.userIds
+                userIds: data.userIds,
+                copyusers:data.copyusers,
+                intersection:data.intersection
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })
@@ -217,7 +225,9 @@ export const sendBpmTaskAJAX = (type, data) => {
                 comment: data.comment,
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId,
-                userId: data.userId
+                userId: data.userId,
+                copyusers:data.copyusers,
+                intersection:data.intersection
             }).catch((e) => {
                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             })

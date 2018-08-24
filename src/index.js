@@ -7,6 +7,8 @@ import BpmTaskApprovalWrap from './BpmTaskApprovalWrap';
 import BpmButtonSubmit from './BpmButtonSubmit';
 import BpmButtonRecall from './BpmButtonRecall';
 import BpmLinkAssign from './BpmLinkAssign';
+import BpmCopyContent from './BpmCopyContent';
+import BpmTaskCopyPanel from '../lib/BpmTaskCopyPanel';
 
 
 export {
@@ -18,5 +20,7 @@ export {
     BpmTaskApprovalWrap,
     BpmButtonSubmit,
     BpmButtonRecall,
-    BpmLinkAssign
+    BpmLinkAssign,
+    BpmCopyContent,
+    BpmTaskCopyPanel
 }

@@ -4,20 +4,22 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Button, Col, Message, Modal, Radio, Row, Table } from 'tinper-bee';
+import { Button, Col, Message, Modal, Radio, Row, Table,Select,FormControl} from 'tinper-bee';
 import createModal from 'yyuap-ref';
 import { approvetypeToText, sendBpmTaskAJAX } from './common';
 import refOptions from './refOptions';
-
+import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 const propTypes = {
     id: PropTypes.string,
     appType: PropTypes.string,
     refCode: PropTypes.string,
+    properties:PropTypes.object,
     onBpmFlowClick: PropTypes.func,
     onStart: PropTypes.func,
     onEnd: PropTypes.func,
     onSuccess: PropTypes.func,
-    onError: PropTypes.func
+    onError: PropTypes.func,
+    onChangestate:PropTypes.func
 };
 
 class BpmTaskApproval extends Component {
@@ -29,12 +31,14 @@ class BpmTaskApproval extends Component {
             processDefinitionId: props.processDefinitionId,
             processInstanceId: props.processInstanceId,
             taskId: props.id,
-            activityId: "markerbill",
+            activityId: "",
+            activityName:"",
             rejectToActivityShow: false,
             rejectlist: [],
             selectedRow: [],
             userIds: [],
-            userId: null,
+            userId: [],
+            userName:[],
             HuoDongID: "",//新版活动ID
             HuoDongName: ""//新版活动名字
         }
@@ -62,284 +66,42 @@ class BpmTaskApproval extends Component {
             this.setState({
                 approvetype: "withdraw",
                 comment: approvetypeToText("withdraw")
+            },()=>{
+                this.props.onChangestate(this.state);
             });
         }
     }
 
     //选择审批的类型
     handleChange = (value) => {
-        this.setState({ approvetype: value, comment: approvetypeToText(value) });
+        this.setState({
+            approvetype: value,
+            comment: approvetypeToText(value) ,
+            userName:"",
+            userIds: [],
+            userId: [],
+        },()=>{
+            this.props.onChangestate(this.state);
+        });
     }
     //绑定审批意见
     handlerCommentChange = (e) => {
-        this.setState({ comment: e.target.value });
+        this.setState({ comment: e.target.value },()=>{
+            this.props.onChangestate(this.state);
+        },()=>{
+            this.props.onChangestate(this.state);
+        });
     }
     //审批提交
-    handlerSubmitBtn = async () => {
-        let { onStart, onEnd, onSuccess, onError } = this.props;
-        if (this.state.comment == "") {
-            Message.create({ content: '不能为空', color: 'danger', position: 'top' });
-            return;
-        }
-        onStart && onStart();
-        //第一次请求审批，有的是直接一次请求，有的需要二次请求
-        let result = await sendBpmTaskAJAX(this.state.approvetype, this.state);
-        //检测需要二次请求并弹出Modal审批
-        switch (this.state.approvetype) {
-            case 'agree'://同意
-            case 'unagree'://不同意
-                //普通同意操作，没有后续操作，直接成功
-                if (result.data.flag == 'success') {
-                    Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
-                } else if (result.data.flag == 'faile') {
-                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: result.data.msg
-                    });
-                }
-                //普通同意操作，有后续操作，有加签人员判断
-                if (result.data.assignAble) {
-                    //判断是否有最新的活动id和name
-                    if (result.data.assignList.length > 0) {
-                        this.setState({
-                            HuoDongID: result.data.assignList[0].activityId,
-                            HuoDongName: result.data.assignList[0].activityName
-                        });
-                    }
-                    // onStart && onStart();
-                    //可以是加签操作，拉取加签请求
-                    onEnd && onEnd();
-                    //配置参照需要参数
-                    var options = Object.assign(JSON.parse(refOptions), {
-                        title: '人员选择',
-                        backdrop: false,
-                        hasPage: true,
-                        refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                        isRadio: false,
-                        className: '',
-                        param: {//url请求参数
-                            refCode: this.props.refCode,
-                            tenantId: '',
-                            sysId: '',
-                            transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                        },
-                        //选择中的数据
-                        keyList: [],
-                        //保存回调sels选中的行数据showVal显示的字
-                        onSave: async (sels, showVal) => {//showVal="12;13;管理员"
-                            //回调
-                            onStart && onStart();
-                            //同意后续的加签
-                            //TO DO:重构URL
-                            var agreeeMsg = await sendBpmTaskAJAX('commit', {
-                                activityId: this.state.HuoDongID,
-                                activityName: this.state.HuoDongName,
-                                comment: this.state.comment,
-                                taskId: this.state.taskId,
-                                approvetype: this.state.approvetype,
-                                processInstanceId: this.state.processInstanceId,
-                                participants: Array.from(sels, x => ({ id: x.id }))
-                            }).catch((e) => {
-                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: `服务器请求出错`
-                                });
-                            });
-                            //确认加签后的处理
-                            if (agreeeMsg.data.flag == 'success') {
-                                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'info', position: 'top' });
-                                this.setState({
-                                    rejectlist: [],
-                                    selectedRow: []
-                                });
-                                onSuccess && onSuccess();
-                            } else {
-                                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: agreeeMsg.data.msg
-                                });
-                            }
-                        },
-                        showVal: '',
-                        showKey: 'refname',
-                        verification: false
-                    });
-                    //弹出参照组件
-                    createModal(options);
-                }
-                break;
-            //驳回到环节
-            case 'rejectToActivity':
-                if (result.data.flag == 'success') {
-                    onEnd && onEnd();
-                    this.setState({
-                        rejectlist: result.data.rejectlist,
-                        selectedRow: new Array(result.data.rejectlist.length),
-                        rejectToActivityShow: true
-                    });
-                } else {
-                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: result.data.msg
-                    });
-                }
-                break;
-            //加签
-            case 'signAdd':
-                if (result.data.status == 1) {
-                    onEnd && onEnd();
-                    //配置参照需要参数
-                    var options = Object.assign(JSON.parse(refOptions), {
-                        title: '加签人员',
-                        backdrop: false,
-                        hasPage: true,
-                        refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                        isRadio: false,
-                        className: '',
-                        param: {//url请求参数
-                            refCode: this.props.refCode,
-                            tenantId: '',
-                            sysId: '',
-                            transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                        },
-                        //选择中的数据
-                        keyList: [],
-                        //保存回调sels选中的行数据showVal显示的字
-                        onSave: async (sels, showVal) => {//showVal="12;13;管理员"
-                            //回调
-                            onStart && onStart();
-                            //TO DO:重构URL
-                            //执行最终加签操作
-                            var signAddMsg = await sendBpmTaskAJAX('signaddtask', {
-                                approvetype: this.state.approvetype,
-                                comment: this.state.comment,
-                                processInstanceId: this.state.processInstanceId,
-                                taskId: this.state.taskId,
-                                userIds: Array.from(sels, x => x.id)
-                            }).catch((e) => {
-                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: `服务器请求出错`
-                                });
-                            });
-                            //判断加签最终是否成功
-                            if (signAddMsg.data.flag == 'success') {
-                                Message.create({ content: `${signAddMsg.data.msg}`, color: 'info', position: 'top' });
-                                onSuccess && onSuccess();
-                            } else {
-                                Message.create({ content: `${signAddMsg.data.msg}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: signAddMsg.data.msg
-                                });
-                            }
-                        },
-                        showVal: '',
-                        showKey: 'refname',
-                        verification: false
-                    });
-                    //弹出参照组件
-                    createModal(options);
-                } else {
-                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: result.data.msg
-                    });
-                }
-                break;
-            //改派
-            case 'delegate':
-                if (result.data.status == 1) {
-                    onEnd && onEnd();
-                    //配置参照需要参数
-                    var options = Object.assign(JSON.parse(refOptions), {
-                        title: '改派人员',
-                        backdrop: false,
-                        hasPage: true,
-                        refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                        isRadio: true,
-                        className: '',
-                        param: {//url请求参数
-                            refCode: this.props.refCode,
-                            tenantId: '',
-                            sysId: '',
-                            transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                        },
-                        //选择中的数据
-                        keyList: [],
-                        //保存回调sels选中的行数据showVal显示的字
-                        onSave: async (sels, showVal) => {//showVal="12;13;管理员"
-                            //回调
-                            onStart && onStart();
-                            //TO DO:重构URL
-                            let delegateMsg = await sendBpmTaskAJAX('delegatetask', {
-                                approvetype: this.state.approvetype,
-                                comment: this.state.comment,
-                                processInstanceId: this.state.processInstanceId,
-                                taskId: this.state.taskId,
-                                userId: Array.isArray(sels) ? sels[0].id : ""
-                            }).catch((e) => {
-                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: `服务器请求出错`
-                                });
-                            });
-                            //处理后续的操作
-                            if (delegateMsg.data.flag == 'success') {
-                                Message.create({ content: `${delegateMsg.data.msg}`, color: 'info', position: 'top' });
-                                onSuccess && onSuccess();
-                            } else {
-                                Message.create({ content: `${delegateMsg.data.msg}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: delegateMsg.data.msg
-                                });
-                            }
-                        },
-                        showVal: '',
-                        showKey: 'refname',
-                        verification: false
-                    });
-                    //弹出参照组件
-                    createModal(options);
-                } else {
-                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: result.data.msg
-                    });
-                }
-                break;
 
-            //所有都不满足的话那就是只有一次请求直接给出提示
-            default:
-                if (result.data.flag == 'success') {
-                    Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
-                } else {
-                    Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
-                    onError && onError({
-                        type: 2,
-                        msg: result.data.msg
-                    });
-                }
-                break;
-        }
-    }
     //通用关闭方法
     activityModalClose = () => {
         this.setState({
             rejectToActivityShow: false,
             rejectlist: [],
             selectedRow: []
+        },()=>{
+            this.props.onChangestate(this.state);
         });
     }
     //驳回到环节的最终提交
@@ -367,6 +129,8 @@ class BpmTaskApproval extends Component {
                 rejectToActivityShow: false,
                 rejectlist: [],
                 selectedRow: []
+            },()=>{
+                this.props.onChangestate(this.state);
             });
         } else {
             Message.create({ content: `${rejectToBillMakerMsg.data.msg}`, color: 'danger', position: 'top' });
@@ -381,31 +145,105 @@ class BpmTaskApproval extends Component {
         let onBpmFlowClick = this.props.onBpmFlowClick;
         onBpmFlowClick && onBpmFlowClick();
     }
+    getDataSource=()=>{
+        let arr =[{
+            key: "同意",
+            value: "agree"
+        }];
+        let { addsignAble,rejectAble ,delegateAble,unagreeable } = this.props.properties
+        if(unagreeable)arr.push({key: "不同意", value: "unagree"})
+        if(rejectAble)arr.push({key: "驳回到环节", value: "rejectToActivity"})
+        if(addsignAble)arr.push({key: "加签", value: "signAdd"})
+        if(delegateAble)arr.push({key: "改派", value: "delegate"})
+        return arr
+    }
+    rejectToActivity= async ()=>{
+        let { onError } = this.props;
+        let result = await sendBpmTaskAJAX(this.state.approvetype, this.state);
+        if (result.data.flag == 'success'&& result.data.rejectlist.length>0) {
+            this.setState({
+                rejectlist: result.data.rejectlist,
+                selectedRow: new Array(result.data.rejectlist.length),
+                rejectToActivityShow: true
+            });
+        } else {
+            Message.create({ content: result.data.msg||'当前环节为首环节，没有可以驳回的环节', color: 'warning', position: 'top' });
+            onError && onError({
+                type: 2,
+                msg: result.data.msg||'当前环节为首环节，没有可以驳回的环节'
+            });
+        }
+    }
     render() {
+        let self = this;
+        let userRef ={
+            title:self.state.approvetype ==='delegate'?'改派人员选择':"加签人员选择",
+            backdrop: false,
+            hasPage: true,
+            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            isRadio: self.state.approvetype === 'delegate',
+            filterRefUrl: '',
+            className: '',
+            param: {//url请求参数
+                refCode: 'newuser',
+                tenantId: '',
+                sysId: '',
+                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+            },
+            //选择中的数据
+            keyList: self.state.userId,
+            //保存回调sels选中的行数据showVal显示的字
+            onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                var temp = sels.map(v => v.id);
+                //显示值
+                let userName = self.state.userName;
+                userName = showVal;
+                //选中的值
+                let userId = self.state.userId;
+                userId = temp;
+                self.setState({
+                    userId: userId,
+                    userIds:userId,
+                    userName: userName,
+
+                },()=>{
+                    self.props.onChangestate(self.state);
+                });
+            },
+            showVal: this.state.userName,
+            showKey: 'refname',
+            verification: false
+        }
         return (
             <div className="clearfix">
                 <div style={{ "padding": "0px" }}>
                     {this.props.appType == "1" && <div>
                         <Row style={{
-                            "height": "46px",
-                            "lineHeight": "46px",
+                            "margin":"8px 0",
                             "padding": "0 10px"
                         }}>
-                            <Col md={8}>
-                                <Radio.RadioGroup
-                                    name="approvetype"
-                                    selectedValue={this.state.approvetype}
-                                    onChange={this.handleChange}>
-                                    <Radio value="agree">同意</Radio>
-                                    <Radio value="unagree">不同意</Radio>
-                                    <Radio value="rejectToActivity">驳回到环节</Radio>
-                                    <Radio value="rejectToBillMaker">驳回到制单人</Radio>
-                                    <Radio value="signAdd">加签</Radio>
-                                    <Radio value="delegate">改派</Radio>
-                                </Radio.RadioGroup>
+                            <Col md={1} style={{"paddingLeft":0}}>
+                                <Select
+                                    style={{ width: '100%' }}
+                                    placeholder="请选择"
+                                    onChange={self.handleChange}
+                                    defaultValue="agree"
+                                    data={self.getDataSource()}
+                                />
                             </Col>
-                            <Col md={4} style={{ "textAlign": "right" }}>
-                                {this.props.appType == "1" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}
+                                <Col md={7} style={{"paddingLeft":0}}>
+                                    {this.state.approvetype==="signAdd" &&<RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />}{/*加签*/}
+                                    {this.state.approvetype==="delegate" &&<RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />}{/*改派*/}
+                                    {this.state.approvetype==="rejectToActivity" &&<FormControl
+                                        readOnly={true}
+                                        style={{"width":"240px"}}
+                                        placeholder={'请选择环节'}
+                                        value={this.state.activityName}
+                                        onClick={this.rejectToActivity}
+                                        onChange={this.onChange} />}{/*驳回*/}
+                                </Col>
+                            <Col md={4} style={{ "textAlign": "right","paddingRight": 0}}>
+                                {/*{this.props.appType == "1" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}*/}
                                 {this.props.appType == "1" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
                             </Col>
                         </Row>
@@ -496,13 +334,16 @@ class BpmTaskApproval extends Component {
                                 selectedRow[index] = true;
                                 this.setState({
                                     activityId: record.activityId,
+                                    activityName:record.activityName,
                                     selectedRow: selectedRow
+                                },()=>{
+                                    this.props.onChangestate(this.state);
                                 });
                             }}
                             columns={this.rejectToActivityCol} data={this.state.rejectlist} />
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button colors="danger" style={{ "marginRight": "10px" }} onClick={this.rejectToActivityOK}> 确定 </Button>
+                        <Button colors="danger" style={{ "marginRight": "10px" }} onClick={this.activityModalClose}> 确定 </Button>
                         <Button onClick={this.activityModalClose}> 关闭 </Button>
                     </Modal.Footer>
                 </Modal>
@@ -513,7 +354,15 @@ class BpmTaskApproval extends Component {
 BpmTaskApproval.propTypes = propTypes;
 BpmTaskApproval.defaultProps = {
     appType: "1",
-    refCode: "newuser"
+    refCode: "newuser",
+    properties:{
+        addSignAble:true, //可否加签
+        iscopytouser:true, //可否抄送
+        rejectAble:true, //可否驳回
+        delegateAble:true, //可否改派
+        unagreeable:true, //可否不同意
+        assignAble:true, //可否指派
+    }
 }
 
 export default BpmTaskApproval;
