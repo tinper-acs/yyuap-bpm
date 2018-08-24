@@ -8,7 +8,7 @@ import BpmButtonSubmit from './BpmButtonSubmit';
 import BpmButtonRecall from './BpmButtonRecall';
 import BpmLinkAssign from './BpmLinkAssign';
 import BpmCopyContent from './BpmCopyContent';
-import BpmTaskCopyPanel from '../lib/BpmTaskCopyPanel';
+import BpmTaskCopyPanel from './BpmTaskCopyPanel';
 
 
 export {

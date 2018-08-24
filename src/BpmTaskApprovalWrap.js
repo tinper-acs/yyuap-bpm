@@ -10,7 +10,7 @@ import { billidToIds } from './common';
 import refOptions from './refOptions';
 import createModal from 'yyuap-ref';
 import { sendBpmTaskAJAX } from './common';
-import BpmTaskCopyPanel from  '../lib/BpmTaskCopyPanel';
+import BpmTaskCopyPanel from  './BpmTaskCopyPanel';
 
 const propTypes = {
     id: PropTypes.string,
