@@ -35,7 +35,7 @@ class BpmTaskApprovalWrap extends Component {
             processInstanceId: "",
             copyusers:[], //抄送数据
             intersection:true, //是否交集
-            approvetype:"",  //审批类型
+            approvetype:"agree",  //审批类型
             comment:"审批同意", //审批内容
             activityId:"",//驳回环节id
             userIds:[],//加签用户数组
@@ -66,6 +66,7 @@ class BpmTaskApprovalWrap extends Component {
 
                 this.setState({
                     id: taskId,
+                    taskId:taskId,
                     properties:{
                         addsignAble,iscopytouser,rejectAble,delegateAble,unagreeable,assignAble
                     },
