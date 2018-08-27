@@ -199,10 +199,10 @@ class BpmTaskApproval extends Component {
                 let userName = self.state.userName;
                 userName = showVal;
                 //选中的值
-                let userId = self.state.userId;
+                let userId = self.state.userIds;
                 userId = temp;
                 self.setState({
-                    userId: userId,
+                    userId: userId[0],
                     userIds:userId,
                     userName: userName,
 
