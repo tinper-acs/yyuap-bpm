@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {  Panel,Col, Row, Button ,Label,Checkbox} from 'tinper-bee';
 import classnames from 'classnames'
 import BpmCopyContent from "./BpmCopyContent";
+import './bpm.css'
 const propTypes = {
     panelOpen:PropTypes.bool,//是否默认展开，false默认关闭
     reset:PropTypes.func,//重置的回调
@@ -41,22 +42,22 @@ class BpmTaskCopyPanel extends Component {
         let header = () => {
             return (
                 <div className="clearfix" onClick={this.open}>
-                    <span  className={'copy-panel-title'} style={{"float":"left","color": "#434A54","font-size": "14px"}}>
+                    <span  className={'copy-panel-title'} style={{"float":"left","color": "#434A54","fontSize": "14px"}}>
                         {this.props.title}
                     </span>
-                    <span  className={'copy-panel-icon'} style={{"float":"right", "color": "#1E7BE2","font-size": "14px"}}>
-                        {this.state.panelOpen ?'收起' :'展开'}
+                    <span  className={'copy-panel-icon'} style={{"float":"right", "color": "#1E7BE2","fontSize": "14px"}}>
+                        {this.state.panelOpen ? '展开':'收起'}
                         <i className={classnames({
                             'uf': true,
-                            'uf-arrow-down': this.state.panelOpen,
-                            'uf-arrow-right': !this.state.panelOpen
+                            'uf-arrow-down': !this.state.panelOpen,
+                            'uf-arrow-right': this.state.panelOpen
                         })}/>
                     </span>
                 </div>
             )
         };
         return (
-            <Panel className={classes} style={{"border-radius": "0!important","border": "none!important","border-bottom": "1px solid transparent!important"}}  header={header()}  collapsible expanded={this.state.searchOpen}>
+            <Panel className={classes} style={{"borderRadius": "0!important","border": "none!important","borderBottom": "1px solid transparent!important"}}  header={header()}  collapsible expanded={this.state.searchOpen}>
                 <div className="clearfix">
                     <BpmCopyContent onCopyusersChange={self.props.onCopyusersChange}
                         {...self.props}

@@ -182,7 +182,7 @@ class BpmTaskApproval extends Component {
             hasPage: true,
             refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: self.state.approvetype === 'delegate',
-            filterRefUrl: '',
+            filterRefUrl: '/iuap_pap_quickstart/common/filterRef',
             className: '',
             param: {//url请求参数
                 refCode: 'newuser',
@@ -284,7 +284,7 @@ class BpmTaskApproval extends Component {
                                 </Radio.RadioGroup>
                             </Col>
                             <Col md={4} style={{ "textAlign": "right" }}>
-                                {this.props.appType == "2" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}
+                                {/*{this.props.appType == "2" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}*/}
                                 {this.props.appType == "2" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
                             </Col>
                         </Row>

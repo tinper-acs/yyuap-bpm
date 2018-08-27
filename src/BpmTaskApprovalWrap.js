@@ -36,7 +36,7 @@ class BpmTaskApprovalWrap extends Component {
             copyusers:[], //抄送数据
             intersection:true, //是否交集
             approvetype:"",  //审批类型
-            comment:"", //审批内容
+            comment:"审批同意", //审批内容
             activityId:"",//驳回环节id
             userIds:[],//加签用户数组
             userId:"",//改派用户
@@ -61,7 +61,9 @@ class BpmTaskApprovalWrap extends Component {
                 });
             } else if (pID.data.taskId) {
                 let { processDefinitionId, processInstanceId, taskId } = pID.data;
+                //可否加签|可否抄送|可否驳回|可否改派|可否不同意|可否指派
                 let {currentActivity:{ properties:{ addsignAble,iscopytouser,rejectAble ,delegateAble,unagreeable,assignAble }}}= pID.data;
+
                 this.setState({
                     id: taskId,
                     properties:{
@@ -87,7 +89,7 @@ class BpmTaskApprovalWrap extends Component {
     handlerSubmitBtn =  async()=>{
         let { onStart, onEnd, onSuccess, onError } = this.props;
         if (this.state.comment == "") {
-            Message.create({ content: '不能为空', color: 'danger', position: 'top' });
+            Message.create({ content: '审批意见不能为空', color: 'danger', position: 'top' });
             return;
         }
         onStart && onStart();
@@ -291,7 +293,7 @@ class BpmTaskApprovalWrap extends Component {
                     });
                 });
                 //处理后续的操作
-                if (delegateMsg.data.flag == 'success') {
+                if (delegateMsg.data.flag === 'success') {
                     Message.create({ content: `${delegateMsg.data.msg}`, color: 'info', position: 'top' });
                     onSuccess && onSuccess();
                 } else {
@@ -299,6 +301,19 @@ class BpmTaskApprovalWrap extends Component {
                     onError && onError({
                         type: 2,
                         msg: delegateMsg.data.msg
+                    });
+                }
+                break;
+            case 'withdraw':
+                let res = await sendBpmTaskAJAX(this.state.approvetype, this.state);
+                if (res.data.flag === 'success') {
+                    Message.create({ content: res.data.msg, color: 'info', position: 'top' });
+                    onSuccess && onSuccess();
+                } else {
+                    Message.create({ content: res.data.msg, color: 'danger', position: 'top' });
+                    onError && onError({
+                        type: 2,
+                        msg: res.data.msg
                     });
                 }
                 break;
@@ -340,7 +355,7 @@ class BpmTaskApprovalWrap extends Component {
                         />
                     </Col>
                 </Row>
-                    {this.state.properties.iscopytouser && <Row>
+                    {this.state.properties.iscopytouser && this.props.appType == 1 && <Row>
                     <Col md={12}>
                         <BpmTaskCopyPanel
                             panelOpen={false}
