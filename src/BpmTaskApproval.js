@@ -222,7 +222,7 @@ class BpmTaskApproval extends Component {
                             "margin":"8px 0",
                             "padding": "0 10px"
                         }}>
-                            <Col md={1} style={{"paddingLeft":0}}>
+                            <Col md={1} xs={1} sm={1} style={{"paddingLeft":0,"paddingRight":'15px'}}>
                                 <Select
                                     style={{ width: '100%' }}
                                     placeholder="请选择"
@@ -231,18 +231,17 @@ class BpmTaskApproval extends Component {
                                     data={self.getDataSource()}
                                 />
                             </Col>
-                                <Col md={7} style={{"paddingLeft":0}}>
+                                <Col md={3} xs={3} sm={3} style={{"paddingLeft":0}}>
                                     {this.state.approvetype==="signAdd" &&<RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />}{/*加签*/}
                                     {this.state.approvetype==="delegate" &&<RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />}{/*改派*/}
                                     {this.state.approvetype==="rejectToActivity" &&<FormControl
                                         readOnly={true}
-                                        style={{"width":"240px"}}
                                         placeholder={'请选择环节'}
                                         value={this.state.activityName}
                                         onClick={this.rejectToActivity}
                                         onChange={this.onChange} />}{/*驳回*/}
                                 </Col>
-                            <Col md={4} style={{ "textAlign": "right","paddingRight": 0}}>
+                            <Col md={4} mdOffset={4} xs={4} xsOffset={4} sm={4} smOffset={4} style={{ "textAlign": "right","paddingRight": 0}}>
                                 {/*{this.props.appType == "1" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}*/}
                                 {this.props.appType == "1" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
                             </Col>

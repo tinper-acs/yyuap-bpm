@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import {  Panel,Col, Row, Button ,Label,Checkbox} from 'tinper-bee';
 import classnames from 'classnames'
 import BpmCopyContent from "./BpmCopyContent";
-import './bpm.css'
 const propTypes = {
     panelOpen:PropTypes.bool,//是否默认展开，false默认关闭
     reset:PropTypes.func,//重置的回调

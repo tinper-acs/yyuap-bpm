@@ -50,7 +50,8 @@ class BpmCopyContent extends Component {
             "height": "30px",
             "lineHeight": "30px",
             "width": "10%",
-            "padding": "15px"
+            "padding": "15px",
+            "display":"inline"
         }
         const refcon={
             "display": "inline-block",
