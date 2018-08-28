@@ -280,6 +280,14 @@ export const onRecall = (url, data) => {
         data: data
     });
 }
+/**
+ * 查询流程定义的id
+ */
+export const getByFindProcessDefinitionId = (processDefinitionKey) => {
+    return axios.get(`eiap-plus/process/latestProDefByKey?processDefinitionKey=${processDefinitionKey}&_=${Math.random()}`, {
+        params: {}
+    });
+}
 
 /**
  * 审批状态类型返回默认审批文案
