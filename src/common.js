@@ -250,6 +250,14 @@ export const queryBpmTemplateAllocate = (obj) => {
     });
 }
 /**
+ * 查询流程定义的id
+ */
+export const getByFindProcessDefinitionId = (processDefinitionKey) => {
+    return axios.get(`eiap-plus/process/latestProDefByKey?processDefinitionKey=${processDefinitionKey}&_=${Math.random()}`, {
+        params: {}
+    });  
+}
+/**
  * 提交流程
  */
 export const onCommit = (data) => {

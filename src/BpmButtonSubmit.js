@@ -6,8 +6,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Button, Modal, Table } from 'tinper-bee';
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
-import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
+import { onCommit, queryBpmTemplateAllocate, reconvert ,getByFindProcessDefinitionId} from './common';
 import refOptions from './refOptions';
+import BpmFlowChart from './BpmFlowChart';
+
 const propTypes = {
     checkedArray: PropTypes.array,
     funccode: PropTypes.string,
@@ -40,9 +42,22 @@ class BpmButtonSubmit extends Component {
             huanjieShow: false,//环节指派显示
             huanjieList: [],
             editRowIndex: 0,
-            showVal: []
+            showVal: [],
+            processDefinitionId:""
+        }
+    } 
+
+    getByProcessDefinitionId= async (processDefineCode) =>{
+        let {data:{data,flag}} = await getByFindProcessDefinitionId(processDefineCode);
+        if(data && flag === "success"){ 
+            this.setState({
+                processDefinitionId:data.id
+            })
+        }else{
+            console.log("根据流程定义key查询processDefinitionId");
         }
     }
+
     //提交流程按钮
     handlerBtn = async () => {
         let { checkedArray, isOne, onStart, onEnd, onSuccess, onError } = this.props;
@@ -80,6 +95,11 @@ class BpmButtonSubmit extends Component {
                     "processDefineCode": detailMsg.data.res_code,
                     "submitArray": checkedArray
                 }
+                if(!detailMsg.data.res_code){
+                    console.log("单据没有关联流程!");
+                    return;
+                }
+                this.getByProcessDefinitionId(detailMsg.data.res_code);
                 //得到下次需要接口用的res_code
                 this.setState({
                     processDefineCode: detailMsg.data.res_code
@@ -191,7 +211,7 @@ class BpmButtonSubmit extends Component {
         }
     }
     render() {
-        let self = this;
+        let self = this; 
         let huanjieCol = [{
             title: "名称",
             dataIndex: "name",
@@ -276,6 +296,11 @@ class BpmButtonSubmit extends Component {
                         columns={huanjieCol}
                         data={this.state.huanjieList}
                     />
+                    <BpmFlowChart
+                        processDefinitionId={this.state.processDefinitionId}
+                        // processInstanceId={"1352ad87-955e-11e8-b376-02420cbf1b08"}
+                    />
+                    
                 </Modal.Body>
                 <Modal.Footer>
                     <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.huanjieHandlerOK}> 确定 </Button>
@@ -295,7 +320,7 @@ BpmButtonSubmit.defaultProps = {
     className: "",
     filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
     refCode: "newuser",
-    size: "",
+    size: "lg",
     scrollY: 270,
     isOne: false
 }
