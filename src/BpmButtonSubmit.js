@@ -139,7 +139,7 @@ class BpmButtonSubmit extends Component {
                             huanjieList: arr,
                             obj: checkedArray,
                             assignInfo: {
-                                assignInfoItems: Array.from(result.data.detailMsg.data.assignedActivities, x => ({ activityId: x.id, activityName: x.name, participants: [] }))
+                                assignInfoItems: Array.from(arr, x => ({ activityId: x.id, activityName: x.name, participants: [] }))
                             }
                         });
                     }
