@@ -109,11 +109,12 @@ class BpmButtonSubmit extends Component {
                     if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
                         //停止事件
                         onEnd && onEnd();
+                        let arr = result.data.detailMsg.data.assignedActivities.filter( (item)=>{ return !item.properties.startactivity;});
                         //更新环节指派数据
                         this.setState({
                             huanjieShow: true,
                             chaosongShow:result.data.detailMsg.data.assignedActivities[0].properties.iscopytouser,
-                            huanjieList: result.data.detailMsg.data.assignedActivities,
+                            huanjieList: arr,
                             obj: checkedArray,
                             assignInfo: {
                                 assignInfoItems: Array.from(result.data.detailMsg.data.assignedActivities, x => ({ activityId: x.id, activityName: x.name, participants: [] }))
@@ -299,7 +300,7 @@ class BpmButtonSubmit extends Component {
                         scroll={{ x: "100%", y: 200 }}
                     />
                 </Modal.Body>:""}
-                {this.state.huanjieShow?
+                {this.state.chaosongShow?
                 <Modal.Header>
                     <Modal.Title> 抄送 </Modal.Title>
                 </Modal.Header>:""}
