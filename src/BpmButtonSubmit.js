@@ -47,7 +47,8 @@ class BpmButtonSubmit extends Component {
             copyusers:[],   //抄送数据
             copyuserShowVal:[], //抄送显示
             intersection:true, //是否交集
-            processDefinitionId:""
+            processDefinitionId:"",
+            submitStatus:true
         }
     }
     getByProcessDefinitionId= async (processDefineCode) =>{
@@ -64,6 +65,9 @@ class BpmButtonSubmit extends Component {
     //提交流程按钮
     handlerBtn = async () => {
         let { checkedArray, isOne, onStart, onEnd, onSuccess, onError } = this.props;
+        this.setState({
+            submitStatus:true
+        })
         //检查是否多单据提交
         if (isOne && checkedArray.length >= 2) {
             onError && onError({
@@ -185,7 +189,7 @@ class BpmButtonSubmit extends Component {
     huanjieHandlerOK = async () => {
         let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
         let { processDefineCode, assignInfo, obj,copyusers,intersection } = this.state;
-        obj=obj[0];
+        // obj=obj[0];
         let arr=[];
         copyusers.map(function(value) {
             arr=arr.concat(value);
@@ -230,6 +234,23 @@ class BpmButtonSubmit extends Component {
     changeCheck=()=> {
         this.setState({intersection:!this.state.intersection});
     }
+    /**
+     * 环节指派的时候，指派人必须选择，不然无法提交。
+     * @memberof BpmButtonSubmit
+     */
+    participantsValidate(sourseArray){
+        let status = true;
+        debugger;
+        sourseArray.forEach(da=>{
+            if(da.participants && da.participants.length>=1){
+                status=false;
+            }else{
+                status=true;
+            }
+        })
+        return status;
+    }
+
     render() {
         let self = this;
         let huanjieCol = [{
@@ -284,7 +305,8 @@ class BpmButtonSubmit extends Component {
                             showVal: _showVal,
                             assignInfo: {
                                 assignInfoItems: sourseArray
-                            }
+                            },
+                            submitStatus:self.participantsValidate(sourseArray)
                         });
                     },
                     showVal: self.state.showVal[index],
@@ -293,7 +315,6 @@ class BpmButtonSubmit extends Component {
                 })} />
             }
         }]
-
 
         return (<span>
             <span onClick={this.handlerBtn}>
@@ -339,10 +360,10 @@ class BpmButtonSubmit extends Component {
                             }}
                         />
                     </Modal.Body>:""}
-                <Modal.Footer>
+                <Modal.Footer style={{"position":"relative"}}>
+                    <span style={{ "color": "red" ,"position":"absolute","left":"10px","top":"32%"}}>{this.state.submitStatus?"* 请把所有的环节都设置一个指派人":""}</span>
                     <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>
-                    <Button colors="primary"  onClick={this.huanjieHandlerOK}> 确定 </Button>
-
+                    <Button colors="primary" disabled={this.state.submitStatus} onClick={this.huanjieHandlerOK}> 确定 </Button>
                 </Modal.Footer>
             </Modal>
         </span>);
