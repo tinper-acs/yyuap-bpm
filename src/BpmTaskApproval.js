@@ -191,7 +191,7 @@ class BpmTaskApproval extends Component {
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
             //选择中的数据
-            keyList: self.state.userId,
+            keyList: self.state.userIds,
             //保存回调sels选中的行数据showVal显示的字
             onSave: function (sels, showVal) {//showVal="12;13;管理员"
                 var temp = sels.map(v => v.id);
