@@ -234,21 +234,19 @@ class BpmButtonSubmit extends Component {
     changeCheck=()=> {
         this.setState({intersection:!this.state.intersection});
     }
+    
     /**
      * 环节指派的时候，指派人必须选择，不然无法提交。
      * @memberof BpmButtonSubmit
      */
     participantsValidate(sourseArray){
-        let status = true;
-        debugger;
+        let count = 0;
         sourseArray.forEach(da=>{
-            if(da.participants && da.participants.length>=1){
-                status=false;
-            }else{
-                status=true;
+            if(da.properties.startactivity && da.participants && da.participants.length>=1){
+                count++;
             }
         })
-        return status;
+        return count == sourseArray.length?false:true;
     }
 
     render() {
