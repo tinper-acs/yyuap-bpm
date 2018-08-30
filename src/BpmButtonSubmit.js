@@ -242,7 +242,7 @@ class BpmButtonSubmit extends Component {
     participantsValidate(sourseArray){
         let count = 0;
         sourseArray.forEach(da=>{
-            if(da.properties.startactivity && da.participants && da.participants.length>=1){
+            if(da.participants && da.participants.length>=1){
                 count++;
             }
         })
