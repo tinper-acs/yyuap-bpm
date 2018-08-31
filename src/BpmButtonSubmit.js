@@ -43,8 +43,8 @@ class BpmButtonSubmit extends Component {
             chaosongShow:false,//抄送显示
             editRowIndex: 0,
             showVal: [],
+            checkedArray:[], //指派选择的数据
             copyusers:[],   //抄送数据
-            copyuserShowVal:[], //抄送显示
             intersection:true  //是否交集
         }
     }
@@ -231,48 +231,60 @@ class BpmButtonSubmit extends Component {
             key: "1",
             width: "20%",
             render(text, record, index) {
-                return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
-                    title: '指派人员选择',
-                    backdrop: false,
-                    hasPage: true,
-                    refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                    isRadio: false,
-                    filterRefUrl: self.props.filterRefUrl,
-                    className: '',
-                    param: {//url请求参数
-                        refCode: self.props.refCode,
-                        tenantId: '',
-                        sysId: '',
-                        transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                    },
-                    //选择中的数据
-                    keyList: self.state.childRefKey[index] || [],
-                    //保存回调sels选中的行数据showVal显示的字
-                    onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                        console.log(sels);
-                        var temp = sels.map(v => v.id);
-                        //显示值
-                        let _showVal = self.state.showVal.slice();
-                        _showVal[index] = showVal;
-                        //选中的值
-                        let _childRefKey = self.state.childRefKey.slice();
-                        _childRefKey[index] = temp;
-                        //副本原始对象
-                        let sourseArray = self.state.assignInfo.assignInfoItems.slice();
-                        //根据修改索引修改指定数据内容
-                        sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
-                        self.setState({
-                            childRefKey: _childRefKey,
-                            showVal: _showVal,
-                            assignInfo: {
-                                assignInfoItems: sourseArray
-                            }
-                        });
-                    },
-                    showVal: self.state.showVal[index],
-                    showKey: 'refname',
-                    verification: false
-                })} />
+                return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
+                    {
+                        title: '选择指派人员',
+                        refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        className: '',
+                        param: {//url请求参数
+                            refCode: 'userUnderOrgRef',
+                            tenantId: '',
+                            sysId: '',
+                            transmitParam: '5',
+                        },
+                        emptyBtn:true,
+                        textOption: {
+                            modalTitle: '选择指派人员',
+                            leftTitle: '组织结构',
+                            rightTitle: '人员列表',
+                            leftTransferText: '待选人员',
+                            rightTransferText: '已选人员',
+
+                        },
+                        checkedArray:self.state.checkedArray[index]||[],
+                        onCancel: function (p) {
+                            console.log(p)
+                        },
+                        //保存回调sels选中的行数据showVal显示的字
+                        onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                            console.log(sels);
+                            var temp = sels.map(v => v.id);
+                            //显示值
+                            let _showVal = self.state.showVal.slice();
+                            _showVal[index] = showVal;
+                            //选中的值
+                            let _childRefKey = self.state.childRefKey.slice();
+                            _childRefKey[index] = temp;
+                            //副本原始对象
+                            let sourseArray = self.state.assignInfo.assignInfoItems.slice();
+                            //根据修改索引修改指定数据内容
+                            sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
+                            let checkedArray = self.state.checkedArray;
+                            checkedArray[index] = sels;
+                            self.setState({
+                                checkedArray:checkedArray,
+                                childRefKey: _childRefKey,
+                                showVal: _showVal,
+                                assignInfo: {
+                                    assignInfoItems: sourseArray
+                                }
+                            });
+                        },
+                        showVal: self.state.showVal[index],
+                        showKey: 'refname',
+                        verification: false
+                    }
+                    )} />
             }
         }]
 
@@ -340,7 +352,7 @@ BpmButtonSubmit.defaultProps = {
     isOne: false,
     organrefCode:"newdept",
     positonrefCode:"newposition",
-    roleRef:"role_new_table",
+    roleRef:"newRoleRef",
     userRef:"newuser"
 }
 export default BpmButtonSubmit;

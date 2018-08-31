@@ -21,20 +21,9 @@ class BpmCopyContent extends Component {
     constructor() {
         super();
         this.state = {
-            childRefKey: [],//参照组件选择的数据
-            userIds: [],
-            processDefineCode: "",
-            assignInfo: {
-                assignInfoItems: []
-            },
-            obj: [],//单据数据
-            huanjieShow: false,//环节指派显示
-            huanjieList: [],
-            chaosongShow:false,//抄送显示
-            editRowIndex: 0,
-            showVal: [],
             copyusers:[],   //抄送数据
             copyuserShowVal:[], //抄送显示
+            copycheckedArray:[],
             intersection:true  //是否交集
         }
     }
@@ -64,8 +53,8 @@ class BpmCopyContent extends Component {
             multiple:true,
             refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
             className: '',
+            emptyBtn:true,
             param: {//url请求参数
                 refCode: self.props.organrefCode,
                 tenantId: '',
@@ -73,7 +62,10 @@ class BpmCopyContent extends Component {
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
             //选择中的数据
-            keyList: self.state.copyusers[0]?self.state.copyusers[0]:[],
+            checkedArray:self.state.copycheckedArray[0]||[],
+            onCancel: function (p) {
+                console.log(p)
+            },
             //保存回调sels选中的行数据showVal显示的字
             onSave: function (sels, showVal) {//showVal="12;13;管理员"
 
@@ -84,12 +76,15 @@ class BpmCopyContent extends Component {
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
                 copyusers[0]=Array.from(temp, x => ({ id: x ,type:`DEPTS`}));
+                let arr = self.state.copycheckedArray;
+                arr[0] = sels;
                 let {onCopyusersChange} = self.props;
                 onCopyusersChange && onCopyusersChange(copyusers);
+
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
-
+                    copycheckedArray:arr
                 });
             },
             showVal: self.state.copyuserShowVal[0],
@@ -101,9 +96,9 @@ class BpmCopyContent extends Component {
             backdrop: false,
             hasPage: true,
             multiple:true,
-            refType: 1,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
+            emptyBtn:true,
             className: '',
             param: {//url请求参数
                 refCode: self.props.positonrefCode,
@@ -112,7 +107,10 @@ class BpmCopyContent extends Component {
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
             //选择中的数据
-            keyList: self.state.copyusers[1]?self.state.copyusers[1]:[],
+            checkedArray:self.state.copycheckedArray[1]||[],
+            onCancel: function (p) {
+                console.log(p)
+            },
             //保存回调sels选中的行数据showVal显示的字
             onSave: function (sels, showVal) {//showVal="12;13;管理员"
 
@@ -123,12 +121,14 @@ class BpmCopyContent extends Component {
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
                 copyusers[1] = Array.from(temp, x => ({ id: x ,type:`POSTS`}));
+                let arr = self.state.copycheckedArray;
+                arr[1] = sels;
                 let {onCopyusersChange} = self.props;
                 onCopyusersChange && onCopyusersChange(copyusers);
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
-
+                    copycheckedArray:arr
                 });
             },
             showVal: self.state.copyuserShowVal[1],
@@ -141,7 +141,7 @@ class BpmCopyContent extends Component {
             hasPage: true,
             refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
+            emptyBtn:true,
             className: '',
             param: {//url请求参数
                 refCode: self.props.roleRef,
@@ -150,7 +150,10 @@ class BpmCopyContent extends Component {
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
             //选择中的数据
-            keyList: self.state.copyusers[2]?self.state.copyusers[2]:[],
+            checkedArray:self.state.copycheckedArray[2]||[],
+            onCancel: function (p) {
+                console.log(p)
+            },
             //保存回调sels选中的行数据showVal显示的字
             onSave: function (sels, showVal) {//showVal="12;13;管理员"
 
@@ -161,12 +164,14 @@ class BpmCopyContent extends Component {
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
                 copyusers[2] = Array.from(temp, x => ({ id: x ,type:`USERGROUP`}));
+                let arr = self.state.copycheckedArray;
+                arr[2] = sels;
                 let {onCopyusersChange} = self.props;
                 onCopyusersChange && onCopyusersChange(copyusers);
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
-
+                    copycheckedArray:arr
                 });
             },
             showVal: self.state.copyuserShowVal[2],
@@ -177,9 +182,9 @@ class BpmCopyContent extends Component {
             title: '抄送人员选择',
             backdrop: false,
             hasPage: true,
+            emptyBtn:true,
             refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: false,
-            filterRefUrl: self.props.filterRefUrl,
             className: '',
             param: {//url请求参数
                 refCode: self.props.refCode,
@@ -188,7 +193,10 @@ class BpmCopyContent extends Component {
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
             //选择中的数据
-            keyList: self.state.copyusers[3]?self.state.copyusers[3]:[],
+            checkedArray:self.state.copycheckedArray[3]||[],
+            onCancel: function (p) {
+                console.log(p)
+            },
             //保存回调sels选中的行数据showVal显示的字
             onSave: function (sels, showVal) {//showVal="12;13;管理员"
                 var temp = sels.map(v => v.id);
@@ -198,12 +206,14 @@ class BpmCopyContent extends Component {
                 //选中的值
                 let copyusers = self.state.copyusers.slice();
                 copyusers[3] = Array.from(temp, x => ({ id: x ,type:`USER`}));
+                let arr = self.state.copycheckedArray;
+                arr[3] = sels;
                 let {onCopyusersChange} = self.props;
                 onCopyusersChange && onCopyusersChange(copyusers);
                 self.setState({
                     copyusers: copyusers,
                     copyuserShowVal: copyuserShowVal,
-
+                    copycheckedArray:arr
                 });
             },
             showVal: self.state.copyuserShowVal[3],
@@ -241,7 +251,7 @@ BpmCopyContent.defaultProps = {
     filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
     organrefCode:"newdept",
     positonrefCode:"newposition",
-    roleRef:"role_new_table",
+    roleRef:"newRoleRef",
     userRef:"newuser"
 }
 export default BpmCopyContent;
