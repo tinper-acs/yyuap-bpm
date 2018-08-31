@@ -122,12 +122,11 @@ class BpmTaskApprovalWrap extends Component {
                     // onStart && onStart();
                     //可以是加签操作，拉取加签请求
                     onEnd && onEnd();
-                    //TODO 穿梭框参照 配置参照需要参数
                     var options = Object.assign(JSON.parse(refOptions), {
                         title: '指派人员选择',
                         backdrop: false,
                         hasPage: true,
-                        refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
                         isRadio: false,
                         className: '',
                         param: {//url请求参数
@@ -137,7 +136,18 @@ class BpmTaskApprovalWrap extends Component {
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
                         },
                         //选择中的数据
-                        keyList: [],
+                        checkedArray:[],
+                        textOption: {
+                            modalTitle: '选择指派人员',
+                            leftTitle: '组织结构',
+                            rightTitle: '人员列表',
+                            leftTransferText: '待选人员',
+                            rightTransferText: '已选人员',
+
+                        },
+                        onCancel: function (p) {
+                            console.log(p)
+                        },
                         //保存回调sels选中的行数据showVal显示的字
                         onSave: async (sels, showVal) => {//showVal="12;13;管理员"
                             //回调
@@ -392,6 +402,6 @@ BpmTaskApprovalWrap.propTypes = propTypes;
 BpmTaskApprovalWrap.defaultProps = {
     id: "",
     appType: "1",
-    refCode: "newuser"
+    refCode: "userUnderOrgRef"
 }
 export default BpmTaskApprovalWrap;

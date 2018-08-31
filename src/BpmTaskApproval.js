@@ -12,6 +12,7 @@ import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 const propTypes = {
     id: PropTypes.string,
     appType: PropTypes.string,
+    filterRefUrl: PropTypes.string,
     refCode: PropTypes.string,
     properties:PropTypes.object,
     onBpmFlowClick: PropTypes.func,
@@ -39,6 +40,7 @@ class BpmTaskApproval extends Component {
             userIds: [],
             userId: [],
             userName:[],
+            checkedArray:[],
             HuoDongID: "",//新版活动ID
             HuoDongName: ""//新版活动名字
         }
@@ -80,6 +82,7 @@ class BpmTaskApproval extends Component {
             userName:"",
             userIds: [],
             userId: [],
+            checkedArray:[]
         },()=>{
             this.props.onChangestate(this.state);
         });
@@ -180,18 +183,29 @@ class BpmTaskApproval extends Component {
             title:self.state.approvetype ==='delegate'?'改派人员选择':"加签人员选择",
             backdrop: false,
             hasPage: true,
-            refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            refType: self.state.approvetype ==='delegate'?2:5,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: self.state.approvetype === 'delegate',
-            filterRefUrl: '/iuap_pap_quickstart/common/filterRef',
             className: '',
+            emptyBtn:true,
             param: {//url请求参数
-                refCode: 'newuser',
+                refCode: self.state.approvetype ==='delegate'?'newuser':'userUnderOrgRef',
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
+            textOption: {
+                modalTitle: '选择加签人员',
+                leftTitle: '组织结构',
+                rightTitle: '人员列表',
+                leftTransferText: '待选人员',
+                rightTransferText: '已选人员',
+            },
+
             //选择中的数据
-            keyList: self.state.userIds,
+            checkedArray: self.state.checkedArray,
+            onCancel: function (p) {
+                console.log(p)
+            },
             //保存回调sels选中的行数据showVal显示的字
             onSave: function (sels, showVal) {//showVal="12;13;管理员"
                 var temp = sels.map(v => v.id);
@@ -205,7 +219,7 @@ class BpmTaskApproval extends Component {
                     userId: userId[0],
                     userIds:userId,
                     userName: userName,
-
+                    checkedArray:sels,
                 },()=>{
                     self.props.onChangestate(self.state);
                 });
@@ -354,6 +368,7 @@ BpmTaskApproval.propTypes = propTypes;
 BpmTaskApproval.defaultProps = {
     appType: "1",
     refCode: "newuser",
+    filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
     properties:{
         addSignAble:true, //可否加签
         iscopytouser:true, //可否抄送
