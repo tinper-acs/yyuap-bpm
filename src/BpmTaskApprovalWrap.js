@@ -136,7 +136,7 @@ class BpmTaskApprovalWrap extends Component {
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
                         },
                         //选择中的数据
-                        keyList: [],
+                        checkedArray:[],
                         textOption: {
                             modalTitle: '选择指派人员',
                             leftTitle: '组织结构',
