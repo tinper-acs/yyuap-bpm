@@ -331,7 +331,15 @@ class BpmTaskApprovalWrap extends Component {
                 }
                 break;
             case 'rejectToBillMaker':
-                let rejectres = await sendBpmTaskAJAX(this.state.approvetype, this.state);
+                let rejectres = await sendBpmTaskAJAX(this.state.approvetype,{
+                    activityId: 'markerbill',
+                    approvetype: approvetype,
+                    comment: comment,
+                    processInstanceId: processInstanceId,
+                    taskId: taskId,
+                    copyusers:this.state.copyusers,
+                    intersection:this.state.intersection
+                });
                 if (rejectres.data.flag === 'success') {
                     Message.create({ content: rejectres.data.msg, color: 'info', position: 'top' });
                     onSuccess && onSuccess();
