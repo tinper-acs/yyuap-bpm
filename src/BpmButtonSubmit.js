@@ -77,6 +77,13 @@ class BpmButtonSubmit extends Component {
                 funccode: this.props.funccode,
                 nodekey: this.props.nodekey
             });
+            if(!detailMsg.data ||detailMsg.data==null){
+                onError && onError({
+                    type: 1,
+                    msg: `当前单据没有绑定流程`
+                });
+                return;
+            }
             //正常拿到成功数据后
             if (success == "success") {
                 //组织新的第二次提交参数，用于是否有流程指派操作等

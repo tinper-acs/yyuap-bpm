@@ -47,6 +47,7 @@ class BpmTaskApprovalWrap extends Component {
                 delegateAble:true, //可否改派
                 unagreeable:true, //可否不同意
                 assignAble:true, //可否指派
+                deleteable:true  //可否驳回到制单人
             }
         }
     }
@@ -62,13 +63,13 @@ class BpmTaskApprovalWrap extends Component {
             } else if (pID.data.taskId) {
                 let { processDefinitionId, processInstanceId, taskId } = pID.data;
                 //可否加签|可否抄送|可否驳回|可否改派|可否不同意|可否指派
-                let {currentActivity:{ properties:{ addsignAble,iscopytouser,rejectAble ,delegateAble,unagreeable,assignAble }}}= pID.data;
+                let {currentActivity:{ properties:{ addsignAble,iscopytouser,rejectAble ,delegateAble,unagreeable,assignAble ,deleteable}}}= pID.data;
 
                 this.setState({
                     id: taskId,
                     taskId:taskId,
                     properties:{
-                        addsignAble,iscopytouser,rejectAble,delegateAble,unagreeable,assignAble
+                        addsignAble,iscopytouser,rejectAble,delegateAble,unagreeable,assignAble,deleteable
                     },
                     processDefinitionId,
                     processInstanceId,
@@ -315,6 +316,7 @@ class BpmTaskApprovalWrap extends Component {
                     });
                 }
                 break;
+            //弃审
             case 'withdraw':
                 let res = await sendBpmTaskAJAX(this.state.approvetype, this.state);
                 if (res.data.flag === 'success') {
@@ -325,6 +327,19 @@ class BpmTaskApprovalWrap extends Component {
                     onError && onError({
                         type: 2,
                         msg: res.data.msg
+                    });
+                }
+                break;
+            case 'rejectToBillMaker':
+                let rejectres = await sendBpmTaskAJAX(this.state.approvetype, this.state);
+                if (rejectres.data.flag === 'success') {
+                    Message.create({ content: rejectres.data.msg, color: 'info', position: 'top' });
+                    onSuccess && onSuccess();
+                } else {
+                    Message.create({ content: rejectres.data.msg, color: 'danger', position: 'top' });
+                    onError && onError({
+                        type: 2,
+                        msg: rejectres.data.msg
                     });
                 }
                 break;

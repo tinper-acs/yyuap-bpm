@@ -153,9 +153,10 @@ class BpmTaskApproval extends Component {
             key: "同意",
             value: "agree"
         }];
-        let { addsignAble,rejectAble ,delegateAble,unagreeable } = this.props.properties
+        let { addsignAble,rejectAble ,delegateAble,unagreeable ,deleteable} = this.props.properties
         if(unagreeable)arr.push({key: "不同意", value: "unagree"})
         if(rejectAble)arr.push({key: "驳回到环节", value: "rejectToActivity"})
+        if(deleteable)arr.push({key: "驳回到制单人", value: "rejectToBillMaker"})
         if(addsignAble)arr.push({key: "加签", value: "signAdd"})
         if(delegateAble)arr.push({key: "改派", value: "delegate"})
         return arr
@@ -378,6 +379,7 @@ BpmTaskApproval.defaultProps = {
         delegateAble:true, //可否改派
         unagreeable:true, //可否不同意
         assignAble:true, //可否指派
+        deleteable:true //可否驳回制单人
     }
 }
 
