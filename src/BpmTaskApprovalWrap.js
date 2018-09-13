@@ -333,10 +333,10 @@ class BpmTaskApprovalWrap extends Component {
             case 'rejectToBillMaker':
                 let rejectres = await sendBpmTaskAJAX(this.state.approvetype,{
                     activityId: 'markerbill',
-                    approvetype: approvetype,
-                    comment: comment,
-                    processInstanceId: processInstanceId,
-                    taskId: taskId,
+                    approvetype: this.state.approvetype,
+                    comment:this.state.comment,
+                    processInstanceId: this.state.processInstanceId,
+                    taskId: this.state.taskId,
                     copyusers:this.state.copyusers,
                     intersection:this.state.intersection
                 });
