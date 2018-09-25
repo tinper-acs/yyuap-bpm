@@ -162,7 +162,7 @@ class BpmTaskApprovalWrap extends Component {
                                 taskId: this.state.taskId,
                                 approvetype: this.state.approvetype,
                                 processInstanceId: this.state.processInstanceId,
-                                participants: Array.from(sels, x => ({ id: x.id }))
+                                participants: Array.from(sels, x => ({ "id": x.id }))
                             }).catch((e) => {
                                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                                 onError && onError({
