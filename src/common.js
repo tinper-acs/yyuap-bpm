@@ -284,7 +284,7 @@ export const onRecall = (url, data) => {
  * 查询流程定义的id
  */
 export const getByFindProcessDefinitionId = (processDefinitionKey) => {
-    return axios.get(`eiap-plus/process/latestProDefByKey?processDefinitionKey=${processDefinitionKey}&_=${Math.random()}`, {
+    return axios.get(`/eiap-plus/process/latestProDefByKey?processDefinitionKey=${processDefinitionKey}&_=${Math.random()}`, {
         params: {}
     });
 }
