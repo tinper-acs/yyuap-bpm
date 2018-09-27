@@ -100,7 +100,7 @@ class BpmButtonSubmit extends Component {
                 let result = await onCommit(commitParam);
                 let flag = result.data.success;
                 //一般普通的提交成功和失败
-                if (flag == "success" && (typeof result.data.detailMsg.data.assignAble == 'undefined')) {
+                if (flag == "success" && (!result.data.detailMsg.data.assignAble)) {
                     //正确
                     onSuccess && onSuccess();
                 } else if (flag == "fail_global") {
@@ -111,7 +111,7 @@ class BpmButtonSubmit extends Component {
                     });
                 }
                 //当得知需要二次弹出环节面板
-                if (result.data.detailMsg.data.assignAble == true) {
+                if (result.data.detailMsg.data && result.data.detailMsg.data.assignAble == true) {
                     //判断是否有最新的活动id和name
                     if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
                         //停止事件
