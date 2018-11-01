@@ -45,7 +45,8 @@ class BpmButtonSubmit extends Component {
             showVal: [],
             checkedArray:[], //指派选择的数据
             copyusers:[],   //抄送数据
-            intersection:true  //是否交集
+            intersection:true,  //是否交集
+            submiting:false
         }
     }
     //提交流程按钮
@@ -173,47 +174,59 @@ class BpmButtonSubmit extends Component {
     //选择完所有加签后的确定事件
     huanjieHandlerOK = async () => {
         let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
-        let { processDefineCode, assignInfo, obj,copyusers,intersection } = this.state;
+        let { processDefineCode, assignInfo, obj,copyusers,intersection,submiting } = this.state;
         obj=obj[0];
         let arr=[];
+        let self = this;
         copyusers.map(function(value) {
             arr=arr.concat(value);
         });
         copyusers=arr;
         //加载事件
-        onStart && onStart();
-        let result = await axios.post(urlAssignSubmit, {
-            processDefineCode,
-            assignInfo,
-            obj,
-            copyusers,
-            intersection
+        if(!submiting){
+            onStart && onStart();
+            this.setState({
+                submiting:true
+            })
+            let result = await axios.post(urlAssignSubmit, {
+                processDefineCode,
+                assignInfo,
+                obj,
+                copyusers,
+                intersection
 
-        }).catch((e) => {
-            onError && onError({
-                type: 2,
-                msg: `后台服务请求发生错误`
+            }).catch((e) => {
+
+                onError && onError({
+                    type: 2,
+                    msg: `后台服务请求发生错误`
+                });
+                self.setState({
+                    submiting:false
+                })
             });
-        });
-        if (result.data.success == 'success') {
-            onSuccess && onSuccess();
-            this.setState({
-                huanjieShow: false,
-                chaosongShow:false,
-                childRefKey: [],
-                showVal: []
-            });
-        } else if (result.data.success == 'fail_global') {
-            onError && onError({
-                type: 2,
-                msg: reconvert(result.data.message) || '流程启动失败'
-            });
-            this.setState({
-                huanjieShow: false,
-                chaosongShow:false,
-                childRefKey: [],
-                showVal: []
-            });
+            if (result.data.success == 'success') {
+                onSuccess && onSuccess();
+                this.setState({
+                    huanjieShow: false,
+                    chaosongShow:false,
+                    childRefKey: [],
+                    showVal: [],
+                    submiting:false
+                });
+            } else if (result.data.success == 'fail_global') {
+                onError && onError({
+                    type: 2,
+                    msg: reconvert(result.data.message) || '流程启动失败'
+                });
+                this.setState({
+                    huanjieShow: false,
+                    chaosongShow:false,
+                    childRefKey: [],
+                    showVal: [],
+                    submiting:false
+                });
+            }
         }
     }
     changeCheck=()=> {
