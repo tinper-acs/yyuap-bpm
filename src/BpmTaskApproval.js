@@ -359,7 +359,7 @@ class BpmTaskApproval extends Component {
                             columns={this.rejectToActivityCol} data={this.state.rejectlist} />
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button colors="danger" style={{ "marginRight": "10px" }} onClick={this.activityModalClose}> 确定 </Button>
+                        <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.activityModalClose}> 确定 </Button>
                         <Button onClick={this.activityModalClose}> 关闭 </Button>
                     </Modal.Footer>
                 </Modal>
