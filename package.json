@@ -43,6 +43,7 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "tinper-bee": "^1.5.4",
+    "bee-select":"^1.1.5",
     "uba": "4.0.3",
     "uba-server-mock": "2.0.2",
     "uba-server-proxy": "2.0.3",

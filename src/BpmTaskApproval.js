@@ -4,7 +4,8 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Button, Col, Message, Modal, Radio, Row, Table,Select,FormControl} from 'tinper-bee';
+import { Button, Col, Message, Modal, Radio, Row, Table,FormControl} from 'tinper-bee';
+import Select from 'bee-select';
 import createModal from 'yyuap-ref';
 import { approvetypeToText, sendBpmTaskAJAX } from './common';
 import refOptions from './refOptions';
