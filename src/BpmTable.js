@@ -70,8 +70,8 @@ class BpmTable extends Component {
             },
             {
                 title: "超时时间",
-                dataIndex: "dueDate",
-                key: "dueDate"
+                dataIndex: "claimTime",
+                key: "claimTime"
             }
         ];
     }
