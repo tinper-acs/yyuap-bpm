@@ -71,7 +71,14 @@ class BpmTable extends Component {
             {
                 title: "超时时间",
                 dataIndex: "claimTime",
-                key: "claimTime"
+                key: "claimTime",
+                render: (text, record, index) => {
+                    if (text == null) {
+                        return <div>-</div>
+                    } else {
+                        return <div>{timestampToDate(text)}</div>
+                    }
+                }
             }
         ];
     }
