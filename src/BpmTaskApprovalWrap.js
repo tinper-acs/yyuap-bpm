@@ -405,9 +405,9 @@ class BpmTaskApprovalWrap extends Component {
                         />
                     </Col>
                 </Row>}
-                    <Row>
-                        <Col  style={{ "textAlign": "right" }}>
-                            <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "26px" }} colors="primary">提交</Button>
+                    <Row style={{"margin":"8px 0", "padding": "0 10px"}}>
+                        <Col md={4} mdOffset={8} xs={4} xsOffset={8} sm={4} smOffset={8} style={{ "textAlign": "right","paddingRight": 0}}>
+                            <Button onClick={this.handlerSubmitBtn}  colors="primary">提交</Button>
                         </Col>
                     </Row>
 
