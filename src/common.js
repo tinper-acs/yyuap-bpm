@@ -122,7 +122,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 copyusers:data.copyusers,
                 intersection:data.intersection
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'unagree':
             return axios.post(getBpmTaskURL(type), {
@@ -134,7 +139,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 copyusers:data.copyusers,
                 intersection:data.intersection
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                     Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'rejectToActivity':
             return axios.post(getBpmTaskURL(type), {
@@ -144,7 +154,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId,
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'rejectToBillMaker':
             return axios.post(getBpmTaskURL(type), {
@@ -156,7 +171,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 copyusers:data.copyusers,
                 intersection:data.intersection
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                     Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'signAdd':
             return axios.post(getBpmTaskURL(type), {
@@ -166,7 +186,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'delegate':
             return axios.post(getBpmTaskURL(type), {
@@ -176,7 +201,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'withdraw':
             return axios.post(getBpmTaskURL(type), {
@@ -186,14 +216,24 @@ export const sendBpmTaskAJAX = (type, data) => {
                 processInstanceId: data.processInstanceId,
                 taskId: data.taskId
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'hisTasklist':
             return axios.post(getBpmTaskURL(type), {
                 processDefinitionId: data.processDefinitionId,
                 processInstanceId: data.processInstanceId
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'commit':
             return axios.post(getBpmTaskURL(type), {
@@ -205,7 +245,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 processInstanceId: data.processInstanceId,
                 participants: data.participants
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'signaddtask':
             return axios.post(getBpmTaskURL(type), {
@@ -217,7 +262,12 @@ export const sendBpmTaskAJAX = (type, data) => {
                 copyusers:data.copyusers,
                 intersection:data.intersection
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                    Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
         case 'delegatetask':
             return axios.post(getBpmTaskURL(type), {
@@ -229,14 +279,24 @@ export const sendBpmTaskAJAX = (type, data) => {
                 copyusers:data.copyusers,
                 intersection:data.intersection
             }).catch((e) => {
-                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                if (e.response && e.response.status == 401){
+                     Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+                    return;
+                }else{
+                    Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+                }
             })
 
         default:
             break;
     }
     return axios.post(getBpmTaskURL(type), data).catch((e) => {
-        Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+        if (e.response && e.response.status == 401){
+             Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})
+            return;
+        }else{
+            Message.create({content: `${e.toString()}`, color: 'danger', position: 'top'})
+        }
     })
 }
 
