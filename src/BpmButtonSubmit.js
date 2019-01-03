@@ -254,10 +254,10 @@ class BpmButtonSubmit extends Component {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
                     {
                         title: '选择指派人员',
-                        refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        refType: 3,//1:树形 2.单表 3.树卡型 4.多选 5.default
                         className: '',
                         param: {//url请求参数
-                            refCode: 'userUnderOrgRef',
+                            refCode: 'usertreeandgrid',
                             tenantId: '',
                             sysId: '',
                             transmitParam: '5',

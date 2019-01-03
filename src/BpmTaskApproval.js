@@ -185,12 +185,12 @@ class BpmTaskApproval extends Component {
             title:self.state.approvetype ==='delegate'?'改派人员选择':"加签人员选择",
             backdrop: false,
             hasPage: true,
-            refType: self.state.approvetype ==='delegate'?2:5,//1:树形 2.单表 3.树卡型 4.多选 5.default
+            refType: self.state.approvetype ==='delegate'?2:3,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: self.state.approvetype === 'delegate',
             className: '',
             emptyBtn:true,
             param: {//url请求参数
-                refCode: self.state.approvetype ==='delegate'?'newuser':'userUnderOrgRef',
+                refCode: self.state.approvetype ==='delegate'?'newuser':'usertreeandgrid',
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
