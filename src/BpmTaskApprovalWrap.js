@@ -127,14 +127,35 @@ class BpmTaskApprovalWrap extends Component {
                         title: '指派人员选择',
                         backdrop: false,
                         hasPage: true,
-                        refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        refType: 3,//1:树形 2.单表 3.树卡型 4.多选 5.default
                         isRadio: false,
                         className: '',
                         param: {//url请求参数
-                            refCode: this.props.refCode,
+                            refCode: 'usertreeandgrid',
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                            queryparams: {
+                                "tablename": "org_dept",
+                                "idfield": "pk_dept",
+                                "pidfield": "pk_fatherorg",
+                                "codefield": "code",
+                                "namefield": "name",
+                                "condition": {
+                                    "dr": "0",
+                                    "enablestate": 2
+                                }
+                            },
+                            tableQueryParams: {
+                                "tablename": "sm_user",
+                                "idfield": "cuserid",
+                                "codefield": "user_code",
+                                "namefield": "user_name",
+                                "condition": {
+                                    "dr": "0",
+                                    "enablestate": 2
+                                }
+                            }
                         },
                         //选择中的数据
                         checkedArray:[],

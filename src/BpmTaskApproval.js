@@ -194,6 +194,27 @@ class BpmTaskApproval extends Component {
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                queryparams: {
+                    "tablename": "org_dept",
+                    "idfield": "pk_dept",
+                    "pidfield": "pk_fatherorg",
+                    "codefield": "code",
+                    "namefield": "name",
+                    "condition": {
+                        "dr": "0",
+                        "enablestate": 2
+                    }
+                },
+                tableQueryParams: {
+                    "tablename": "sm_user",
+                    "idfield": "cuserid",
+                    "codefield": "user_code",
+                    "namefield": "user_name",
+                    "condition": {
+                        "dr": "0",
+                        "enablestate": 2
+                    }
+                }
             },
             textOption: {
                 modalTitle: '选择加签人员',
