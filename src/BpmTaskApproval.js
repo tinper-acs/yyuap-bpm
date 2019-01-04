@@ -191,28 +191,28 @@ class BpmTaskApproval extends Component {
             emptyBtn:true,
             param: {//url请求参数
                 refCode: self.state.approvetype ==='delegate'?'newuser':'usertreeandgrid',
-                tenantId: '',
-                sysId: '',
-                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                queryparams: {
-                    "tablename": "org_dept",
-                    "idfield": "pk_dept",
-                    "pidfield": "pk_fatherorg",
-                    "codefield": "code",
-                    "namefield": "name",
-                    "condition": {
-                        "dr": "0",
-                        "enablestate": 2
-                    }
-                },
-                tableQueryParams: {
-                    "tablename": "sm_user",
-                    "idfield": "cuserid",
-                    "codefield": "user_code",
-                    "namefield": "user_name",
-                    "condition": {
-                        "dr": "0",
-                        "enablestate": 2
+                pk_org:"",
+                transmitParam: {
+                    queryparams: {
+                        "tablename": "org_dept",
+                        "idfield": "pk_dept",
+                        "pidfield": "pk_fatherorg",
+                        "codefield": "code",
+                        "namefield": "name",
+                        "condition": {
+                            "dr": "0",
+                            "enablestate": 2
+                        }
+                    },
+                    tableQueryParams: {
+                        "tablename": "sm_user",
+                        "idfield": "cuserid",
+                        "codefield": "user_code",
+                        "namefield": "user_name",
+                        "condition": {
+                            "dr": "0",
+                            "enablestate": 2
+                        }
                     }
                 }
             },
