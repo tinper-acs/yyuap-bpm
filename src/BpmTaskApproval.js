@@ -193,6 +193,7 @@ class BpmTaskApproval extends Component {
                 refCode: self.state.approvetype ==='delegate'?'newuser':'userUnderOrgRef',
                 tenantId: '',
                 sysId: '',
+                cfgParam:true,
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
             textOption: {
