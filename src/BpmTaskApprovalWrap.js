@@ -116,7 +116,7 @@ class BpmTaskApprovalWrap extends Component {
                     //判断是否有最新的活动id和name
                     if (result.data.assignList.length > 0) {
                         this.setState({
-                            HuoDongID: result.data.assignList.join(),
+                            HuoDongID: result.data.assignList.map( item => item.activityId ).join(),
                             HuoDongName: result.data.assignList[0].activityName
                         });
                     }
