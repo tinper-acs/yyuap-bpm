@@ -204,18 +204,18 @@ class BpmLinkAssign extends Component {
             title: "名称",
             dataIndex: "name",
             key: "name",
-            width: "40%"
+
         },
         {
             title: "编码",
             dataIndex: "id",
             key: "id",
-            width: "40%"
+
         }, {
             title: "指派",
             dataIndex: "1",
             key: "1",
-            width: "20%",
+
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
                     title: '人员选择',

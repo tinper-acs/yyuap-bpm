@@ -23,7 +23,7 @@ class BpmTable extends Component {
                 title: "任务ID",
                 dataIndex: "id",
                 key: "id",
-                width: "30%"
+
             },
             {
                 title: "任务名称",

@@ -4,7 +4,8 @@
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Button, Modal, Table ,Row,Label,Checkbox } from 'tinper-bee';
+import { Button, Modal ,Table,Row,Label,Checkbox } from 'tinper-bee';
+// import Table from 'bee-table';
 import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
@@ -238,18 +239,16 @@ class BpmButtonSubmit extends Component {
             title: "名称",
             dataIndex: "name",
             key: "name",
-            width: "40%"
+
         },
         {
             title: "编码",
             dataIndex: "id",
             key: "id",
-            width: "40%"
         }, {
             title: "指派",
             dataIndex: "1",
             key: "1",
-            width: "20%",
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
                     {

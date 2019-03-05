@@ -18,7 +18,6 @@ class BpmTestCheckTable extends Component {
                 title: "Name",
                 dataIndex: "name",
                 key: "name",
-                width: "30%"
             },
             {
                 title: "ID",

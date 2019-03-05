@@ -1,6 +1,6 @@
 {
   "name": "yyuap-bpm",
-  "version": "0.3.28",
+  "version": "0.3.29",
   "description": "tinper-bee bpm component",
   "main": "./lib/index.js",
   "scripts": {
@@ -42,7 +42,7 @@
     "prop-types": "^15.6.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "tinper-bee": "^1.5.4",
+    "tinper-bee": "1.6.8",
     "bee-select": "^1.1.5",
     "uba": "4.0.3",
     "uba-server-mock": "2.0.2",
