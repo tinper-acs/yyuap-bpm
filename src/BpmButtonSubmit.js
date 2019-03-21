@@ -132,20 +132,19 @@ class BpmButtonSubmit extends Component {
                             }
                         });
                         var options = Object.assign(JSON.parse(refOptions), {
-                            title: '指派人员选择',
+                            title: '选择指派人员',
                             backdrop: false,
                             hasPage: true,
                             refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
                             isRadio: false,
                             className: '',
                             param: {//url请求参数
-                                refCode: this.props.refCode,
+                                refCode: 'userUnderOrgRef',
                                 tenantId: '',
                                 sysId: '',
-                                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                                transmitParam: '5',
                             },
-                            //选择中的数据
-                            checkedArray:[],
+                            emptyBtn:true,
                             textOption: {
                                 modalTitle: '选择指派人员',
                                 leftTitle: '组织结构',
