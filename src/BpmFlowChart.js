@@ -19,7 +19,7 @@ class BpmFlowChart extends Component {
             <div>
                 <iframe
                     style={{ width, height, "minHeight": "300px" }}
-                    src={`${url}?procDefId=${processDefinitionId}&procInstId=${processInstanceId}`}
+                    src={`${url}?processDefinitionId=${processDefinitionId}&processInstanceId=${processInstanceId}`}
                     frameBorder="0"
                 >
                 </iframe>
@@ -29,7 +29,7 @@ class BpmFlowChart extends Component {
 }
 BpmFlowChart.propTypes = propTypes;
 BpmFlowChart.defaultProps = {
-    url: "/ubpm-web-process-designer/process-designer/index.html#/processDetail",
+    url: "/eiap-plus/vendor/diagram-viewer/index.html",
     width: "99%",
     height: "300px",
     processDefinitionId: "eiap508870:4:c3bc57e8-631a-11e8-8d04-0686c4000fcf",
