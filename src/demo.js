@@ -42,17 +42,14 @@ class Demo extends Component {
                 />
                 <BpmTestCheckTable />
                 <BpmButtonSubmit
-                    funccode="ygdemo_yw_info"
+                    funccode="orderinfo"
                     nodekey="003"
                     size="lg"
                     isOne={false}
-                    url={`/ygdemo_yw_info/submit`}
-                    urlAssignSubmit={`/ygdemo_yw_info/assignSubmit`}
+                    url={`/orderinfo/order_info/submit`}
+                    urlAssignSubmit={`/orderinfo/order_info/assignSubmit`}
                     checkedArray={
-                        [
-                            { "id": "ea69b9bf-d8b5-47a7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 },
-                            { "id": "ea69b9bf-d8sssa7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 }
-                        ]
+                        [{"id":"4be5580d9aa54bb4b88b7e63c9da95e1","createTime":"2019-03-20 14:04:26 370","createUser":"b009952b5b604965a744852dc213d208","lastModified":"2019-03-20 14:04:26 370","lastModifyUser":"b009952b5b604965a744852dc213d208","ts":"2019-03-20 14:04:26 370","newTs":"2019-03-21 09:52:19 995","dr":0,"bpmState":0,"taskKey":null,"taskId":null,"processInstanceId":null,"processDefineCode":null,"comment":null,"orderType":"0","orderTypeEnumValue":"生产订单","orderNo":"1234","purOrg":"","releaseTime":"2019-03-20 14:04:19","orderAmount":3,"applyNo":"7475c390-cac5-4287-a022-017205de99f5","purGroupNo":"111","purOrgSrc":null,"confirmTime":"2019-03-20 14:04:19","applyName":"用友集团","orderState":"0","orderStateEnumValue":"未提交","tenantid":"tenant","bpmBillCode":"201903210952195","mainBoCode":"order_info","key":1,"_checked":true}]
                     }
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}

@@ -10,6 +10,7 @@ import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
 import BpmCopyContent from "./BpmCopyContent";
+import createModal from 'yyuap-ref';
 const propTypes = {
     checkedArray: PropTypes.array,
     funccode: PropTypes.string,
@@ -118,17 +119,132 @@ class BpmButtonSubmit extends Component {
                     if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
                         //停止事件
                         onEnd && onEnd();
+
                         let arr = result.data.detailMsg.data.assignedActivities.filter( (item)=>{ return !item.properties.startactivity;});
                         //更新环节指派数据
                         this.setState({
-                            huanjieShow: true,
-                            chaosongShow:result.data.detailMsg.data.assignedActivities[0].properties.iscopytouser,
+                            huanjieShow: false,
+                            chaosongShow:false,
                             huanjieList: arr,
                             obj: checkedArray,
                             assignInfo: {
                                 assignInfoItems: Array.from(arr, x => ({ activityId: x.id, activityName: x.name, participants: [] }))
                             }
                         });
+                        var options = Object.assign(JSON.parse(refOptions), {
+                            title: '指派人员选择',
+                            backdrop: false,
+                            hasPage: true,
+                            refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                            isRadio: false,
+                            className: '',
+                            param: {//url请求参数
+                                refCode: this.props.refCode,
+                                tenantId: '',
+                                sysId: '',
+                                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                            },
+                            //选择中的数据
+                            checkedArray:[],
+                            textOption: {
+                                modalTitle: '选择指派人员',
+                                leftTitle: '组织结构',
+                                rightTitle: '人员列表',
+                                leftTransferText: '待选人员',
+                                rightTransferText: '已选人员',
+
+                            },
+                            onCancel: function (p) {
+                                console.log(p)
+                            },
+                            //保存回调sels选中的行数据showVal显示的字
+                            onSave: async (sels, showVal) => {//showVal="12;13;管理员"
+
+
+                                console.log(sels);
+                                let { processDefineCode, assignInfo, obj,copyusers,intersection,submiting } = this.state;
+                                let self = this;
+                                obj=obj[0];
+                                var temp = sels.map(v => v.id);
+                                //显示值
+                                let _showVal = self.state.showVal.slice();
+                                _showVal[0] = showVal;
+                                //选中的值
+                                let _childRefKey = self.state.childRefKey.slice();
+                                _childRefKey[0] = temp;
+                                //副本原始对象
+                                let sourseArray = self.state.assignInfo.assignInfoItems.slice();
+                                //根据修改索引修改指定数据内容
+                                sourseArray[0]['participants'] = Array.from(_childRefKey[0], x => ({ id: x }));
+                                let checkedArray = self.state.checkedArray;
+                                checkedArray[0] = sels;
+
+                                assignInfo.assignInfoItems = sourseArray
+
+                                //回调
+                                onStart && onStart();
+                                //同意后续的加签
+                                let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
+
+                                let arr=[];
+                                copyusers.map(function(value) {
+                                    arr=arr.concat(value);
+                                });
+                                copyusers=arr;
+                                //加载事件
+                                if(!submiting){
+                                    onStart && onStart();
+                                    this.setState({
+                                        submiting:true
+                                    })
+                                    let result = await axios.post(urlAssignSubmit, {
+                                        processDefineCode,
+                                        assignInfo,
+                                        obj,
+                                        copyusers,
+                                        intersection
+
+                                    }).catch((e) => {
+
+                                        onError && onError({
+                                            type: 2,
+                                            msg: `后台服务请求发生错误`
+                                        });
+                                        self.setState({
+                                            submiting:false
+                                        })
+                                    });
+                                    if (result.data.success == 'success') {
+                                        onSuccess && onSuccess();
+                                        this.setState({
+                                            huanjieShow: false,
+                                            chaosongShow:false,
+                                            childRefKey: [],
+                                            showVal: [],
+                                            submiting:false
+                                        });
+                                    } else if (result.data.success == 'fail_global') {
+                                        onError && onError({
+                                            type: 2,
+                                            msg: reconvert(result.data.message) || '流程启动失败'
+                                        });
+                                        this.setState({
+                                            huanjieShow: false,
+                                            chaosongShow:false,
+                                            childRefKey: [],
+                                            showVal: [],
+                                            submiting:false
+                                        });
+                                    }
+                                }
+                            },
+                            showVal: '',
+                            showKey: 'refname',
+                            verification: false
+                        });
+                        //弹出参照组件
+                        createModal(options);
+
                     }
                 }
             } else if (success == "fail_global") {

@@ -368,7 +368,8 @@ export const approvetypeToText = (type) => {
 /**
  * Unicode编码转换
  */
-export const reconvert = (str) => {
+export const reconvert = (str='') => {
+    str = str||"";
     str = str.replace(/(\\u)(\w{1,4})/gi, function ($0) {
         return (String.fromCharCode(parseInt((escape($0).replace(/(%5Cu)(\w{1,4})/g, "$2")), 16)));
     });

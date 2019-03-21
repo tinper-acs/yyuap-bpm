@@ -3,7 +3,10 @@
 [![npm version](https://img.shields.io/npm/v/yyuap-bpm.svg)](https://www.npmjs.com/package/yyuap-bpm)
 [![NPM downloads](http://img.shields.io/npm/dt/yyuap-bpm.svg?style=flat)](https://npmjs.org/package/yyuap-bpm)
 
-
+### 版本说明
+0.3.X 标准产品使用
+0.4.X 贵XXX使用
+0.5.X 四XXX使用
 
 ### 1. 简介
 
