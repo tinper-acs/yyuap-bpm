@@ -144,6 +144,7 @@ class BpmButtonSubmit extends Component {
                                 sysId: '',
                                 transmitParam: '5',
                             },
+                            checkedArray:[],
                             emptyBtn:true,
                             textOption: {
                                 modalTitle: '选择指派人员',
