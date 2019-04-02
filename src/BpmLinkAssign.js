@@ -207,11 +207,6 @@ class BpmLinkAssign extends Component {
 
         },
         {
-            title: "编码",
-            dataIndex: "id",
-            key: "id",
-
-        }, {
             title: "指派",
             dataIndex: "1",
             key: "1",

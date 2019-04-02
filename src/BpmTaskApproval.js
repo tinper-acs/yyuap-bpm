@@ -46,17 +46,12 @@ class BpmTaskApproval extends Component {
             HuoDongName: ""//新版活动名字
         }
         //驳回到环节的Modal-Table
-        this.rejectToActivityCol = [{
-            title: "活动编码",
-            dataIndex: "activityId",
-            key: "activityId",
-            width: "40%"
-        },
+        this.rejectToActivityCol = [
         {
             title: "活动名称",
             dataIndex: "activityName",
             key: "activityName",
-            width: "30%"
+            textAlign:'center'
         }]
     }
     componentWillMount = () => {
@@ -172,10 +167,10 @@ class BpmTaskApproval extends Component {
                 rejectToActivityShow: true
             });
         } else {
-            Message.create({ content: result.data.msg||'当前环节为首环节，没有可以驳回的环节', color: 'warning', position: 'top' });
+            Message.create({ content: result.data.msg||'当前环节没有可被驳回的环节', color: 'warning', position: 'top' });
             onError && onError({
                 type: 2,
-                msg: result.data.msg||'当前环节为首环节，没有可以驳回的环节'
+                msg: result.data.msg||'当前环节没有可被驳回的环节'
             });
         }
     }

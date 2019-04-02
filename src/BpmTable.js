@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Table } from 'tinper-bee';
-import { descriptionToText, sendBpmTaskAJAX, timestampToDate } from './common';
+import { descriptionToText, sendBpmTaskAJAX, timestampToDate,recordToState } from './common';
 const propTypes = {
     processDefinitionId: PropTypes.string,
     processInstanceId: PropTypes.string
@@ -19,14 +19,14 @@ class BpmTable extends Component {
             data: []
         };
         this.columns = [
+            // {
+            //     title: "任务ID",
+            //     dataIndex: "id",
+            //     key: "id",
+            //
+            // },
             {
-                title: "任务ID",
-                dataIndex: "id",
-                key: "id",
-
-            },
-            {
-                title: "任务名称",
+                title: "环节名称",
                 dataIndex: "name",
                 key: "name"
             },
@@ -39,7 +39,7 @@ class BpmTable extends Component {
                 }
             },
             {
-                title: "执行者",
+                title: "审批人",
                 dataIndex: "executionId",
                 key: "executionId"
             },
@@ -63,6 +63,17 @@ class BpmTable extends Component {
                     }
                 }
             },
+            {
+                title: "任务状态",
+                dataIndex: "e",
+                key: "e",
+                render: (text, record, index) => {
+                    if (record == null) {
+                        return <div>-</div>
+                    } else {
+                        return <div>{recordToState(record)}</div>
+                    }
+                }},
             {
                 title: "审批意见",
                 dataIndex: "deleteReason",

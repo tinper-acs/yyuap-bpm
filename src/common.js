@@ -74,6 +74,20 @@ export const descriptionToText = (vApproveType) => {
     }
 }
 
+export const  recordToState=(record)=>{
+   if (record.description === 'withdraw') {
+       return '已完成';
+   }else{
+       if(record.endTime && record.startTime){
+           return '已完成';//有开始时间 有结束时间为已完成
+       }else if(record.claimTime && new Date() >record.claimTime){
+           return '已逾期';//当前时间大于超时时间
+       }else{
+           return '审批中';//其他情况为审批中
+       }
+   }
+}
+
 /**
  * 获得处理URL
  */
