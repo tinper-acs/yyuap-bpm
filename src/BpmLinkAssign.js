@@ -224,7 +224,7 @@ class BpmLinkAssign extends Component {
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
                     isRadio: false,
                     filterRefUrl: self.props.filterRefUrl,
-                    className: '',
+                    className: 'bpm-ref',
                     param: {//url请求参数
                         refCode: self.props.refCode,
                         tenantId: '',

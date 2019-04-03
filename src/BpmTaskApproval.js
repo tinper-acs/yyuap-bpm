@@ -187,7 +187,7 @@ class BpmTaskApproval extends Component {
             hasPage: true,
             refType: self.state.approvetype ==='delegate'?2:5,//1:树形 2.单表 3.树卡型 4.多选 5.default
             isRadio: self.state.approvetype === 'delegate',
-            className: '',
+            className: 'bpm-ref',
             emptyBtn:true,
             param: {//url请求参数
                 refCode: self.state.approvetype ==='delegate'?'newuser':'userUnderOrgRef',
@@ -262,7 +262,7 @@ class BpmTaskApproval extends Component {
                                 </Col>
                             <Col md={4} mdOffset={3} xs={4} xsOffset={2} sm={4} smOffset={3} style={{ "textAlign": "right","paddingRight": 0}}>
                                 {/*{this.props.appType == "1" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}*/}
-                                {this.props.appType == "1" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
+                                {/*{this.props.appType == "1" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}*/}
                             </Col>
                         </Row>
                         <Row style={{
@@ -303,7 +303,7 @@ class BpmTaskApproval extends Component {
                             </Col>
                             <Col md={4} style={{ "textAlign": "right" }}>
                                 {/*{this.props.appType == "2" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}*/}
-                                {this.props.appType == "2" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
+                                {/*{this.props.appType == "2" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}*/}
                             </Col>
                         </Row>
                         <Row style={{
