@@ -1,13 +1,8 @@
-## Bpm流程组件
+# 流程组件 YyuapBpm
 
-[![npm version](https://img.shields.io/npm/v/yyuap-bpm.svg)](https://www.npmjs.com/package/yyuap-bpm)
-[![NPM downloads](http://img.shields.io/npm/dt/yyuap-bpm.svg?style=flat)](https://npmjs.org/package/yyuap-bpm)
+基于tinper-bee组件库对iUap原有UUI流程业务组件流程部分进行封装React版本
 
-
-
-### 1. 简介
-
-> 基于tinper-bee组件库对iUap原有UUI流程业务组件流程部分进行封装React版本
+实际使用中不需要使用全部组件
 
 总共包含8种组件，分别是：
 
@@ -22,14 +17,17 @@
 7|BpmTaskApprovalWrap|流程整合审批面板
 8|BpmTestCheckTable|测试任务中心表格组件
 
-实际使用中不需要使用全部组件
 
-### 2. 安装
+## 何时使用
+ 
+用来开发的时候测试任务中心表格，禁止用于生产阶段切记！！！
+
+
+## 如何使用
 
 - 通过npm下载使用
 `npm install yyuap-bpm -S`
 
-### 3. 使用
 
 如果使用流程图相关组件那么导入:
 
@@ -46,9 +44,9 @@ import { BpmWrap } from 'yyuap-bpm';
 />
 ```
 
-### 4. API
+## API
 
-##### BpmFlowChart
+### BpmFlowChart
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
@@ -58,7 +56,7 @@ import { BpmWrap } from 'yyuap-bpm';
 4|width|string|流程图宽度
 5|height|string|流程图高度
 
-##### BpmTable
+### BpmTable
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
@@ -66,7 +64,7 @@ import { BpmWrap } from 'yyuap-bpm';
 2|processDefinitionId|string|流程图服务必备参数
 3|processInstanceId|string|流程图服务必备参数
 
-##### BpmTaskApproval
+### BpmTaskApproval
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
@@ -77,7 +75,7 @@ import { BpmWrap } from 'yyuap-bpm';
 5|onSuccess|function|调用后端服务成功后的回调
 
 
-##### BpmButtonSubmit
+### BpmButtonSubmit
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
@@ -92,7 +90,7 @@ import { BpmWrap } from 'yyuap-bpm';
 9|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
-##### BpmButtonRecall
+### BpmButtonRecall
 
 序号 | 参数 | 类型 | 说明
 ---|---|---|---
@@ -105,7 +103,7 @@ import { BpmWrap } from 'yyuap-bpm';
 7|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
-##### BpmWrap
+### BpmWrap
 
 > 基于BpmFlowChart和BpmTable组合使用的流程查看组件
 当传入id(TaskID)、processDefinitionId、processInstanceId的时候不请求getbillid接口
@@ -119,7 +117,7 @@ import { BpmWrap } from 'yyuap-bpm';
 3|processInstanceId|string|processInstanceId
 
 
-##### BpmTaskApprovalWrap
+### BpmTaskApprovalWrap
 
 
 序号 | 参数 | 类型 | 说明
@@ -132,8 +130,8 @@ import { BpmWrap } from 'yyuap-bpm';
 6|onStart|function|调用异步服务回调，一般用于请求Loading处理
 
 
-##### BpmTestCheckTable
+## 注意事项
 
-> 用来开发的时候测试任务中心表格，禁止用于生产阶段切记！！！
+用来开发的时候测试任务中心表格，禁止用于生产阶段切记！！！
 
-
+## 更新日志
