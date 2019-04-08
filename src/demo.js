@@ -42,18 +42,17 @@ class Demo extends Component {
                 />
                 <BpmTestCheckTable />
                 <BpmButtonSubmit
-                    funccode="ygdemo_yw_info"
+                    funccode="f3d51126-c5dd-4d23-9c23-9040e405cb37"
                     nodekey="003"
                     size="lg"
                     isOne={false}
-                    url={`/ygdemo_yw_info/submit`}
-                    urlAssignSubmit={`/ygdemo_yw_info/assignSubmit`}
-                    checkedArray={
-                        [
-                            { "id": "ea69b9bf-d8b5-47a7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 },
-                            { "id": "ea69b9bf-d8sssa7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 }
-                        ]
-                    }
+                    url={`/iuapmdm/modeling/mdmshow/flowdata/submit`}
+                    urlAssignSubmit={`/iuapmdm/modeling/mdmshow/flowdata/assignSubmit`}
+                    params={{
+                        pk_gd:'f3d51126-c5dd-4d23-9c23-9040e405cb37', // 左侧树主键
+                        main:"{\"mdm_datastatus\":\"3\",\"mdm_duplicate\":0,\"dr\":0,\"mdm_code\":\"lctest00100000002\",\"mdm_version\":1,\"name\":\"ee\",\"code\":\"ee\",\"pk_mdm\":\"ba295cb8-cbed-4c46-9bb7-33ead604ae1f\"}",
+                        sub:'', // 子表的json对象字符串，需要拼接(可能多个子表，也可能没有)
+                    }}
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}
                 >
@@ -62,43 +61,11 @@ class Demo extends Component {
                     </Button>
                 </BpmButtonSubmit>
                 <BpmButtonRecall
-                    url={`/iuap_pap_quickstart/example_workorder/recall`}
-                    checkedArray={
-                        [
-                            {
-                                "id": "ccb34c6d3fc349789be73678d7cc8fac",
-                                "createTime": "2018-07-04 12:36:26 088",
-                                "createUser": "U001",
-                                "lastModified": "2018-07-04 12:36:26 088",
-                                "lastModifyUser": "U001",
-                                "ts": "2018-07-04 12:36:26 088",
-                                "dr": 0,
-                                "bpmState": 1,
-                                "taskKey": null,
-                                "taskId": null,
-                                "processInstanceId": null,
-                                "processDefineCode": null,
-                                "comment": null,
-                                "orderCode": "201807042036265",
-                                "orderName": null,
-                                "supplier": null,
-                                "supplierName": "11",
-                                "type": "0",
-                                "purchasing": "22",
-                                "purchasingGroup": "22",
-                                "voucherDate": 1530633600000,
-                                "approvalState": null,
-                                "confirmState": null,
-                                "closeState": null,
-                                "type_name": "投诉工单",
-                                "approvalState_name": null,
-                                "confirmState_name": null,
-                                "closeState_name": null,
-                                "remark": null,
-                                "bpmBillCode": null
-                            }
-                        ]
-                    }
+                    url={`/iuapmdm/modeling/mdmshow/flowdata/unsubmit`}
+                    params={{
+                        pk_gd:'f3d51126-c5dd-4d23-9c23-9040e405cb37', // 左侧树主键
+                        pk_mdm:"ba295cb8-cbed-4c46-9bb7-33ead604ae1f"
+                    }}
                 >
                     <Button size='sm' shape="border" className="admin">
                         <i className='uf uf-arrow-c-o-down'></i>收回

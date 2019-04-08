@@ -12,6 +12,7 @@ import refOptions from './refOptions';
 import BpmCopyContent from "./BpmCopyContent";
 const propTypes = {
     checkedArray: PropTypes.array,
+    params:PropTypes.object,
     funccode: PropTypes.string,
     nodekey: PropTypes.string,
     url: PropTypes.string,
@@ -52,7 +53,7 @@ class BpmButtonSubmit extends Component {
     }
     //提交流程按钮
     handlerBtn = async () => {
-        let { checkedArray, isOne, onStart, onEnd, onSuccess, onError } = this.props;
+        let { params,checkedArray, isOne, onStart, onEnd, onSuccess, onError } = this.props;
         //检查是否多单据提交
         if (isOne && checkedArray.length >= 2) {
             onError && onError({
@@ -63,9 +64,9 @@ class BpmButtonSubmit extends Component {
         }
 
         //处理数据提交第一次请求，然后发起二次请求
-        if (checkedArray.length > 0) {
+        if (checkedArray.length > 0||(params && params.main)) {
             //如果传来的数据状态bpmState==null or 0 那么直接给出错误重复提交
-            if (checkedArray[0].bpmState >= 1) {
+            if (checkedArray[0] && checkedArray[0].bpmState >= 1) {
                 onError && onError({
                     type: 1,
                     msg: `不能提交此单据，重复提交`
@@ -92,7 +93,8 @@ class BpmButtonSubmit extends Component {
                 let commitParam = {
                     "url": this.props.url,
                     "processDefineCode": detailMsg.data.res_code,
-                    "submitArray": checkedArray
+                    "submitArray": checkedArray,
+                    'params':params
                 }
                 //得到下次需要接口用的res_code
                 this.setState({
@@ -100,29 +102,33 @@ class BpmButtonSubmit extends Component {
                 });
                 //收集参数准备提交submit
                 let result = await onCommit(commitParam);
-                let flag = result.data.success;
+
+                //flag此时为true, msg提示信息，data返回的其他数据信息失败时，对象有两个参数flag, msg,   flag此时为false, msg提示信息
+
+                let flag = result.data.flag;
                 //一般普通的提交成功和失败
-                if (flag == "success" && (!result.data.detailMsg.data.assignAble)) {
+                if (flag && (!result.data.data.assignAble)) {
                     //正确
                     onSuccess && onSuccess();
-                } else if (flag == "fail_global") {
+                } else if (flag) {
                     //后端错误
                     onError && onError({
                         type: 2,
-                        msg: reconvert(result.data.message) || '流程启动失败'
+                        msg: reconvert(result.data.msg) || '流程启动失败'
                     });
                 }
                 //当得知需要二次弹出环节面板
-                if (result.data.detailMsg.data && result.data.detailMsg.data.assignAble == true) {
+                if ( flag && result.data.data && result.data.data.assignAble == true) {
+                    let data = result.data.data
                     //判断是否有最新的活动id和name
-                    if (result.data.detailMsg.data.assignedActivities && result.data.detailMsg.data.assignedActivities.length > 0) {
+                    if (data.assignedActivities && data.assignedActivities.length > 0) {
                         //停止事件
                         onEnd && onEnd();
-                        let arr = result.data.detailMsg.data.assignedActivities.filter( (item)=>{ return !item.properties.startactivity;});
+                        let arr = data.assignedActivities.filter( (item)=>{ return !item.properties.startactivity;});
                         //更新环节指派数据
                         this.setState({
                             huanjieShow: true,
-                            chaosongShow:result.data.detailMsg.data.assignedActivities[0].properties.iscopytouser,
+                            chaosongShow:data.assignedActivities[0].properties.iscopytouser,
                             huanjieList: arr,
                             obj: checkedArray,
                             assignInfo: {
@@ -174,7 +180,7 @@ class BpmButtonSubmit extends Component {
     }
     //选择完所有加签后的确定事件
     huanjieHandlerOK = async () => {
-        let { urlAssignSubmit, onSuccess, onError, onStart, onEnd } = this.props;
+        let { urlAssignSubmit, onSuccess, onError, onStart, onEnd ,params} = this.props;
         let { processDefineCode, assignInfo, obj,copyusers,intersection,submiting } = this.state;
         obj=obj[0];
         let arr=[];
@@ -194,7 +200,8 @@ class BpmButtonSubmit extends Component {
                 assignInfo,
                 obj,
                 copyusers,
-                intersection
+                intersection,
+                ...params
 
             }).catch((e) => {
 
@@ -206,7 +213,9 @@ class BpmButtonSubmit extends Component {
                     submiting:false
                 })
             });
-            if (result.data.success == 'success') {
+            //flag, msg, data
+
+            if (result.data.flag) {
                 onSuccess && onSuccess();
                 this.setState({
                     huanjieShow: false,
@@ -215,10 +224,10 @@ class BpmButtonSubmit extends Component {
                     showVal: [],
                     submiting:false
                 });
-            } else if (result.data.success == 'fail_global') {
+            } else if (!result.data.flag) {
                 onError && onError({
                     type: 2,
-                    msg: reconvert(result.data.message) || '流程启动失败'
+                    msg: reconvert(result.data.msg) || '流程启动失败'
                 });
                 this.setState({
                     huanjieShow: false,

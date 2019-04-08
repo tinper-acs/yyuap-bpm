@@ -340,7 +340,7 @@ export const onCommit = (data) => {
     return axios({
         url: `${data.url}`,
         method: "post",
-        data: data['submitArray'],
+        data: data['params']?data['params']:data['submitArray'],
         params: { "processDefineCode": data['processDefineCode'] }
     });
 }
