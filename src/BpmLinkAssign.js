@@ -275,7 +275,7 @@ BpmLinkAssign.defaultProps = {
     urlAssignSubmit: "/example/ygdemo_yw_info/assignSubmit",
     className: "",
     filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
-    refCode: "newuser",
+    refCode: "relatedUser",
     scrollY: 270
 }
 export default BpmLinkAssign;

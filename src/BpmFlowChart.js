@@ -18,7 +18,7 @@ class BpmFlowChart extends Component {
         return (
             <div>
                 <iframe
-                    style={{ width, height, "minHeight": "300px" }}
+                    style={{ width, height, "minHeight": "400px" }}
                     src={`${url}?processDefinitionId=${processDefinitionId}&processInstanceId=${processInstanceId}`}
                     frameBorder="0"
                 >
@@ -31,7 +31,7 @@ BpmFlowChart.propTypes = propTypes;
 BpmFlowChart.defaultProps = {
     url: "/eiap-plus/vendor/diagram-viewer/index.html",
     width: "99%",
-    height: "300px",
+    height: "400px",
     processDefinitionId: "eiap508870:4:c3bc57e8-631a-11e8-8d04-0686c4000fcf",
     processInstanceId: "d5c3ab59-631a-11e8-8d04-0686c4000fcf"
 }
