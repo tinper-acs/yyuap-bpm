@@ -110,7 +110,7 @@ class BpmButtonSubmit extends Component {
                 if (flag && (!result.data.data.assignAble)) {
                     //正确
                     onSuccess && onSuccess();
-                } else if (flag) {
+                } else if (!flag) {
                     //后端错误
                     onError && onError({
                         type: 2,
