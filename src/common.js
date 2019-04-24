@@ -257,7 +257,8 @@ export const sendBpmTaskAJAX = (type, data) => {
                 taskId: data.taskId,
                 approvetype: data.approvetype,
                 processInstanceId: data.processInstanceId,
-                participants: data.participants
+                participants: data.participants,
+                assignInfo:data.assignInfo
             }).catch((e) => {
                 if (e.response && e.response.status == 401){
                     Message.create({content: e.response.data && e.response.data.msg, color: 'danger', position: 'top'})

@@ -4,8 +4,9 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Button ,Message} from 'tinper-bee';
+import { Col, Row, Button ,Message,Modal,Table} from 'tinper-bee';
 import BpmTaskApproval from './BpmTaskApproval';
+import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import { billidToIds } from './common';
 import refOptions from './refOptions';
 import createModal from 'yyuap-ref';
@@ -28,9 +29,19 @@ class BpmTaskApprovalWrap extends Component {
     constructor() {
         super();
         this.state = {
+            childRefKey: [],//参照组件选择的数据
             isShowFlowBtn: false,
             id: "",
             taskId: "",
+            huanjieShow:false,
+            huanjieList:[],
+            checkedArray:[],
+            editRowIndex: 0,
+            showVal: [],
+            submiting:false,
+            assignInfo: {
+                assignInfoItems: []
+            },
             processDefinitionId: "",
             processInstanceId: "",
             copyusers:[], //抄送数据
@@ -87,6 +98,58 @@ class BpmTaskApprovalWrap extends Component {
             });
         }
     }
+    //通用关闭方法
+    closeHuanjie = () => {
+        this.setState({
+            huanjieShow: false,
+            childRefKey: [],
+            showVal: []
+        });
+    }
+    //选择完所有加签后的确定事件
+    huanjieHandlerOK = async () => {
+        let {  onSuccess, onError, onStart, onEnd } = this.props;
+        let { processDefineCode, assignInfo, obj,copyusers,intersection,submiting } = this.state;
+        //加载事件
+        onStart && onStart();
+        var result = await sendBpmTaskAJAX('commit', {
+                                activityId: this.state.HuoDongID,
+                                activityName: this.state.HuoDongName,
+                                comment: this.state.comment,
+                                taskId: this.state.taskId,
+                                approvetype: this.state.approvetype,
+                                processInstanceId: this.state.processInstanceId,
+                                participants: [], assignInfo
+                        }).catch((e) => {
+                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                            onError && onError({
+                                type: 2,
+                                msg: `服务器请求出错`
+                            });
+                        });
+
+        if (result.data.flag == 'success') {
+            onSuccess && onSuccess();
+            this.setState({
+                huanjieShow: false,
+                childRefKey: [],
+                showVal: [],
+                submiting:false
+            });
+        } else if (result.data.flag == 'fail_global') {
+            onError && onError({
+                type: 2,
+                msg: reconvert(result.data.message) || '流程启动失败'
+            });
+            this.setState({
+                huanjieShow: false,
+                childRefKey: [],
+                showVal: [],
+                submiting:false
+            });
+        }
+
+    }
     //提交
     handlerSubmitBtn =  async()=>{
         let { onStart, onEnd, onSuccess, onError } = this.props;
@@ -114,16 +177,30 @@ class BpmTaskApprovalWrap extends Component {
                 //普通同意操作，有后续操作，有加签人员判断
                 if (result.data.assignAble) {
                     //判断是否有最新的活动id和name
-                    if (result.data.assignList.length > 0) {
+                    if(result.data.assignList.length>1){
+                        onEnd && onEnd();
+                        let arr = result.data.assignList
+                        //更新环节指派数据
                         this.setState({
-                            HuoDongID: result.data.assignList[0].activityId,
-                            HuoDongName: result.data.assignList[0].activityName
+                            huanjieShow: true,
+                            huanjieList: arr,
+                            assignInfo: {
+                                assignInfoItems: Array.from(arr, x => ({ activityId: x.activityId, activityName: x.activityName, participants: [] }))
+                            }
                         });
-                    }
+
+                    }else{
+                        if (result.data.assignList.length > 0) {
+                            this.setState({
+                                HuoDongID: result.data.assignList[0].activityId,
+                                HuoDongName: result.data.assignList[0].activityName
+                            });
+                        }
                     // onStart && onStart();
                     //可以是加签操作，拉取加签请求
                     onEnd && onEnd();
-                    var options = Object.assign(JSON.parse(refOptions), {
+                    let options = Object.assign(JSON.parse(refOptions),
+                        {
                         title: '指派人员选择',
                         backdrop: false,
                         hasPage: true,
@@ -162,7 +239,14 @@ class BpmTaskApprovalWrap extends Component {
                                 taskId: this.state.taskId,
                                 approvetype: this.state.approvetype,
                                 processInstanceId: this.state.processInstanceId,
-                                participants: Array.from(sels, x => ({ "id": x.id }))
+                                participants: Array.from(sels, x => ({ "id": x.id })),
+                                assignInfo:{
+                                    assignInfoItems:[{
+                                        activityId: this.state.HuoDongID,
+                                        activityName: this.state.HuoDongName,
+                                        participants: Array.from(sels, x => ({ "id": x.id }))
+                                    }]
+                                }
                             }).catch((e) => {
                                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                                 onError && onError({
@@ -192,6 +276,7 @@ class BpmTaskApprovalWrap extends Component {
                     });
                     //弹出参照组件
                     createModal(options);
+                    }
                 }
                 break;
             //驳回到环节
@@ -363,6 +448,75 @@ class BpmTaskApprovalWrap extends Component {
         });
     }
     render() {
+        let self = this;
+        let huanjieCol = [{
+        title: "名称",
+        dataIndex: "activityName",
+        key: "activityName",
+
+    },
+        {
+            title: "指派",
+            dataIndex: "1",
+            key: "1",
+            render(text, record, index) {
+                return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
+                    {
+                        title: '选择指派人员',
+                        refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
+                        className: '',
+                        param: {//url请求参数
+                            refCode: 'userUnderOrgRef',
+                            tenantId: '',
+                            sysId: '',
+                            transmitParam: '5',
+                        },
+                        emptyBtn:true,
+                        textOption: {
+                            modalTitle: '选择指派人员',
+                            leftTitle: '组织结构',
+                            rightTitle: '人员列表',
+                            leftTransferText: '待选人员',
+                            rightTransferText: '已选人员',
+
+                        },
+                        checkedArray:self.state.checkedArray[index]||[],
+                        onCancel: function (p) {
+                            console.log(p)
+                        },
+                        //保存回调sels选中的行数据showVal显示的字
+                        onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                            console.log(sels);
+                            var temp = sels.map(v => v.id);
+                            //显示值
+                            let _showVal = self.state.showVal.slice();
+                            _showVal[index] = showVal;
+                            //选中的值
+                            let _childRefKey = self.state.childRefKey.slice();
+                            _childRefKey[index] = temp;
+                            //副本原始对象
+                            let sourseArray = self.state.assignInfo.assignInfoItems.slice();
+                            //根据修改索引修改指定数据内容
+                            sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
+                            let checkedArray = self.state.checkedArray;
+                            checkedArray[index] = sels;
+                            self.setState({
+                                checkedArray:checkedArray,
+                                childRefKey: _childRefKey,
+                                showVal: _showVal,
+                                assignInfo: {
+                                    assignInfoItems: sourseArray
+                                }
+                            });
+                        },
+                        showVal: self.state.showVal[index],
+                        showKey: 'refname',
+                        verification: false
+                    }
+                )} />
+            }
+        }]
+
         return (
             <div className="clearfix">
                 {this.state.processDefinitionId && <div>
@@ -417,6 +571,28 @@ class BpmTaskApprovalWrap extends Component {
                         <Button onClick={this.props.onBpmFlowClick} style={{ "marginBottom": "4px", "marginRight": "15px" }} colors="primary">流程图</Button>
                     </Col>
                 </Row>}
+                <Modal
+                    size={this.props.size}
+                    show={this.state.huanjieShow}
+                    backdrop={false}
+                    enforceFocus={false}
+                    onHide={this.closeHuanjie}>
+                <Modal.Header closeButton>
+                    <Modal.Title> 环节指派</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Table
+                        rowKey={record => record.id}
+                        columns={huanjieCol}
+                        data={this.state.huanjieList}
+                        scroll={{ x: "100%", y: 200 }}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>
+                    <Button colors="primary"  onClick={this.huanjieHandlerOK}> 确定 </Button>
+                </Modal.Footer>
+                </Modal>
             </div>
         );
     }
