@@ -20,7 +20,7 @@ let option = {
     onCancel: function (p) {
         console.log(p)
     },
-    filterKey: [{ title: '人员名称人员名称人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }, { title: '人员名称', key: 'peoname' }],
+    filterKey: [ { title: '用户名称', key: 'peoname' }],
     textOption: {
         modalTitle: '选择品类',
         leftTitle: '品类结构',

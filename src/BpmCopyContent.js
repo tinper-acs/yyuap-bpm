@@ -179,7 +179,7 @@ class BpmCopyContent extends Component {
             verification: false
         }
         let userRef ={
-            title: '抄送人员选择',
+            title: '抄送用户选择',
             backdrop: false,
             hasPage: true,
             emptyBtn:true,

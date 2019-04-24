@@ -157,7 +157,7 @@ class BpmButtonSubmit extends Component {
             showVal: []
         });
     }
-    //选择人员后的确定事件
+    //选择用户后的确定事件
     signAddOK = () => {
         //修改第几个数据
         let _index = this.state.editRowIndex;
@@ -248,7 +248,7 @@ class BpmButtonSubmit extends Component {
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
                     {
-                        title: '选择指派人员',
+                        title: '选择指派用户',
                         refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
                         className: '',
                         param: {//url请求参数
@@ -259,11 +259,11 @@ class BpmButtonSubmit extends Component {
                         },
                         emptyBtn:true,
                         textOption: {
-                            modalTitle: '选择指派人员',
+                            modalTitle: '选择指派用户',
                             leftTitle: '组织结构',
-                            rightTitle: '人员列表',
-                            leftTransferText: '待选人员',
-                            rightTransferText: '已选人员',
+                            rightTitle: '用户列表',
+                            leftTransferText: '待选用户',
+                            rightTransferText: '已选用户',
 
                         },
                         checkedArray:self.state.checkedArray[index]||[],

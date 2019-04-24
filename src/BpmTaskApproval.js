@@ -177,7 +177,7 @@ class BpmTaskApproval extends Component {
     render() {
         let self = this;
         let userRef ={
-            title:self.state.approvetype ==='delegate'?'改派人员选择':"加签人员选择",
+            title:self.state.approvetype ==='delegate'?'改派用户选择':"加签用户选择",
             backdrop: false,
             hasPage: true,
             refType: self.state.approvetype ==='delegate'?2:5,//1:树形 2.单表 3.树卡型 4.多选 5.default
@@ -192,11 +192,11 @@ class BpmTaskApproval extends Component {
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
             },
             textOption: {
-                modalTitle: '选择加签人员',
+                modalTitle: '选择加签用户',
                 leftTitle: '组织结构',
-                rightTitle: '人员列表',
-                leftTransferText: '待选人员',
-                rightTransferText: '已选人员',
+                rightTitle: '用户列表',
+                leftTransferText: '待选用户',
+                rightTransferText: '已选用户',
 
             },
             //选择中的数据

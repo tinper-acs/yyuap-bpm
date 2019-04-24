@@ -174,7 +174,7 @@ class BpmTaskApprovalWrap extends Component {
                         msg: result.data.msg
                     });
                 }
-                //普通同意操作，有后续操作，有加签人员判断
+                //普通同意操作，有后续操作，有加签用户判断
                 if (result.data.assignAble) {
                     //判断是否有最新的活动id和name
                     if(result.data.assignList.length>1){
@@ -201,7 +201,7 @@ class BpmTaskApprovalWrap extends Component {
                     onEnd && onEnd();
                     let options = Object.assign(JSON.parse(refOptions),
                         {
-                        title: '指派人员选择',
+                        title: '指派用户选择',
                         backdrop: false,
                         hasPage: true,
                         refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
@@ -216,11 +216,11 @@ class BpmTaskApprovalWrap extends Component {
                         //选择中的数据
                         checkedArray:[],
                         textOption: {
-                            modalTitle: '选择指派人员',
+                            modalTitle: '选择指派用户',
                             leftTitle: '组织结构',
-                            rightTitle: '人员列表',
-                            leftTransferText: '待选人员',
-                            rightTransferText: '已选人员',
+                            rightTitle: '用户列表',
+                            leftTransferText: '待选用户',
+                            rightTransferText: '已选用户',
 
                         },
                         onCancel: function (p) {
@@ -327,10 +327,10 @@ class BpmTaskApprovalWrap extends Component {
                 onStart && onStart();
                 //TO DO:重构URL
                 if(!this.state.userIds ||this.state.userIds.length ===0){
-                    Message.create({ content: `加签人员不可为空`, color: 'warning', position: 'top' });
+                    Message.create({ content: `加签用户不可为空`, color: 'warning', position: 'top' });
                     onError && onError({
                         type: 2,
-                        msg: `加签人员不可为空`
+                        msg: `加签用户不可为空`
                     });
                     return
                 }
@@ -366,10 +366,10 @@ class BpmTaskApprovalWrap extends Component {
             case 'delegate':
                 onStart && onStart();
                 if(!this.state.userId ||this.state.userId.length ===0){
-                    Message.create({ content: `改派人员不可为空`, color: 'warning', position: 'top' });
+                    Message.create({ content: `改派用户不可为空`, color: 'warning', position: 'top' });
                     onError && onError({
                         type: 2,
-                        msg: `改派人员不可为空`
+                        msg: `改派用户不可为空`
                     });
                     return
                 }
@@ -462,7 +462,7 @@ class BpmTaskApprovalWrap extends Component {
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
                     {
-                        title: '选择指派人员',
+                        title: '选择指派用户',
                         refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
                         className: '',
                         param: {//url请求参数
@@ -473,11 +473,11 @@ class BpmTaskApprovalWrap extends Component {
                         },
                         emptyBtn:true,
                         textOption: {
-                            modalTitle: '选择指派人员',
+                            modalTitle: '选择指派用户',
                             leftTitle: '组织结构',
-                            rightTitle: '人员列表',
-                            leftTransferText: '待选人员',
-                            rightTransferText: '已选人员',
+                            rightTitle: '用户列表',
+                            leftTransferText: '待选用户',
+                            rightTransferText: '已选用户',
 
                         },
                         checkedArray:self.state.checkedArray[index]||[],

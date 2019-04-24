@@ -148,7 +148,7 @@ class BpmLinkAssign extends Component {
             showVal: []
         });
     }
-    //选择人员后的确定事件
+    //选择用户后的确定事件
     signAddOK = () => {
         //修改第几个数据
         let _index = this.state.editRowIndex;
@@ -213,7 +213,7 @@ class BpmLinkAssign extends Component {
 
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
-                    title: '人员选择',
+                    title: '用户选择',
                     backdrop: false,
                     hasPage: true,
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
