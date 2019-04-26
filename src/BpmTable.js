@@ -2,6 +2,8 @@
  * bpm流程数据历史表格
  */
 
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import {getlocals,FormattedMessage} from './local/intl'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Table } from 'tinper-bee';
@@ -26,12 +28,12 @@ class BpmTable extends Component {
             //
             // },
             {
-                title: "环节名称",
+                title: <FormattedMessage id="js.b9f.src14.0001" defaultMessage="环节名称" />,
                 dataIndex: "name",
                 key: "name"
             },
             {
-                title: "任务类型",
+                title: <FormattedMessage id="js.b9f.src14.0002" defaultMessage="任务类型" />,
                 dataIndex: "description",
                 key: "description",
                 render: (text, record, index) => {
@@ -39,12 +41,12 @@ class BpmTable extends Component {
                 }
             },
             {
-                title: "审批人",
+                title: <FormattedMessage id="js.b9f.src14.0003" defaultMessage="审批人" />,
                 dataIndex: "executionId",
                 key: "executionId"
             },
             {
-                title: "开始时间",
+                title: <FormattedMessage id="js.b9f.src14.0004" defaultMessage="开始时间" />,
                 dataIndex: "startTime",
                 key: "startTime",
                 render: (text, record, index) => {
@@ -52,7 +54,7 @@ class BpmTable extends Component {
                 }
             },
             {
-                title: "结束时间",
+                title: <FormattedMessage id="js.b9f.src14.0005" defaultMessage="结束时间" />,
                 dataIndex: "endTime",
                 key: "endTime",
                 render: (text, record, index) => {
@@ -64,7 +66,7 @@ class BpmTable extends Component {
                 }
             },
             {
-                title: "任务状态",
+                title: <FormattedMessage id="js.b9f.src14.0006" defaultMessage="任务状态" />,
                 dataIndex: "e",
                 key: "e",
                 render: (text, record, index) => {
@@ -75,12 +77,12 @@ class BpmTable extends Component {
                     }
                 }},
             {
-                title: "审批意见",
+                title: <FormattedMessage id="js.b9f.src14.0007" defaultMessage="审批意见" />,
                 dataIndex: "deleteReason",
                 key: "deleteReason"
             },
             {
-                title: "超时时间",
+                title: <FormattedMessage id="js.b9f.src14.0008" defaultMessage="超时时间" />,
                 dataIndex: "claimTime",
                 key: "claimTime",
                 render: (text, record, index) => {
@@ -106,7 +108,7 @@ class BpmTable extends Component {
     render() {
         return (<Table
             bordered
-            emptyText={() => <span>暂时没有流程历史数据</span>}
+            emptyText={() => <span><FormattedMessage id="js.b9f.src14.0009" defaultMessage="暂时没有流程历史数据" /></span>}
             columns={this.columns}
             data={this.state.data}
         />);

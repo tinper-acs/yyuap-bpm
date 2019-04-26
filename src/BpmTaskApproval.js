@@ -2,6 +2,9 @@
  * bpm流程任务审批组件
  */
 
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import cookie from 'react-cookie'
+import {getlocals,FormattedMessage} from './local/intl'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Button, Col, Message, Modal, Radio, Row, Table,FormControl} from 'tinper-bee';
@@ -29,7 +32,7 @@ class BpmTaskApproval extends Component {
         super(props);
         this.state = {
             approvetype: "agree",
-            comment: "审批同意",
+            comment: getlocals({id:"js.b9f.src10.0001",defaultMessage:"审批同意"}),
             processDefinitionId: props.processDefinitionId,
             processInstanceId: props.processInstanceId,
             taskId: props.id,
@@ -48,7 +51,7 @@ class BpmTaskApproval extends Component {
         //驳回到环节的Modal-Table
         this.rejectToActivityCol = [
         {
-            title: "活动名称",
+            title: getlocals({id:"js.b9f.src10.0002" ,defaultMessage:"活动名称" }),
             dataIndex: "activityName",
             key: "activityName",
             textAlign:'center'
@@ -117,7 +120,7 @@ class BpmTaskApproval extends Component {
             Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
             onError && onError({
                 type: 2,
-                msg: `服务器请求错误`
+                msg: getlocals({id:"js.b9f.src10.0003" ,defaultMessage:"服务器请求错误" })
             });
         });
 
@@ -146,15 +149,15 @@ class BpmTaskApproval extends Component {
     }
     getDataSource=()=>{
         let arr =[{
-            key: "同意",
+            key: getlocals({id:"js.b9f.src10.0004" ,defaultMessage:"同意" }),
             value: "agree"
         }];
         let { addsignAble,rejectAble ,delegateAble,unagreeable ,deleteable} = this.props.properties
-        if(unagreeable)arr.push({key: "不同意", value: "unagree"})
-        if(rejectAble)arr.push({key: "驳回到环节", value: "rejectToActivity"})
-        if(deleteable)arr.push({key: "驳回到制单人", value: "rejectToBillMaker"})
-        if(addsignAble)arr.push({key: "加签", value: "signAdd"})
-        if(delegateAble)arr.push({key: "改派", value: "delegate"})
+        if(!unagreeable)arr.push({key: getlocals({id:"js.b9f.src10.0005" ,defaultMessage:"不同意" }), value: "unagree"})
+        if(rejectAble)arr.push({key: getlocals({id:"js.b9f.src10.0006" ,defaultMessage:"驳回到环节" }), value: "rejectToActivity"})
+        if(deleteable)arr.push({key: getlocals({id:"js.b9f.src10.0007" ,defaultMessage:"驳回到制单人" }), value: "rejectToBillMaker"})
+        if(!addsignAble)arr.push({key: getlocals({id:"js.b9f.src10.0008" ,defaultMessage:"加签" }), value: "signAdd"})
+        if(!delegateAble)arr.push({key: getlocals({id:"js.b9f.src10.0009" ,defaultMessage:"改派" }), value: "delegate"})
         return arr
     }
     rejectToActivity= async ()=>{
@@ -167,17 +170,17 @@ class BpmTaskApproval extends Component {
                 rejectToActivityShow: true
             });
         } else {
-            Message.create({ content: result.data.msg||'当前环节没有可被驳回的环节', color: 'warning', position: 'top' });
+            Message.create({ content: result.data.msg||getlocals({id:"js.b9f.src10.0010" ,defaultMessage:"当前环节没有可被驳回的环节" }), color: 'warning', position: 'top' });
             onError && onError({
                 type: 2,
-                msg: result.data.msg||'当前环节没有可被驳回的环节'
+                msg: result.data.msg||getlocals({id:"js.b9f.src10.0010" ,defaultMessage:"当前环节没有可被驳回的环节" })
             });
         }
     }
     render() {
         let self = this;
         let userRef ={
-            title:self.state.approvetype ==='delegate'?'改派用户选择':"加签用户选择",
+            title:self.state.approvetype ==='delegate'?getlocals({id:"js.b9f.src10.0011" ,defaultMessage:"改派用户选择" }):getlocals({id:"js.b9f.src10.0012" ,defaultMessage:"加签用户选择" }),
             backdrop: false,
             hasPage: true,
             refType: self.state.approvetype ==='delegate'?2:5,//1:树形 2.单表 3.树卡型 4.多选 5.default
@@ -190,13 +193,14 @@ class BpmTaskApproval extends Component {
                 sysId: '',
                 cfgParam:true,
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                locale:cookie.load('u_locale')
             },
             textOption: {
-                modalTitle: '选择加签用户',
-                leftTitle: '组织结构',
-                rightTitle: '用户列表',
-                leftTransferText: '待选用户',
-                rightTransferText: '已选用户',
+                modalTitle: getlocals({id:"js.b9f.src10.0013" ,defaultMessage:"选择加签用户" }),
+                leftTitle: getlocals({id:"js.b9f.src10.0014" ,defaultMessage:"组织结构" }),
+                rightTitle: getlocals({id:"js.b9f.src10.0015" ,defaultMessage:"用户列表" }),
+                leftTransferText: getlocals({id:"js.b9f.src10.0016" ,defaultMessage:"待选用户" }),
+                rightTransferText: getlocals({id:"js.b9f.src10.0017" ,defaultMessage:"已选用户" }),
 
             },
             //选择中的数据
@@ -239,7 +243,7 @@ class BpmTaskApproval extends Component {
                             <Col md={2}  sm={2} xs={3} style={{"paddingLeft":0,"paddingRight":'15px'}}>
                                 <Select
                                     style={{ width: '100%' }}
-                                    placeholder="请选择"
+                                    placeholder={getlocals({id:"js.b9f.src10.0018", defaultMessage:"请选择"})}
                                     onChange={self.handleChange}
                                     defaultValue="agree"
                                     data={self.getDataSource()}
@@ -250,14 +254,14 @@ class BpmTaskApproval extends Component {
                                     {this.state.approvetype==="delegate" &&<RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />}{/*改派*/}
                                     {this.state.approvetype==="rejectToActivity" &&<FormControl
                                         readOnly={true}
-                                        placeholder={'请选择环节'}
+                                        placeholder={getlocals({id:"js.b9f.src10.0019", defaultMessage:"请选择环节"})}
                                         value={this.state.activityName}
                                         onClick={this.rejectToActivity}
                                         onChange={this.onChange} />}{/*驳回*/}
                                 </Col>
                             <Col md={4} mdOffset={3} xs={4} xsOffset={2} sm={4} smOffset={3} style={{ "textAlign": "right","paddingRight": 0}}>
                                 {/*{this.props.appType == "1" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}*/}
-                                {this.props.appType == "1" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
+                                {this.props.appType == "1" && <Button onClick={this.handlerFlow} colors="primary">{getlocals({id:"js.b9f.src10.0020" ,defaultMessage:"流程图" })}</Button>}
                             </Col>
                         </Row>
                         <Row style={{
@@ -275,7 +279,7 @@ class BpmTaskApproval extends Component {
                                         "marginBottom": "20px",
                                         "borderRadius": "4px"
                                     }}
-                                    placeholder="请输入处理意见"
+                                    placeholder={getlocals({id:"js.b9f.src10.0021", defaultMessage:"请输入处理意见"})}
                                     value={this.state.comment}
                                     onChange={this.handlerCommentChange}
                                 />
@@ -293,12 +297,12 @@ class BpmTaskApproval extends Component {
                                     name="approvetype"
                                     selectedValue={this.state.approvetype}
                                     onChange={this.handleChange}>
-                                    <Radio value="withdraw">弃审</Radio>
+                                    <Radio value="withdraw">{getlocals({id:"js.b9f.src10.0022" ,defaultMessage:"弃审" })}</Radio>
                                 </Radio.RadioGroup>
                             </Col>
                             <Col md={4} style={{ "textAlign": "right" }}>
                                 {/*{this.props.appType == "2" && <Button onClick={this.handlerSubmitBtn} style={{ "marginRight": "10px" }} colors="primary">提交</Button>}*/}
-                                {this.props.appType == "2" && <Button onClick={this.handlerFlow} colors="primary">流程图</Button>}
+                                {this.props.appType == "2" && <Button onClick={this.handlerFlow} colors="primary">{getlocals({id:"js.b9f.src10.0020" ,defaultMessage:"流程图" })}</Button>}
                             </Col>
                         </Row>
                         <Row style={{
@@ -316,7 +320,7 @@ class BpmTaskApproval extends Component {
                                         "marginBottom": "20px",
                                         "borderRadius": "4px"
                                     }}
-                                    placeholder="请输入弃审意见"
+                                    placeholder={getlocals({id:"js.b9f.src10.0023", defaultMessage:"请输入弃审意见"})}
                                     value={this.state.comment}
                                     onChange={this.handlerCommentChange}
                                 />
@@ -329,12 +333,12 @@ class BpmTaskApproval extends Component {
                     backdrop={false}
                     onHide={this.activityModalClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title> 活动列表 </Modal.Title>
+                        <Modal.Title>{getlocals({id:"js.b9f.src10.0024" ,defaultMessage:"活动列表" })}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Table
                             rowKey={(r) => r.activityId}
-                            emptyText={() => (<div>暂无数据</div>)}
+                            emptyText={() => (<div>{getlocals({id:"js.b9f.src10.0025" ,defaultMessage:"暂无数据" })}</div>)}
                             rowClassName={(record, index, indent) => {
                                 if (this.state.selectedRow[index]) {
                                     return 'selected';
@@ -356,8 +360,8 @@ class BpmTaskApproval extends Component {
                             columns={this.rejectToActivityCol} data={this.state.rejectlist} />
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.activityModalClose}> 确定 </Button>
-                        <Button onClick={this.activityModalClose}> 关闭 </Button>
+                        <Button colors="primary" style={{ "marginRight": "10px" }} onClick={this.activityModalClose}>{getlocals({id:"js.b9f.src10.0026" ,defaultMessage:"确定" })}</Button>
+                        <Button onClick={this.activityModalClose}>{getlocals({id:"js.b9f.src10.0027" ,defaultMessage:"关闭" })}</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

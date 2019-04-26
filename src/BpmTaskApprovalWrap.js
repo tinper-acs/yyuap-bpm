@@ -2,6 +2,9 @@
  * 审批逻辑组件
  */
 
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import {getlocals,FormattedMessage} from './local/intl'
+import cookie from 'react-cookie'
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Button ,Message,Modal,Table} from 'tinper-bee';
@@ -47,7 +50,7 @@ class BpmTaskApprovalWrap extends Component {
             copyusers:[], //抄送数据
             intersection:true, //是否交集
             approvetype:"agree",  //审批类型
-            comment:"审批同意", //审批内容
+            comment:getlocals({id:"js.b9f.src5.0001" ,defaultMessage:"审批同意" }), //getlocals({id:"js.b9f.src5.0002" ,defaultMessage:"审批内容" })
             activityId:"",//驳回环节id
             userIds:[],//加签用户数组
             userId:"",//改派用户
@@ -124,7 +127,7 @@ class BpmTaskApprovalWrap extends Component {
                                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                             onError && onError({
                                 type: 2,
-                                msg: `服务器请求出错`
+                                msg: getlocals({id:"js.b9f.src5.0003" ,defaultMessage:"服务器请求出错" })
                             });
                         });
 
@@ -139,7 +142,7 @@ class BpmTaskApprovalWrap extends Component {
         } else if (result.data.flag == 'fail_global') {
             onError && onError({
                 type: 2,
-                msg: reconvert(result.data.message) || '流程启动失败'
+                msg: reconvert(result.data.message) || getlocals({id:"js.b9f.src5.0004" ,defaultMessage:"流程启动失败" })
             });
             this.setState({
                 huanjieShow: false,
@@ -154,7 +157,7 @@ class BpmTaskApprovalWrap extends Component {
     handlerSubmitBtn =  async()=>{
         let { onStart, onEnd, onSuccess, onError } = this.props;
         if (this.state.comment == "") {
-            Message.create({ content: '审批意见不能为空', color: 'danger', position: 'top' });
+            Message.create({ content: getlocals({id:"js.b9f.src5.0005" ,defaultMessage:"审批意见不能为空" }), color: 'danger', position: 'top' });
             return;
         }
         onStart && onStart();
@@ -201,7 +204,7 @@ class BpmTaskApprovalWrap extends Component {
                     onEnd && onEnd();
                     let options = Object.assign(JSON.parse(refOptions),
                         {
-                        title: '指派用户选择',
+                        title: getlocals({id:"js.b9f.src5.0006" ,defaultMessage:"指派用户选择" }),
                         backdrop: false,
                         hasPage: true,
                         refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
@@ -212,15 +215,16 @@ class BpmTaskApprovalWrap extends Component {
                             tenantId: '',
                             sysId: '',
                             transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                            locale:cookie.load('u_locale')
                         },
                         //选择中的数据
                         checkedArray:[],
                         textOption: {
-                            modalTitle: '选择指派用户',
-                            leftTitle: '组织结构',
-                            rightTitle: '用户列表',
-                            leftTransferText: '待选用户',
-                            rightTransferText: '已选用户',
+                            modalTitle: getlocals({id:"js.b9f.src5.0007" ,defaultMessage:"选择指派用户" }),
+                            leftTitle: getlocals({id:"js.b9f.src5.0008" ,defaultMessage:"组织结构" }),
+                            rightTitle: getlocals({id:"js.b9f.src5.0009" ,defaultMessage:"用户列表" }),
+                            leftTransferText: getlocals({id:"js.b9f.src5.0010" ,defaultMessage:"待选用户" }),
+                            rightTransferText: getlocals({id:"js.b9f.src5.0011" ,defaultMessage:"已选用户" }),
 
                         },
                         onCancel: function (p) {
@@ -251,7 +255,7 @@ class BpmTaskApprovalWrap extends Component {
                                 Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                                 onError && onError({
                                     type: 2,
-                                    msg: `服务器请求出错`
+                                    msg: getlocals({id:"js.b9f.src5.0003" ,defaultMessage:"服务器请求出错" })
                                 });
                             });
                             //确认加签后的处理
@@ -283,10 +287,10 @@ class BpmTaskApprovalWrap extends Component {
             case 'rejectToActivity':
                 let {activityId,approvetype,comment,processInstanceId,taskId}=this.state;
                 if(!activityId ||activityId.length ===0){
-                    Message.create({ content: `驳回环节不可为空`, color: 'warning', position: 'top' });
+                    Message.create({ content: getlocals({id:"js.b9f.src5.0013" ,defaultMessage:"驳回环节不可为空" }), color: 'warning', position: 'top' });
                     onError && onError({
                         type: 2,
-                        msg: `驳回环节不可为空`
+                        msg: getlocals({id:"js.b9f.src5.0013" ,defaultMessage:"驳回环节不可为空" })
                     });
                     return
                 }
@@ -302,7 +306,7 @@ class BpmTaskApprovalWrap extends Component {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                     onError && onError({
                         type: 2,
-                        msg: `服务器请求错误`
+                        msg: getlocals({id:"js.b9f.src5.0014" ,defaultMessage:"服务器请求错误" })
                     });
                 });
 
@@ -327,10 +331,12 @@ class BpmTaskApprovalWrap extends Component {
                 onStart && onStart();
                 //TO DO:重构URL
                 if(!this.state.userIds ||this.state.userIds.length ===0){
-                    Message.create({ content: `加签用户不可为空`, color: 'warning', position: 'top' });
+
+                    Message.create({ content: `getlocals({id:"js.b9f.src5.0016" ,defaultMessage:"加签用户不可为空" })`, color: 'warning', position: 'top' });
+
                     onError && onError({
                         type: 2,
-                        msg: `加签用户不可为空`
+                        msg: getlocals({id:"js.b9f.src5.0016" ,defaultMessage:"加签用户不可为空" })
                     });
                     return
                 }
@@ -347,7 +353,7 @@ class BpmTaskApprovalWrap extends Component {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                     onError && onError({
                         type: 2,
-                        msg: `服务器请求出错`
+                        msg: getlocals({id:"js.b9f.src5.0003" ,defaultMessage:"服务器请求出错" })
                     });
                 });
                 //判断加签最终是否成功
@@ -366,10 +372,10 @@ class BpmTaskApprovalWrap extends Component {
             case 'delegate':
                 onStart && onStart();
                 if(!this.state.userId ||this.state.userId.length ===0){
-                    Message.create({ content: `改派用户不可为空`, color: 'warning', position: 'top' });
+                    Message.create({ content: getlocals({id:"js.b9f.src5.0018" ,defaultMessage:"改派用户不可为空" }), color: 'warning', position: 'top' });
                     onError && onError({
                         type: 2,
-                        msg: `改派用户不可为空`
+                        msg: getlocals({id:"js.b9f.src5.0018" ,defaultMessage:"改派用户不可为空" })
                     });
                     return
                 }
@@ -386,7 +392,7 @@ class BpmTaskApprovalWrap extends Component {
                     Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
                     onError && onError({
                         type: 2,
-                        msg: `服务器请求出错`
+                        msg: getlocals({id:"js.b9f.src5.0003" ,defaultMessage:"服务器请求出错" })
                     });
                 });
                 //处理后续的操作
@@ -450,19 +456,19 @@ class BpmTaskApprovalWrap extends Component {
     render() {
         let self = this;
         let huanjieCol = [{
-        title: "名称",
+        title: getlocals({id:"js.b9f.src5.0019" ,defaultMessage:"名称" }),
         dataIndex: "activityName",
         key: "activityName",
 
     },
         {
-            title: "指派",
+            title: getlocals({id:"js.b9f.src5.0020" ,defaultMessage:"指派" }),
             dataIndex: "1",
             key: "1",
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
                     {
-                        title: '选择指派用户',
+                        title: getlocals({id:"js.b9f.src5.0007" ,defaultMessage:"选择指派用户" }),
                         refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
                         className: '',
                         param: {//url请求参数
@@ -470,14 +476,15 @@ class BpmTaskApprovalWrap extends Component {
                             tenantId: '',
                             sysId: '',
                             transmitParam: '5',
+                            locale:cookie.load('u_locale')
                         },
                         emptyBtn:true,
                         textOption: {
-                            modalTitle: '选择指派用户',
-                            leftTitle: '组织结构',
-                            rightTitle: '用户列表',
-                            leftTransferText: '待选用户',
-                            rightTransferText: '已选用户',
+                            modalTitle: getlocals({id:"js.b9f.src5.0007" ,defaultMessage:"选择指派用户" }),
+                            leftTitle: getlocals({id:"js.b9f.src5.0008" ,defaultMessage:"组织结构" }),
+                            rightTitle: getlocals({id:"js.b9f.src5.0009" ,defaultMessage:"用户列表" }),
+                            leftTransferText: getlocals({id:"js.b9f.src5.0010" ,defaultMessage:"待选用户" }),
+                            rightTransferText: getlocals({id:"js.b9f.src5.0011" ,defaultMessage:"已选用户" }),
 
                         },
                         checkedArray:self.state.checkedArray[index]||[],
@@ -561,14 +568,14 @@ class BpmTaskApprovalWrap extends Component {
                 </Row>}
                     <Row style={{"margin":"8px 0", "padding": "0 10px"}}>
                         <Col md={4} mdOffset={8} xs={4} xsOffset={8} sm={4} smOffset={8} style={{ "textAlign": "right","paddingRight": 0}}>
-                            <Button onClick={this.handlerSubmitBtn}  colors="primary">提交</Button>
+                            <Button onClick={this.handlerSubmitBtn}  colors="primary">{getlocals({id:"js.b9f.src5.0022" ,defaultMessage:"提交" })}</Button>
                         </Col>
                     </Row>
 
                 </div>}
                 {this.state.isShowFlowBtn && <Row>
-                    <Col mdOffset={11} md={1} style={{ "textAlign": "right" }}>
-                        <Button onClick={this.props.onBpmFlowClick} style={{ "marginBottom": "4px", "marginRight": "15px" }} colors="primary">流程图</Button>
+                    <Col mdOffset={10} md={2} style={{ "textAlign": "right" }}>
+                        <Button onClick={this.props.onBpmFlowClick} style={{ "marginBottom": "4px", "marginRight": "15px" }} colors="primary">{getlocals({id:"js.b9f.src5.0023" ,defaultMessage:"流程图" })}</Button>
                     </Col>
                 </Row>}
                 <Modal
@@ -578,7 +585,7 @@ class BpmTaskApprovalWrap extends Component {
                     enforceFocus={false}
                     onHide={this.closeHuanjie}>
                 <Modal.Header closeButton>
-                    <Modal.Title> 环节指派</Modal.Title>
+                    <Modal.Title>{getlocals({id:"js.b9f.src5.0024" ,defaultMessage:"环节指派" })}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Table
@@ -589,8 +596,8 @@ class BpmTaskApprovalWrap extends Component {
                     />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>
-                    <Button colors="primary"  onClick={this.huanjieHandlerOK}> 确定 </Button>
+                    <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}>{getlocals({id:"js.b9f.src5.0025" ,defaultMessage:"关闭" })}</Button>
+                    <Button colors="primary"  onClick={this.huanjieHandlerOK}>{getlocals({id:"js.b9f.src5.0026" ,defaultMessage:"确定" })}</Button>
                 </Modal.Footer>
                 </Modal>
             </div>

@@ -1,6 +1,8 @@
 /**
  * 审批抄送组件
  */
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import {getlocals,FormattedMessage} from './local/intl'
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {  Panel,Col, Row, Button ,Label,Checkbox} from 'tinper-bee';
@@ -45,7 +47,7 @@ class BpmTaskCopyPanel extends Component {
                         {this.props.title}
                     </span>
                     <span  className={'copy-panel-icon'} style={{"float":"right", "color": "#1E7BE2","fontSize": "14px"}}>
-                        {this.state.panelOpen ? '展开':'收起'}
+                        {this.state.panelOpen ? <FormattedMessage id="js.b9f.src.0001" defaultMessage="展开" />:<FormattedMessage id="js.b9f.src.0002" defaultMessage="收起" />}
                         <i className={classnames({
                             'uf': true,
                             'uf-arrow-down': !this.state.panelOpen,

@@ -1,3 +1,4 @@
+import { FormattedMessage, defineMessages, injectIntl, intlShape } from 'react-intl';
 import React, { Component } from 'react';
 import { Button } from 'tinper-bee';
 import {
@@ -29,7 +30,7 @@ class Demo extends Component {
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}
                     appType="1"
-                    id="3be26f2debb442d9b5f8012ba40c3fa3"
+                    id="692ab251139c41699cdb85651bed5c91"
                 />
                 <BpmLinkAssign />
                 <BpmFlowChart
@@ -50,8 +51,8 @@ class Demo extends Component {
                     urlAssignSubmit={`/ygdemo_yw_info/assignSubmit`}
                     checkedArray={
                         [
-                            { "id": "ea69b9bf-d8b5-47a7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 },
-                            { "id": "ea69b9bf-d8sssa7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 }
+                            { "id": "ea69b9bf-d8b5-47a7-a1fd-1114f36a9321", "code": "180719001", "name": <FormattedMessage id="js.b9f.src4.0001" defaultMessage="岳明-01" />, "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": <FormattedMessage id="js.b9f.src4.0003" defaultMessage="用友股份" />, "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 },
+                            { "id": "ea69b9bf-d8sssa7-a1fd-1114f36a9321", "code": "180719001", "name": <FormattedMessage id="js.b9f.src4.0001" defaultMessage="岳明-01" />, "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": <FormattedMessage id="js.b9f.src4.0003" defaultMessage="用友股份" />, "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 }
                         ]
                     }
                     onSuccess={() => console.log('success')}
@@ -63,6 +64,8 @@ class Demo extends Component {
                 </BpmButtonSubmit>
                 <BpmButtonRecall
                     url={`/iuap_pap_quickstart/example_workorder/recall`}
+        onSuccess={() => console.log('success')}
+        onError={(err) => console.log(err)}
                     checkedArray={
                         [
                             {
@@ -90,7 +93,7 @@ class Demo extends Component {
                                 "approvalState": null,
                                 "confirmState": null,
                                 "closeState": null,
-                                "type_name": "投诉工单",
+                                "type_name": <FormattedMessage id="js.b9f.src4.0004" defaultMessage="投诉工单" />,
                                 "approvalState_name": null,
                                 "confirmState_name": null,
                                 "closeState_name": null,

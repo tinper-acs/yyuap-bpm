@@ -1,6 +1,9 @@
 /**
  * bpm 提交流程按钮
  */
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import {getlocals,FormattedMessage} from './local/intl'
+import cookie from 'react-cookie'
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -58,7 +61,7 @@ class BpmLinkAssign extends Component {
         if (checkedArray.length >= 2) {
             onError && onError({
                 type: 2,
-                msg: `请选择单条数据提交`
+                msg: getlocals({ id:"js.b9f.src8.0001", defaultMessage:"请选择单条数据提交" })
             });
             return;
         }
@@ -69,7 +72,7 @@ class BpmLinkAssign extends Component {
             if (checkedArray[0].bpmState >= 1) {
                 onError && onError({
                     type: 1,
-                    msg: `不能提交此单据，重复提交`
+                    msg: getlocals({  id:"js.b9f.src8.0002" ,defaultMessage:"不能提交此单据，重复提交" })
                 });
                 return;
             }
@@ -103,7 +106,7 @@ class BpmLinkAssign extends Component {
                     //后端错误
                     onError && onError({
                         type: 2,
-                        msg: reconvert(result.data.message) || '流程启动失败'
+                        msg: reconvert(result.data.message) || getlocals({  id:"js.b9f.src8.0003" ,defaultMessage:"流程启动失败"})
                     });
                 }
                 //当得知需要二次弹出环节面板
@@ -128,14 +131,14 @@ class BpmLinkAssign extends Component {
                 //流程提交错误
                 onError && onError({
                     type: 2,
-                    msg: reconvert(message) || '流程启动失败'
+                    msg: reconvert(message) || getlocals({  id:"js.b9f.src8.0003", defaultMessage:"流程启动失败"})
                 });
             }
         } else {
             // 弹出提示
             onError && onError({
                 type: 1,
-                msg: `请选择提交的单据`
+                msg: getlocals({  id:"js.b9f.src8.0004", defaultMessage:"请选择提交的单据"})
             });
         }
 
@@ -176,7 +179,7 @@ class BpmLinkAssign extends Component {
         }).catch((e) => {
             onError && onError({
                 type: 2,
-                msg: `后台服务请求发生错误`
+                msg: getlocals({  id:"js.b9f.src8.0005", defaultMessage:"后台服务请求发生错误" })
             });
         });
         if (result.data.success == 'success') {
@@ -189,7 +192,7 @@ class BpmLinkAssign extends Component {
         } else if (result.data.success == 'fail_global') {
             onError && onError({
                 type: 2,
-                msg: reconvert(result.data.message) || '流程启动失败'
+                msg: reconvert(result.data.message) || getlocals({  id:"js.b9f.src8.0003", defaultMessage:"流程启动失败"})
             });
             this.setState({
                 huanjieShow: false,
@@ -201,19 +204,19 @@ class BpmLinkAssign extends Component {
     render() {
         let self = this;
         let huanjieCol = [{
-            title: "名称",
+            title: getlocals({  id:"js.b9f.src8.0006", defaultMessage:"名称"}),
             dataIndex: "name",
             key: "name",
 
         },
         {
-            title: "指派",
+            title: getlocals({  id:"js.b9f.src8.0007", defaultMessage:"指派" }),
             dataIndex: "1",
             key: "1",
 
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
-                    title: '用户选择',
+                    title: getlocals({  id:"js.b9f.src8.0008", defaultMessage:"用户选择" }),
                     backdrop: false,
                     hasPage: true,
                     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
@@ -225,6 +228,7 @@ class BpmLinkAssign extends Component {
                         tenantId: '',
                         sysId: '',
                         transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                        locale:cookie.load('u_locale')
                     },
                     //选择中的数据
                     keyList: self.state.childRefKey[index] || [],
@@ -259,7 +263,7 @@ class BpmLinkAssign extends Component {
         return (<Table
             loading={false}
             scroll={{ y: this.props.scrollY }}
-            emptyText={() => (<span>暂无环节</span>)}
+            emptyText={() => (<span>{getlocals({  id:"js.b9f.src8.0009", defaultMessage:"暂无环节" })}</span>)}
             rowKey={record => record.id}
             columns={huanjieCol}
             data={this.state.huanjieList}

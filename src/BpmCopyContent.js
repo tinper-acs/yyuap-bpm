@@ -1,6 +1,9 @@
 /**
  * bpm 提交流程按钮
  */
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import cookie from 'react-cookie'
+import {getlocals,FormattedMessage} from './local/intl'
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Button, Modal, Table ,Row,Label,Checkbox } from 'tinper-bee';
@@ -47,7 +50,7 @@ class BpmCopyContent extends Component {
             "width": "36%"
         }
         let organRef ={
-            title: '抄送部门选择',
+            title: <FormattedMessage id="js.b9f.src7.0001" defaultMessage="抄送部门选择" />,
             backdrop: false,
             hasPage: true,
             multiple:true,
@@ -60,6 +63,7 @@ class BpmCopyContent extends Component {
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                locale:cookie.load('u_locale')
             },
             //选择中的数据
             checkedArray:self.state.copycheckedArray[0]||[],
@@ -92,7 +96,7 @@ class BpmCopyContent extends Component {
             verification: false
         }
         let positonRef ={
-            title: '抄送岗位选择',
+            title: <FormattedMessage id="js.b9f.src7.0002" defaultMessage="抄送岗位选择" />,
             backdrop: false,
             hasPage: true,
             multiple:true,
@@ -105,6 +109,7 @@ class BpmCopyContent extends Component {
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                locale:cookie.load('u_locale')
             },
             //选择中的数据
             checkedArray:self.state.copycheckedArray[1]||[],
@@ -136,7 +141,7 @@ class BpmCopyContent extends Component {
             verification: false
         }
         let roleRef={
-            title: '抄送角色选择',
+            title: <FormattedMessage id="js.b9f.src7.0003" defaultMessage="抄送角色选择" />,
             backdrop: false,
             hasPage: true,
             refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
@@ -148,6 +153,7 @@ class BpmCopyContent extends Component {
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                locale:cookie.load('u_locale')
             },
             //选择中的数据
             checkedArray:self.state.copycheckedArray[2]||[],
@@ -179,7 +185,7 @@ class BpmCopyContent extends Component {
             verification: false
         }
         let userRef ={
-            title: '抄送用户选择',
+            title: <FormattedMessage id="js.b9f.src7.0004" defaultMessage="抄送用户选择" />,
             backdrop: false,
             hasPage: true,
             emptyBtn:true,
@@ -191,6 +197,7 @@ class BpmCopyContent extends Component {
                 tenantId: '',
                 sysId: '',
                 transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
+                locale:cookie.load('u_locale')
             },
             //选择中的数据
             checkedArray:self.state.copycheckedArray[3]||[],
@@ -222,26 +229,26 @@ class BpmCopyContent extends Component {
         }
         return (<div>
                     <Row>
-                        <Label style={labelStyle} className={`refLabel`}>按部门:</Label>
+                        <Label style={labelStyle} className={`refLabel`}>{<FormattedMessage id="js.b9f.src7.0005" defaultMessage="按部门:" />}</Label>
                         <div style={refcon}>
                             <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),organRef)} />
                         </div>
-                        <Label style={labelStyle} className={`refLabel`}>按岗位:</Label>
+                        <Label style={labelStyle} className={`refLabel`}>{<FormattedMessage id="js.b9f.src7.0006" defaultMessage="按岗位:" />}</Label>
                         <div style={refcon}>
                             <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),positonRef)} />
                         </div>
                     </Row>
                     <Row   style={{'marginTop':'15px','marginBottom':'15px'}}>
-                        <Label style={labelStyle} className={`refLabel`}>按角色:</Label>
+                        <Label style={labelStyle} className={`refLabel`}>{<FormattedMessage id="js.b9f.src7.0007" defaultMessage="按角色:" />}</Label>
                         <div style={refcon}>
                             <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions),roleRef)} />
                         </div>
-                        <Label style={labelStyle} className={`refLabel`}>按用户:</Label>
+                        <Label style={labelStyle} className={`refLabel`}>{<FormattedMessage id="js.b9f.src7.0008" defaultMessage="按用户:" />}</Label>
                         <div style={refcon}>
                             <RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />
                         </div>
                     </Row>
-                    <Checkbox style={{ "margin": 0}} checked={this.state.intersection} onChange={this.changeCheck}>是否交集</Checkbox>
+                    <Checkbox style={{ "margin": 0}} checked={this.state.intersection} onChange={this.changeCheck}><FormattedMessage id="js.b9f.src7.0009" defaultMessage="是否交集" /></Checkbox>
         </div>);
     }
 }

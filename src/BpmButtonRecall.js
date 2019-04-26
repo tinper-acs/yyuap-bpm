@@ -1,9 +1,11 @@
 /**
  * bpm 收回流程按钮
  */
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { onRecall } from './common';
+import {getlocals,FormattedMessage} from './local/intl'
 
 const propTypes = {
     checkedArray: PropTypes.array,
@@ -31,7 +33,7 @@ class BpmButtonRecall extends Component {
         if (checkedArray.length >= 2) {
             onError && onError({
                 type: 2,
-                msg: `请选择单条数据收回`
+                msg: getlocals({ id:"js.b9f.src13.0001",defaultMessage:"请选择单条数据收回" })
             });
             return;
         }
@@ -43,7 +45,7 @@ class BpmButtonRecall extends Component {
             } else {
                 onError && onError({
                     type: 1,
-                    msg: `流程没有启动无法撤回`
+                    msg: getlocals({id:"js.b9f.src13.0002",defaultMessage:"流程没有启动无法撤回"})
                 });
             }
 
@@ -51,13 +53,13 @@ class BpmButtonRecall extends Component {
             // 弹出提示请选择数据
             onError && onError({
                 type: 1,
-                msg: `请选择单据才能撤回`
+                msg: getlocals({ id:"js.b9f.src13.0003" ,defaultMessage:"请选择单据才能撤回"})
             });
             return;
         }
         if (recallArray.length > 0) {
             onStart && onStart();
-            let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray);
+            let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray,onError);
             if (detailMsg.data['success'] && detailMsg.data.success == 'success') {
                 onSuccess && onSuccess();
             } else {

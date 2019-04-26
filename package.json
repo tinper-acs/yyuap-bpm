@@ -42,6 +42,8 @@
     "prop-types": "^15.6.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-cookie": "^1.0.5",
+    "react-intl": "^2.7.2",
     "tinper-bee": "1.6.8",
     "bee-select": "^1.1.5",
     "uba": "4.0.3",

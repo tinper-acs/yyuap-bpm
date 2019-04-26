@@ -1,6 +1,9 @@
 /**
  * bpm 提交流程按钮
  */
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import cookie from 'react-cookie'
+import {getlocals,FormattedMessage} from './local/intl'
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -10,6 +13,7 @@ import RefWithInput from 'yyuap-ref/dist2/refWithInput';
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
 import BpmCopyContent from "./BpmCopyContent";
+
 const propTypes = {
     checkedArray: PropTypes.array,
     funccode: PropTypes.string,
@@ -57,7 +61,7 @@ class BpmButtonSubmit extends Component {
         if (isOne && checkedArray.length >= 2) {
             onError && onError({
                 type: 2,
-                msg: `请选择单条数据提交`
+                msg: getlocals({ id:"js.b9f.src6.0001" ,defaultMessage:"请选择单条数据提交"})
             });
             return;
         }
@@ -68,7 +72,7 @@ class BpmButtonSubmit extends Component {
             if (checkedArray[0].bpmState >= 1) {
                 onError && onError({
                     type: 1,
-                    msg: `不能提交此单据，重复提交`
+                    msg: getlocals({  id:"js.b9f.src6.0002", defaultMessage:"不能提交此单据，重复提交" })
                 });
                 return;
             }
@@ -82,7 +86,7 @@ class BpmButtonSubmit extends Component {
             if(!detailMsg.data ||detailMsg.data==null){
                 onError && onError({
                     type: 1,
-                    msg: `当前单据没有绑定流程`
+                    msg: getlocals({  id:"js.b9f.src6.0003" ,defaultMessage:"当前单据没有绑定流程"})
                 });
                 return;
             }
@@ -109,7 +113,7 @@ class BpmButtonSubmit extends Component {
                     //后端错误
                     onError && onError({
                         type: 2,
-                        msg: reconvert(result.data.message) || '流程启动失败'
+                        msg: reconvert(result.data.message) || getlocals({ id:"js.b9f.src6.0004",defaultMessage:"流程启动失败"})
                     });
                 }
                 //当得知需要二次弹出环节面板
@@ -136,14 +140,14 @@ class BpmButtonSubmit extends Component {
                 //流程提交错误
                 onError && onError({
                     type: 2,
-                    msg: reconvert(message) || '流程启动失败'
+                    msg: reconvert(message) || getlocals({ id:"js.b9f.src6.0004", defaultMessage:"流程启动失败" })
                 });
             }
         } else {
             // 弹出提示
             onError && onError({
                 type: 1,
-                msg: `请选择提交的单据`
+                msg: getlocals({ id:"js.b9f.src6.0005", defaultMessage:"请选择提交的单据" })
             });
         }
 
@@ -200,7 +204,7 @@ class BpmButtonSubmit extends Component {
 
                 onError && onError({
                     type: 2,
-                    msg: `后台服务请求发生错误`
+                    msg: getlocals({id:"js.b9f.src6.0006",defaultMessage:"后台服务请求发生错误" })
                 });
                 self.setState({
                     submiting:false
@@ -218,7 +222,7 @@ class BpmButtonSubmit extends Component {
             } else if (result.data.success == 'fail_global') {
                 onError && onError({
                     type: 2,
-                    msg: reconvert(result.data.message) || '流程启动失败'
+                    msg: reconvert(result.data.message) || getlocals({ id:"js.b9f.src6.0004", defaultMessage:"流程启动失败"})
                 });
                 this.setState({
                     huanjieShow: false,
@@ -236,19 +240,19 @@ class BpmButtonSubmit extends Component {
     render() {
         let self = this;
         let huanjieCol = [{
-            title: "名称",
+            title: <FormattedMessage id="js.b9f.src6.0007" defaultMessage="名称" />,
             dataIndex: "name",
             key: "name",
 
         },
         {
-            title: "指派",
+            title: <FormattedMessage id="js.b9f.src6.0008" defaultMessage="指派" />,
             dataIndex: "1",
             key: "1",
             render(text, record, index) {
                 return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
                     {
-                        title: '选择指派用户',
+                        title:getlocals({  id:"js.b9f.src6.0009", defaultMessage:"选择指派用户"}),
                         refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
                         className: '',
                         param: {//url请求参数
@@ -256,14 +260,15 @@ class BpmButtonSubmit extends Component {
                             tenantId: '',
                             sysId: '',
                             transmitParam: '5',
+                            locale:cookie.load('u_locale')
                         },
                         emptyBtn:true,
                         textOption: {
-                            modalTitle: '选择指派用户',
-                            leftTitle: '组织结构',
-                            rightTitle: '用户列表',
-                            leftTransferText: '待选用户',
-                            rightTransferText: '已选用户',
+                            modalTitle: <FormattedMessage id="js.b9f.src6.0009" defaultMessage="选择指派用户" />,
+                            leftTitle: <FormattedMessage id="js.b9f.src6.0010" defaultMessage="组织结构" />,
+                            rightTitle: <FormattedMessage id="js.b9f.src6.0011" defaultMessage="用户列表" />,
+                            leftTransferText: <FormattedMessage id="js.b9f.src6.0012" defaultMessage="待选用户" />,
+                            rightTransferText: <FormattedMessage id="js.b9f.src6.0013" defaultMessage="已选用户" />,
 
                         },
                         checkedArray:self.state.checkedArray[index]||[],
@@ -317,7 +322,7 @@ class BpmButtonSubmit extends Component {
                 enforceFocus={false}
                 onHide={this.closeHuanjie}>
                 <Modal.Header closeButton>
-                    <Modal.Title> {this.state.huanjieShow?'环节指派':'抄送'}</Modal.Title>
+                    <Modal.Title> {this.state.huanjieShow?<FormattedMessage id="js.b9f.src6.0014" defaultMessage="环节指派" />:<FormattedMessage id="js.b9f.src6.0015" defaultMessage="抄送" />}</Modal.Title>
                 </Modal.Header>
                 {this.state.huanjieShow?<Modal.Body>
                     <Table
@@ -329,7 +334,7 @@ class BpmButtonSubmit extends Component {
                 </Modal.Body>:""}
                 {this.state.chaosongShow?
                 <Modal.Header>
-                    <Modal.Title> 抄送 </Modal.Title>
+                    <Modal.Title><FormattedMessage id="js.b9f.src6.0016" defaultMessage="抄送" /></Modal.Title>
                 </Modal.Header>:""}
                 {this.state.chaosongShow?
                     <Modal.Body>
@@ -344,8 +349,8 @@ class BpmButtonSubmit extends Component {
                         />
                     </Modal.Body>:""}
                 <Modal.Footer>
-                    <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>
-                    <Button colors="primary"  onClick={this.huanjieHandlerOK}> 确定 </Button>
+                    <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}><FormattedMessage id="js.b9f.src6.0017" defaultMessage="关闭" /></Button>
+                    <Button colors="primary"  onClick={this.huanjieHandlerOK}><FormattedMessage id="js.b9f.src6.0018" defaultMessage="确定" /></Button>
 
                 </Modal.Footer>
             </Modal>

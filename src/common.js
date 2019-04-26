@@ -1,7 +1,8 @@
 /**
  * 核心功能函数处理类
  */
-
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import {getlocals,FormattedMessage} from './local/intl'
 import axios from 'axios';
 import { Message } from 'tinper-bee';
 
@@ -14,7 +15,7 @@ export const timestampToDate = (_stamp, formatStr = 'yyyy-MM-dd  hh:mm:ss') => {
     let unixTimestamp = new Date(_stamp);
     {
         var str = formatStr;
-        var Week = ['日', '一', '二', '三', '四', '五', '六'];
+        var Week = [getlocals({id:"js.b9f.src3.0001" ,defaultMessage:"日" }), getlocals({id:"js.b9f.src3.0002" ,defaultMessage:"一" }), getlocals({id:"js.b9f.src3.0003" ,defaultMessage:"二" }), getlocals({id:"js.b9f.src3.0004" ,defaultMessage:"三" }), getlocals({id:"js.b9f.src3.0005" ,defaultMessage:"四" }), getlocals({id:"js.b9f.src3.0006" ,defaultMessage:"五" }), getlocals({id:"js.b9f.src3.0007" ,defaultMessage:"六" })];
 
         str = str.replace(/yyyy|YYYY/, unixTimestamp.getFullYear());
         str = str.replace(/yy|YY/, (unixTimestamp.getYear() % 100) > 9 ? (unixTimestamp.getYear() % 100).toString() : '0' + (unixTimestamp.getYear() % 100));
@@ -41,49 +42,54 @@ export const timestampToDate = (_stamp, formatStr = 'yyyy-MM-dd  hh:mm:ss') => {
 /**
  * 流程历史表格描述转换
  */
-export const descriptionToText = (vApproveType) => {
-    if (vApproveType == 'submit') {
-        return '提交';
+export const descriptionToText = (vApproveType) =>{
+    switch (vApproveType){
+        case 'submit':
+            return getlocals({id: "js.b9f.src3.0008", defaultMessage: "提交"});
+            break;
+        case 'agree':
+            return getlocals({id: "js.b9f.src3.0009", defaultMessage: "审批"});
+            break;
+        case 'unagree':
+            return getlocals({id: "js.b9f.src3.0010", defaultMessage: "不同意"});
+            break;
+        case 'reject':
+            return getlocals({id: "js.b9f.src3.0011", defaultMessage: "驳回"});
+            break;
+        case  'signAdd':
+            return getlocals({id: "js.b9f.src3.0012", defaultMessage: "加签"});
+            break;
+        case 'signAdding':
+            return getlocals({id: "js.b9f.src3.0013", defaultMessage: "加签中"});
+            break;
+        case 'delegate':
+            return getlocals({id: "js.b9f.src3.0014", defaultMessage: "改派"});
+            break;
+        case 'termination':
+            return getlocals({id: "js.b9f.src3.0015", defaultMessage: "终止"});
+            break;
+        case 'withdraw':
+            return getlocals({id: "js.b9f.src3.0016", defaultMessage: "删除"});
+            break;
+        case 'postCompleted':
+            return getlocals({id: "js.b9f.src3.0009", defaultMessage: "审批"});
+            break;
+        default:
+            return getlocals({id: "js.b9f.src3.0008", defaultMessage: "提交"});
+            break;
     }
-    if (vApproveType == 'agree') {
-        return '审批';
-    }
-    if (vApproveType == 'unagree') {
-        return '不同意';
-    }
-    if (vApproveType == 'reject') {
-        return '驳回';
-    }
-    if (vApproveType == 'signAdd') {
-        return '加签';
-    }
-    if (vApproveType == 'signAdding') {
-        return '加签中';
-    }
-    if (vApproveType == 'delegate') {
-        return '改派';
-    }
-    if (vApproveType == 'termination') {
-        return '终止';
-    }
-    if (vApproveType == 'withdraw') {
-        return '删除';
-    }
-    if (vApproveType == 'postCompleted') {
-        return '审批';
-    }
-}
 
+}
 export const  recordToState=(record)=>{
    if (record.description === 'withdraw') {
-       return '已完成';
+       return getlocals({id:"js.b9f.src3.0017" ,defaultMessage:"已完成" });
    }else{
        if(record.endTime && record.startTime){
-           return '已完成';//有开始时间 有结束时间为已完成
+           return getlocals({id:"js.b9f.src3.0017" ,defaultMessage:"已完成" });//getlocals({id:"js.b9f.src3.0018" ,defaultMessage:"有开始时间 有结束时间为已完成" })
        }else if(record.claimTime && new Date() >record.claimTime){
-           return '已逾期';//当前时间大于超时时间
+           return getlocals({id:"js.b9f.src3.0019" ,defaultMessage:"已逾期" });//getlocals({id:"js.b9f.src3.0020" ,defaultMessage:"当前时间大于超时时间" })
        }else{
-           return '审批中';//其他情况为审批中
+           return getlocals({id:"js.b9f.src3.0021" ,defaultMessage:"审批中" });//getlocals({id:"js.b9f.src3.0022" ,defaultMessage:"其他情况为审批中" })
        }
    }
 }
@@ -348,11 +354,16 @@ export const onCommit = (data) => {
 /**
  * 收回流程
  */
-export const onRecall = (url, data) => {
+export const onRecall = (url, data,onError) => {
     return axios({
         url: `${url}`,
         method: "post",
         data: data
+    }).catch(function () {
+        onError && onError({
+            type: 2,
+            msg: getlocals({id:"js.b9f.src5.0003" ,defaultMessage:"服务器请求出错" })
+        })
     });
 }
 
@@ -362,19 +373,19 @@ export const onRecall = (url, data) => {
 export const approvetypeToText = (type) => {
     switch (type) {
         case 'agree':
-            return '审批同意';
+            return getlocals({id:"js.b9f.src3.0023",defaultMessage:"审批同意" });
         case 'unagree':
-            return '审批不同意';
+            return getlocals({id:"js.b9f.src3.0024",defaultMessage:"审批不同意" });
         case 'rejectToActivity':
-            return '驳回到环节';
+            return getlocals({id:"js.b9f.src3.0025",defaultMessage:"驳回到环节" });
         case 'rejectToBillMaker':
-            return '驳回到制单人';
+            return getlocals({id:"js.b9f.src3.0026",defaultMessage:"驳回到制单人" });
         case 'signAdd':
-            return '加签';
+            return getlocals({id:"js.b9f.src3.0012",defaultMessage:"加签" });
         case 'delegate':
-            return '改派';
+            return getlocals({id:"js.b9f.src3.0014",defaultMessage:"改派" });
         case 'withdraw':
-            return '弃审';
+            return getlocals({id:"js.b9f.src3.0027",defaultMessage:"弃审" });
         default:
             break;
     }

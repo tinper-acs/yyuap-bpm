@@ -1,7 +1,10 @@
+import {getlocals,FormattedMessage} from './local/intl'
 let option = {
     title: '',
     refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
     className: '',
+    buttonText:{ok:getlocals({id:  "js.b9f.src5.0026" ,defaultMessage:"确定" }),
+        cancel:getlocals({id:"js.b9f.src14.0010" ,defaultMessage:"取消" })},
     param: {//url请求参数
         refCode: 'bd_common_user',
         tenantId: '',

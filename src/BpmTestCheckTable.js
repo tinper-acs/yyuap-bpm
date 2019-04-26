@@ -2,6 +2,8 @@
  * 模拟任务中心测试组件
  */
 
+import { defineMessages, injectIntl, intlShape } from 'react-intl';
+import {getlocals,FormattedMessage} from './local/intl'
 import React, { Component } from 'react';
 import { Table, Row, Col, Button } from 'tinper-bee';
 import axios from 'axios';
@@ -49,14 +51,14 @@ class BpmTestCheckTable extends Component {
     render() {
         return (<Table
             bordered
-            emptyText={() => <span>暂时没有数据</span>}
+            emptyText={() => <span><FormattedMessage id="js.b9f.src11.0001" defaultMessage="暂时没有数据" /></span>}
             columns={this.columns}
             data={this.state.data}
             title={() => <Button colors="primary" onClick={() => {
                 //document.location.hash = `#/bdm/bpm?processDefinitionId=${this.state.factoryValue.processDefinitionId}&processInstanceId=${this.state.factoryValue.processInstanceId}`;
                 document.location.hash = `#/bdm/bpmapproval?id=${this.state.factoryValue.id}&processDefinitionId=${this.state.factoryValue.processDefinitionId}&processInstanceId=${this.state.factoryValue.processInstanceId}`;
                 //window.open(`http://127.0.0.1:3000/#/bdm/bpm?processDefinitionId=${this.state.factoryValue.processDefinitionId}&processInstanceId=${this.state.factoryValue.processInstanceId}`);
-            }}>任务中心打开审批</Button>}
+            }}><FormattedMessage id="js.b9f.src11.0002" defaultMessage="任务中心打开审批" /></Button>}
             onRowClick={(record, index, indent) => {
                 this.setState({
                     factoryValue: record
