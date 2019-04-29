@@ -51,7 +51,7 @@ class BpmTaskApproval extends Component {
             title: "活动名称",
             dataIndex: "activityName",
             key: "activityName",
-            textAlign:'center'
+            textAlign:'left'
         }]
     }
     componentWillMount = () => {
