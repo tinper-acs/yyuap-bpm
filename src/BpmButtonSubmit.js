@@ -53,6 +53,9 @@ class BpmButtonSubmit extends Component {
     //提交流程按钮
     handlerBtn = async () => {
         let { checkedArray, isOne, onStart, onEnd, onSuccess, onError } = this.props;
+        if(this.props.children.props.disabled){
+            return
+        }
         //检查是否多单据提交
         if (isOne && checkedArray.length >= 2) {
             onError && onError({
