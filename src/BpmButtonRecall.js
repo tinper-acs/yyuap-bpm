@@ -25,6 +25,9 @@ class BpmButtonRecall extends Component {
      */
     handlerBtn = async () => {
         let { checkedArray, onStart, onEnd, onSuccess, onError } = this.props;
+        if(this.props.children.props.disabled){
+            return
+        }
         let recallArray = [];
 
         //检查只能一条单据提交流程
