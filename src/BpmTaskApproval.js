@@ -185,7 +185,7 @@ class BpmTaskApproval extends Component {
             className: '',
             emptyBtn:true,
             param: {//url请求参数
-                refCode: self.state.approvetype ==='delegate'?'newuser':'userUnderOrgRef',
+                refCode: self.state.approvetype ==='delegate'?'relatedUser':'userUnderOrgRef',
                 tenantId: '',
                 sysId: '',
                 cfgParam:true,
@@ -367,7 +367,7 @@ class BpmTaskApproval extends Component {
 BpmTaskApproval.propTypes = propTypes;
 BpmTaskApproval.defaultProps = {
     appType: "1",
-    refCode: "newuser",
+    refCode: "relatedUser",
     filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
     properties:{
         addSignAble:true, //可否加签

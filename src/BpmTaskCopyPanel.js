@@ -75,10 +75,10 @@ BpmTaskCopyPanel.defaultProps = {
     reset: () => {},//重置的回调
     title: "抄送(选填)",
     filterRefUrl:'/iuap_pap_quickstart/common/filterRef',
-    refCode: "newuser",
+    refCode: "relatedUser",
     organrefCode:"newdept",
     positonrefCode:"newposition",
     roleRef:"newrole",
-    userRef:"newuser"
+    userRef:"relatedUser"
 }
 export default BpmTaskCopyPanel;

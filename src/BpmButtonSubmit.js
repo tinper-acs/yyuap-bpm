@@ -370,13 +370,13 @@ BpmButtonSubmit.defaultProps = {
     urlAssignSubmit: "/example/ygdemo_yw_info/assignSubmit",
     className: "",
     filterRefUrl: "/iuap_pap_quickstart/common/filterRef",
-    refCode: "newuser",
+    refCode: "relatedUser",
     size: "",
     scrollY: 270,
     isOne: false,
     organrefCode:"newdept",
     positonrefCode:"newposition",
     roleRef:"newRoleRef",
-    userRef:"newuser"
+    userRef:"relatedUser"
 }
 export default BpmButtonSubmit;

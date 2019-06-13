@@ -252,6 +252,6 @@ BpmCopyContent.defaultProps = {
     organrefCode:"newdept",
     positonrefCode:"newposition",
     roleRef:"newRoleRef",
-    userRef:"newuser"
+    userRef:"relatedUser"
 }
 export default BpmCopyContent;
