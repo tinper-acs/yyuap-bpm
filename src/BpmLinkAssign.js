@@ -5,7 +5,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Button, Modal, Table } from 'tinper-bee';
-import RefWithInput from 'yyuap-ref/dist2/refWithInput';
+import RefMultipleTableWithInput from 'pap-refer/lib/pap-common-table/src/index.js';
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
 import refOptions from './refOptions';
 const propTypes = {
@@ -216,49 +216,84 @@ class BpmLinkAssign extends Component {
             dataIndex: "1",
             key: "1",
             width: "20%",
-            render(text, record, index) {
-                return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions), {
-                    title: '人员选择',
-                    backdrop: false,
-                    hasPage: true,
-                    refType: 2,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                    isRadio: false,
-                    filterRefUrl: self.props.filterRefUrl,
-                    className: '',
-                    param: {//url请求参数
-                        refCode: self.props.refCode,
-                        tenantId: '',
-                        sysId: '',
-                        transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                    },
-                    //选择中的数据
-                    keyList: self.state.childRefKey[index] || [],
-                    //保存回调sels选中的行数据showVal显示的字
-                    onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                        console.log(sels);
-                        var temp = sels.map(v => v.id);
-                        //显示值
-                        let _showVal = self.state.showVal.slice();
-                        _showVal[index] = showVal;
-                        //选中的值
-                        let _childRefKey = self.state.childRefKey.slice();
-                        _childRefKey[index] = temp;
-                        //副本原始对象
-                        let sourseArray = self.state.assignInfo.assignInfoItems.slice();
-                        //根据修改索引修改指定数据内容
-                        sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
-                        self.setState({
-                            childRefKey: _childRefKey,
-                            showVal: _showVal,
-                            assignInfo: {
-                                assignInfoItems: sourseArray
-                            }
-                        });
-                    },
-                    showVal: self.state.showVal[index],
-                    showKey: 'refname',
-                    verification: false
-                })} />
+            render(text, record, index){
+                const option = {
+                        title: '人员选择',
+                        backdrop: true,
+                        disabled: false,
+                        multiple: false,
+                        strictMode: true,
+                        param:{//url请求参数
+                            refCode:'new_relatedUser'
+                        },
+                        refModelUrl:{
+                            tableBodyUrl:'/wbalone/common-ref/blobRefTreeGrid',//表体请求
+                            refInfo:'/wbalone/common-ref/refInfo',//表头请求
+                        },
+                        matchUrl: '/wbalone/common-ref/matchPKRefJSON',
+                        filterUrl: '/wbalone/common-ref/filterRefJSON',
+                        valueField: "refpk",
+                        displayField: "{refname}",
+                        onSave:(sels, showVal)=> {//showVal="12;13;管理员"
+                            var temp = sels.map(v => v.id);
+                            //显示值
+                            let _showVal = self.state.showVal.slice();
+                            _showVal[index] = showVal;
+                            //选中的值
+                            let _childRefKey = self.state.childRefKey.slice();
+                            _childRefKey[index] = temp;
+                            //副本原始对象
+                            let sourseArray = self.state.assignInfo.assignInfoItems.slice();
+                            //根据修改索引修改指定数据内容
+                            sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
+                            self.setState({
+                                childRefKey: _childRefKey,
+                                showVal: _showVal,
+                                assignInfo: {
+                                    assignInfoItems: sourseArray
+                                }})
+                        }}
+
+            return (<RefMultipleTableWithInput  {...option} />)
+
+                // {disabled: false,
+                //     multiple: false,
+                //     strictMode: true,
+                //     param:{//url请求参数
+                //         refCode:'new_relatedUser'
+                //     },
+                //     valueField: "refpk",
+                //     displayField: "{refname}",
+                //     onCancel: function (p) {
+                //         console.log(p)
+                //     },
+                //     title: '人员选择',
+                //     backdrop: false,
+                //     hasPage: true,
+                //     //保存回调sels选中的行数据showVal显示的字
+                //     onSave: function (sels, showVal) {//showVal="12;13;管理员"
+                //         console.log(sels);
+                //         var temp = sels.map(v => v.id);
+                //         //显示值
+                //         let _showVal = self.state.showVal.slice();
+                //         _showVal[index] = showVal;
+                //         //选中的值
+                //         let _childRefKey = self.state.childRefKey.slice();
+                //         _childRefKey[index] = temp;
+                //         //副本原始对象
+                //         let sourseArray = self.state.assignInfo.assignInfoItems.slice();
+                //         //根据修改索引修改指定数据内容
+                //         sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
+                //         self.setState({
+                //             childRefKey: _childRefKey,
+                //             showVal: _showVal,
+                //             assignInfo: {
+                //                 assignInfoItems: sourseArray
+                //             }
+                //         });
+                //     }
+                // })}
+                // />)
             }
         }]
         return (<Table

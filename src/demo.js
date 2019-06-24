@@ -29,31 +29,30 @@ class Demo extends Component {
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}
                     appType="1"
-                    id="3be26f2debb442d9b5f8012ba40c3fa3"
+                    id="5062f7d0c69e4a28b9e5a424a8ad57cb"
                 />
                 <BpmLinkAssign />
                 <BpmFlowChart
                     processDefinitionId={"eiap350694:3:e2e70948-9559-11e8-b376-02420cbf1b08"}
-                    processInstanceId={"1352ad87-955e-11e8-b376-02420cbf1b08"}
-                />
+                    processInstanceId={"1352ad87-955e-11e8-b376-02420cbf1b08"}/>
+
                 <BpmTable
                     processDefinitionId={"eiap350694:3:e2e70948-9559-11e8-b376-02420cbf1b08"}
                     processInstanceId={"1352ad87-955e-11e8-b376-02420cbf1b08"}
                 />
+
                 <BpmTestCheckTable />
+
                 <BpmButtonSubmit
-                    funccode="ygdemo_yw_info"
-                    nodekey="003"
-                    size="lg"
-                    isOne={false}
-                    url={`/ygdemo_yw_info/submit`}
-                    urlAssignSubmit={`/ygdemo_yw_info/assignSubmit`}
+                    funccode="masterdetail-one"
+                    nodekey="purchaseOrder"
+                    size="md"
+                    isOne={true}
+                    url={`/iuap-pap-demo-be/purchase_order/submit`}
+                    urlAssignSubmit={`/iuap-pap-demo-be/purchase_order/assignSubmit`}
                     checkedArray={
-                        [
-                            { "id": "ea69b9bf-d8b5-47a7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 },
-                            { "id": "ea69b9bf-d8sssa7-a1fd-1114f36a9321", "code": "180719001", "name": "岳明-01", "ly_code": "1", "ly_sm": "岳明-01\u0000", "zr_dw": "97da3229-3308-4492-a457-cb4d4e6264a4", "zr_dw_name": "用友股份", "zrr": null, "xb_dw": null, "xb_dw_name": null, "xbr": null, "begin_date": null, "end_date": null, "zy_cd": 2, "qt_ld": null, "zbr": null, "zbr_name": null, "dbr": null, "jfyq": null, "db_info": null, "jd_bl": null, "rwpf": null, "kpi_flag": 0, "kpi_level": 1, "state": 0, "create_name": null, "create_name_name": null, "create_time": null, "update_name": null, "update_name_name": null, "update_time": null, "unitid": null, "unitid_name": null, "id_ygdemo_yw_sub": null, "metaDefinedName": "ygdemo_yw_info", "namespace": "iuap_qy", "status": 0, "changedPropertyNames": null, "tenant_id": "tenant", "dr": 0, "ts": 1531970736000 }
-                        ]
-                    }
+                        [{"id":"5062f7d0c69e4a28b9e5a424a8ad57cb","createTime":"2019-06-20 12:57:38 838","createUser":"U001","lastModified":"2019-06-20 12:57:38 838","lastModifyUser":"U001","ts":"2019-06-20 12:57:38 838","newTs":"2019-06-20 15:57:27 301","dr":0,"bpmState":0,"taskKey":null,"taskId":null,"processInstanceId":null,"processDefineCode":null,"comment":null,"bpmStateEnumValue":"待确认","orderUser":"U001","orderType":1,"orderTypeEnumValue":"普通采购","orderDeptName":"开发部","orderDept":"1a0b3fc7-2032-42ac-b13f-80dedb5934fe","orderCode":"B220190620001","orderPrice":2,"orderDate":"2019-06-20","orderUserName":"系统管理员","orderName":"aa","tenantid":"tenant","orderName2":null,"orderName3":null,"orderName4":null,"orderName5":null,"orderName6":null,"bpmBillCode":"201906201557274","mainBoCode":"PURCHASE_ORDER"}]
+                        }
                     onSuccess={() => console.log('success')}
                     onError={(err) => console.log(err)}
                 >
@@ -61,6 +60,7 @@ class Demo extends Component {
                         <i className='uf uf-arrow-c-o-up'></i>提交
                     </Button>
                 </BpmButtonSubmit>
+
                 <BpmButtonRecall
                     url={`/iuap_pap_quickstart/example_workorder/recall`}
                     checkedArray={

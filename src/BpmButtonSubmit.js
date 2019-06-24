@@ -5,10 +5,10 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Button, Modal, Table ,Row,Label,Checkbox } from 'tinper-bee';
-import RefWithInput from 'yyuap-ref/dist2/refWithInput';
+import RefTreeTransferWithInput from 'pap-refer/lib/pap-common-treeTransfer/src/index.js';
+import 'pap-refer/dist/index.css'
 import { onCommit, queryBpmTemplateAllocate, reconvert } from './common';
-import refOptions from './refOptions';
-import BpmCopyContent from "./BpmCopyContent";
+
 const propTypes = {
     checkedArray: PropTypes.array,
     funccode: PropTypes.string,
@@ -241,7 +241,7 @@ class BpmButtonSubmit extends Component {
             title: "名称",
             dataIndex: "name",
             key: "name",
-            width: "40%"
+            width: "20%"
         },
         {
             title: "编码",
@@ -252,62 +252,65 @@ class BpmButtonSubmit extends Component {
             title: "指派",
             dataIndex: "1",
             key: "1",
-            width: "20%",
+            width: "40%",
             render(text, record, index) {
-                return <RefWithInput disabled={false} option={Object.assign(JSON.parse(refOptions),
-                    {
-                        title: '选择指派人员',
-                        refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                        className: '',
-                        param: {//url请求参数
-                            refCode: 'userUnderOrgRef',
-                            tenantId: '',
-                            sysId: '',
-                            transmitParam: '5',
-                        },
-                        emptyBtn:true,
-                        textOption: {
-                            modalTitle: '选择指派人员',
-                            leftTitle: '组织结构',
-                            rightTitle: '人员列表',
-                            leftTransferText: '待选人员',
-                            rightTransferText: '已选人员',
 
-                        },
-                        checkedArray:self.state.checkedArray[index]||[],
-                        onCancel: function (p) {
-                            console.log(p)
-                        },
-                        //保存回调sels选中的行数据showVal显示的字
-                        onSave: function (sels, showVal) {//showVal="12;13;管理员"
-                            console.log(sels);
-                            var temp = sels.map(v => v.id);
-                            //显示值
-                            let _showVal = self.state.showVal.slice();
-                            _showVal[index] = showVal;
-                            //选中的值
-                            let _childRefKey = self.state.childRefKey.slice();
-                            _childRefKey[index] = temp;
-                            //副本原始对象
-                            let sourseArray = self.state.assignInfo.assignInfoItems.slice();
-                            //根据修改索引修改指定数据内容
-                            sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
-                            let checkedArray = self.state.checkedArray;
-                            checkedArray[index] = sels;
-                            self.setState({
-                                checkedArray:checkedArray,
-                                childRefKey: _childRefKey,
-                                showVal: _showVal,
-                                assignInfo: {
-                                    assignInfoItems: sourseArray
-                                }
-                            });
-                        },
-                        showVal: self.state.showVal[index],
-                        showKey: 'refname',
-                        verification: false
+                const option = {
+                    title: '选择指派人员',
+                    textOption: {
+                        modalTitle: '选择指派人员',
+                        leftTitle: '组织结构',
+                        rightTitle: '人员列表',
+                        leftTransferText: '待选人员',
+                        rightTransferText: '已选人员',
+
+                    },
+                    param: {//url请求参数
+                        refCode: 'neworgdeptuser_treegrid',//test_common||test_grid||test_tree||test_treeTable
+                        // refModelUrl: 'http://workbench.yyuap.com/ref/rest/testref_ctr/',
+                    },
+                    refModelUrl: {
+                        treeUrl: '/pap_basedoc/common-ref/blobRefTree',
+                        tableBodyUrlSearch: '',
+                        tableBodyUrl:'/pap_basedoc/common-ref/blobRefTreeGrid',//表体请求
+                        refInfo:'/pap_basedoc/common-ref/refInfo',//表头请求
+                    },
+                    jsonp: false,
+                    hearders: {},
+                    displayField: '{refname}',//显示内容的键
+                    valueField: 'refpk',//真实 value 的键
+                    matchUrl: '/pap_basedoc/common-ref/matchPKRefJSON',
+                    // filterUrl: '/pap_basedoc/common-ref/filterRefJSON',
+                    onCancel: function (p) {
+                        console.log(p)
+                    },
+                    onSave: function (sels,showVal) {
+                        console.log(sels);
+                        var temp = sels.map(v => v.id);
+                        //显示值
+                        let _showVal = self.state.showVal.slice();
+                        _showVal[index] = showVal;
+                        //选中的值
+                        let _childRefKey = self.state.childRefKey.slice();
+                        _childRefKey[index] = temp;
+                        //副本原始对象
+                        let sourseArray = self.state.assignInfo.assignInfoItems.slice();
+                        //根据修改索引修改指定数据内容
+                        sourseArray[index]['participants'] = Array.from(_childRefKey[index], x => ({ id: x }));
+                        let checkedArray = self.state.checkedArray;
+                        checkedArray[index] = sels;
+                        self.setState({
+                            checkedArray:checkedArray,
+                            childRefKey: _childRefKey,
+                            showVal: _showVal,
+                            assignInfo: {
+                                assignInfoItems: sourseArray
+                            }
+                        });
                     }
-                    )} />
+                }
+
+                return <RefTreeTransferWithInput {...option}/>
             }
         }]
 
@@ -325,7 +328,7 @@ class BpmButtonSubmit extends Component {
                 enforceFocus={false}
                 onHide={this.closeHuanjie}>
                 <Modal.Header closeButton>
-                    <Modal.Title> {this.state.huanjieShow?'环节指派':'抄送'}</Modal.Title>
+                    <Modal.Title> {'环节指派'}</Modal.Title>
                 </Modal.Header>
                 {this.state.huanjieShow?<Modal.Body>
                     <Table
@@ -335,22 +338,6 @@ class BpmButtonSubmit extends Component {
                         scroll={{ x: "100%", y: 200 }}
                     />
                 </Modal.Body>:""}
-                {this.state.chaosongShow?
-                <Modal.Header>
-                    <Modal.Title> 抄送 </Modal.Title>
-                </Modal.Header>:""}
-                {this.state.chaosongShow?
-                    <Modal.Body>
-                        <BpmCopyContent
-                            onCopyusersChange={(s)=>{
-                                self.setState({copyusers:s})
-                            }}
-                            {...self.props}
-                            onintersectionChange={(s)=>{
-                                self.setState({intersection:s});
-                            }}
-                        />
-                    </Modal.Body>:""}
                 <Modal.Footer>
                     <Button style={{ "marginRight": "10px" }}  onClick={this.closeHuanjie}> 关闭 </Button>
                     <Button colors="primary"  onClick={this.huanjieHandlerOK}> 确定 </Button>

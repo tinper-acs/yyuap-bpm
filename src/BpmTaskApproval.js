@@ -6,10 +6,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Button, Col, Message, Modal, Radio, Row, Table,FormControl} from 'tinper-bee';
 import Select from 'bee-select';
-import createModal from 'yyuap-ref';
 import { approvetypeToText, sendBpmTaskAJAX } from './common';
 import refOptions from './refOptions';
-import RefWithInput from 'yyuap-ref/dist2/refWithInput';
+import RefMultipleTableWithInput from 'pap-refer/lib/pap-common-table/src/index.js';
+import RefTreeTransferWithInput from 'pap-refer/lib/pap-common-treeTransfer/src/index.js';
+import 'pap-refer/dist/index.css'
 const propTypes = {
     id: PropTypes.string,
     appType: PropTypes.string,
@@ -119,7 +120,7 @@ class BpmTaskApproval extends Component {
             processInstanceId: this.state.processInstanceId,
             taskId: this.state.taskId
         }).catch((e) => {
-            Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+            Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top',duration:15 });
             onError && onError({
                 type: 2,
                 msg: `服务器请求错误`
@@ -172,7 +173,7 @@ class BpmTaskApproval extends Component {
                 rejectToActivityShow: true
             });
         } else {
-            Message.create({ content: result.data.msg||'当前环节为首环节，没有可以驳回的环节', color: 'warning', position: 'top' });
+            Message.create({ content: result.data.msg||'当前环节为首环节，没有可以驳回的环节', color: 'warning', position: 'top' ,style: { animation:'none'}});
             onError && onError({
                 type: 2,
                 msg: result.data.msg||'当前环节为首环节，没有可以驳回的环节'
@@ -181,57 +182,90 @@ class BpmTaskApproval extends Component {
     }
     render() {
         let self = this;
-        let userRef ={
-            title:self.state.approvetype ==='delegate'?'改派人员选择':"加签人员选择",
-            backdrop: false,
-            hasPage: true,
-            refType: self.state.approvetype ==='delegate'?2:5,//1:树形 2.单表 3.树卡型 4.多选 5.default
-            isRadio: self.state.approvetype === 'delegate',
-            className: '',
-            emptyBtn:true,
-            param: {//url请求参数
-                refCode: self.state.approvetype ==='delegate'?'newuser':'userUnderOrgRef',
-                tenantId: '',
-                sysId: '',
-                transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-            },
-            textOption: {
-                modalTitle: '选择加签人员',
-                leftTitle: '组织结构',
-                rightTitle: '人员列表',
-                leftTransferText: '待选人员',
-                rightTransferText: '已选人员',
+    const assignOption = {
+        title: '加签人员选择',
+        textOption: {
+            modalTitle: '选择加签人员',
+            leftTitle: '组织结构',
+            rightTitle: '人员列表',
+            leftTransferText: '待选人员',
+            rightTransferText: '已选人员',
 
-            },
-            //选择中的数据
-            checkedArray: self.state.checkedArray,
-            onCancel: function (p) {
-                console.log(p)
-            },
-            //保存回调sels选中的行数据showVal显示的字
-            onSave: function (sels, showVal) {//showVal="12;13;管理员"
+        },
+        param: {//url请求参数
+            refCode: 'neworgdeptuser_treegrid',//test_common||test_grid||test_tree||test_treeTable
+            // refModelUrl: 'http://workbench.yyuap.com/ref/rest/testref_ctr/',
+        },
+        refModelUrl: {
+            treeUrl: '/pap_basedoc/common-ref/blobRefTree',
+            tableBodyUrlSearch: '',
+            tableBodyUrl:'/pap_basedoc/common-ref/blobRefTreeGrid',//表体请求
+            refInfo:'/pap_basedoc/common-ref/refInfo',//表头请求
+        },
+        jsonp: false,
+        hearders: {},
+        displayField: '{refname}',//显示内容的键
+        valueField: 'refpk',//真实 value 的键
+        onCancel: function (p) {
+            console.log(p)
+        },
+        onSave: function (sels,showVal) {
 
-                var temp = sels.map(v => v.id);
-                //显示值
-                let userName = self.state.userName;
-                userName = showVal;
-                //选中的值
-                let userId = self.state.userIds;
-                userId = temp;
-                self.setState({
-                    userId: userId[0],
-                    userIds:userId,
-                    userName: userName,
-                    checkedArray:sels,
+            var temp = sels.map(v => v.id);
+            //显示值
+            let userName = self.state.userName;
+            userName = showVal;
+            //选中的值
+            let userId = self.state.userIds;
+            userId = temp;
+            self.setState({
+                userId: userId[0],
+                userIds:userId,
+                userName: userName,
+                checkedArray:sels,
 
-                },()=>{
-                    self.props.onChangestate(self.state);
-                });
-            },
-            showVal: this.state.userName,
-            showKey: 'refname',
-            verification: false
+            },()=>{
+                self.props.onChangestate(self.state);
+        });
         }
+    }
+    const option = {
+        title: '改派人员选择',
+        backdrop: true,
+        disabled: false,
+        multiple: false,
+        strictMode: true,
+        jsonp: false,
+        param:{//url请求参数
+            refCode:'new_relatedUser'
+        },
+        refModelUrl:{
+            tableBodyUrl:'/wbalone/common-ref/blobRefTreeGrid',//表体请求
+            refInfo:'/wbalone/common-ref/refInfo',//表头请求
+        },
+        matchUrl: '/wbalone/common-ref/matchPKRefJSON',
+        filterUrl: '/wbalone/common-ref/filterRefJSON',
+        valueField: "refpk",
+        displayField: "{refname}",
+        onSave:(sels, showVal)=> {//showVal="12;13;管理员"
+            var temp = sels.map(v => v.id);
+            //显示值
+            let userName = self.state.userName;
+            userName = showVal;
+            //选中的值
+            let userId = self.state.userIds;
+            userId = temp;
+            self.setState({
+                userId: userId[0],
+                userIds:userId,
+                userName: userName,
+                checkedArray:sels,
+            },()=>{
+                self.props.onChangestate(self.state);
+        });
+        }
+    }
+
         return (
             <div className="clearfix">
                 <div style={{ "padding": "0px" }}>
@@ -250,8 +284,8 @@ class BpmTaskApproval extends Component {
                                 />
                             </Col>
                                 <Col md={3} xs={3} sm={3} style={{"paddingLeft":0}}>
-                                    {this.state.approvetype==="signAdd" &&<RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />}{/*加签*/}
-                                    {this.state.approvetype==="delegate" &&<RefWithInput  disabled={false} option={Object.assign(JSON.parse(refOptions), userRef)} />}{/*改派*/}
+                                    {this.state.approvetype==="signAdd" && <RefTreeTransferWithInput  { ...assignOption} />}
+                                    {this.state.approvetype==="delegate" &&<RefMultipleTableWithInput  {...option} />}
                                     {this.state.approvetype==="rejectToActivity" &&<FormControl
                                         readOnly={true}
                                         placeholder={'请选择环节'}

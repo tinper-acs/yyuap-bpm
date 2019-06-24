@@ -11,12 +11,14 @@
                 "/iuap-example/",
                 "/example/",
                 "/eiap-plus/",
-                "/newref/"
+                "/newref/",
+                "/pap_basedoc/",
+                "/iuap-pap-demo-be/"
             ],
             "options": {
-                "target": "http://172.20.15.155:8888",
+                "target": "http://172.20.52.123",
                 "headers": {
-                    "Referer": "http://172.20.15.155:8888/wbalone/index-view.html"
+                    "Referer": "http://172.20.52.123/wbalone/index-view.html"
                 }
             }
         }
@@ -34,5 +36,10 @@
                 "/upload.do": "./upload.json"
             }
         ]
-    }
+    },
+
+        "static": [{
+            "dir": "node_modules/pap-refer/lib/"
+        }]
+
 }

@@ -8,9 +8,9 @@ import { Col, Row, Button ,Message} from 'tinper-bee';
 import BpmTaskApproval from './BpmTaskApproval';
 import { billidToIds } from './common';
 import refOptions from './refOptions';
-import createModal from 'yyuap-ref';
+import  { RefTreeTransfer} from 'pap-refer/lib/pap-common-treeTransfer/src/index.js';
+import 'pap-refer/dist/index.css'
 import { sendBpmTaskAJAX } from './common';
-import BpmTaskCopyPanel from  './BpmTaskCopyPanel';
 
 const propTypes = {
     id: PropTypes.string,
@@ -40,6 +40,7 @@ class BpmTaskApprovalWrap extends Component {
             activityId:"",//驳回环节id
             userIds:[],//加签用户数组
             userId:"",//改派用户
+            showModal:false,
             properties:{
                 addSignAble:true, //可否加签
                 iscopytouser:true, //可否抄送
@@ -123,75 +124,10 @@ class BpmTaskApprovalWrap extends Component {
                     // onStart && onStart();
                     //可以是加签操作，拉取加签请求
                     onEnd && onEnd();
-                    var options = Object.assign(JSON.parse(refOptions), {
-                        title: '指派人员选择',
-                        backdrop: false,
-                        hasPage: true,
-                        refType: 5,//1:树形 2.单表 3.树卡型 4.多选 5.default
-                        isRadio: false,
-                        className: '',
-                        param: {//url请求参数
-                            refCode: this.props.refCode,
-                            tenantId: '',
-                            sysId: '',
-                            transmitParam: 'EXAMPLE_CONTACTS,EXAMPLE_ORGANIZATION',
-                        },
-                        //选择中的数据
-                        checkedArray:[],
-                        textOption: {
-                            modalTitle: '选择指派人员',
-                            leftTitle: '组织结构',
-                            rightTitle: '人员列表',
-                            leftTransferText: '待选人员',
-                            rightTransferText: '已选人员',
 
-                        },
-                        onCancel: function (p) {
-                            console.log(p)
-                        },
-                        //保存回调sels选中的行数据showVal显示的字
-                        onSave: async (sels, showVal) => {//showVal="12;13;管理员"
-                            //回调
-                            onStart && onStart();
-                            //同意后续的加签
-                            //TO DO:重构URL
-                            var agreeeMsg = await sendBpmTaskAJAX('commit', {
-                                activityId: this.state.HuoDongID,
-                                activityName: this.state.HuoDongName,
-                                comment: this.state.comment,
-                                taskId: this.state.taskId,
-                                approvetype: this.state.approvetype,
-                                processInstanceId: this.state.processInstanceId,
-                                participants: Array.from(sels, x => ({ "id": x.id }))
-                            }).catch((e) => {
-                                Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: `服务器请求出错`
-                                });
-                            });
-                            //确认加签后的处理
-                            if (agreeeMsg.data.flag == 'success') {
-                                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'info', position: 'top' });
-                                this.setState({
-                                    rejectlist: [],
-                                    selectedRow: []
-                                });
-                                onSuccess && onSuccess();
-                            } else {
-                                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'danger', position: 'top' });
-                                onError && onError({
-                                    type: 2,
-                                    msg: agreeeMsg.data.msg
-                                });
-                            }
-                        },
-                        showVal: '',
-                        showKey: 'refname',
-                        verification: false
-                    });
                     //弹出参照组件
-                    createModal(options);
+                    // createModal(options);
+                    this.setState({showModal:true})
                 }
                 break;
             //驳回到环节
@@ -363,6 +299,74 @@ class BpmTaskApprovalWrap extends Component {
         });
     }
     render() {
+        let { onStart, onEnd, onSuccess, onError } = this.props;
+        let self = this
+        const assignOption = {
+            title: '指派人员选择',
+            textOption: {
+                modalTitle: '选择指派人员',
+                leftTitle: '组织结构',
+                rightTitle: '人员列表',
+                leftTransferText: '待选人员',
+                rightTransferText: '已选人员',
+
+            },
+            param: {//url请求参数
+                refCode: 'neworgdeptuser_treegrid',//test_common||test_grid||test_tree||test_treeTable
+                // refModelUrl: 'http://workbench.yyuap.com/ref/rest/testref_ctr/',
+            },
+            refModelUrl: {
+                treeUrl: '/pap_basedoc/common-ref/blobRefTree',
+                tableBodyUrlSearch: '',
+                tableBodyUrl:'/pap_basedoc/common-ref/blobRefTreeGrid',//表体请求
+                refInfo:'/pap_basedoc/common-ref/refInfo',//表头请求
+            },
+            jsonp: false,
+            hearders: {},
+            displayField: '{refname}',//显示内容的键
+            valueField: 'refpk',//真实 value 的键
+            onCancel: function (p) {
+                console.log(p)
+                self.setState({showModal:false})
+            },
+            onSave: async(sels) =>{
+                self.setState({showModal:false})
+
+            onStart && onStart();
+            //同意后续的加签
+            //TO DO:重构URL
+            let agreeeMsg = await sendBpmTaskAJAX('commit', {
+                activityId: self.state.HuoDongID,
+                activityName: self.state.HuoDongName,
+                comment: self.state.comment,
+                taskId: self.state.taskId,
+                approvetype: self.state.approvetype,
+                processInstanceId: self.state.processInstanceId,
+                participants: Array.from(sels, x => ({ "id": x.id }))
+            }).catch((e) => {
+                    Message.create({ content: `${e.toString()}`, color: 'danger', position: 'top' });
+                onError && onError({
+                    type: 2,
+                    msg: `服务器请求出错`
+                });
+            });
+            //确认加签后的处理
+            if (agreeeMsg.data.flag == 'success') {
+                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'info', position: 'top' });
+                self.setState({
+                    rejectlist: [],
+                    selectedRow: []
+                });
+                onSuccess && onSuccess();
+            } else {
+                Message.create({ content: `${agreeeMsg.data.msg}`, color: 'danger', position: 'top' });
+                onError && onError({
+                    type: 2,
+                    msg: agreeeMsg.data.msg
+                });
+            }
+        }
+    }
         return (
             <div className="clearfix">
                 {this.state.processDefinitionId && <div>
@@ -389,22 +393,7 @@ class BpmTaskApprovalWrap extends Component {
                         />
                     </Col>
                 </Row>
-                    {this.state.properties.iscopytouser && this.props.appType == 1 && <Row>
-                    <Col md={12}>
-                        <BpmTaskCopyPanel
-                            panelOpen={false}
-                            title={'抄送(选填)'}
-                            onCopyusersChange={(s)=>{
-                                this.setState({copyusers:s});
 
-                            }}
-                            onintersectionChange={(s)=>{
-                                this.setState({intersection:s});
-                            }}
-
-                        />
-                    </Col>
-                </Row>}
                     <Row style={{"margin":"8px 0", "padding": "0 10px"}}>
                         <Col md={4} mdOffset={8} xs={4} xsOffset={8} sm={4} smOffset={8} style={{ "textAlign": "right","paddingRight": 0}}>
                             <Button onClick={this.handlerSubmitBtn}  colors="primary">提交</Button>
@@ -417,6 +406,7 @@ class BpmTaskApprovalWrap extends Component {
                         <Button onClick={this.props.onBpmFlowClick} style={{ "marginBottom": "4px", "marginRight": "15px" }} colors="primary">流程图</Button>
                     </Col>
                 </Row>}
+                    <RefTreeTransfer {...assignOption} showModal={this.state.showModal}/>
             </div>
         );
     }

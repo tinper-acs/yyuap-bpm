@@ -1,10 +1,10 @@
 {
   "name": "yyuap-bpm",
-  "version": "0.3.26-walsin",
+  "version": "0.3.28-walsin",
   "description": "tinper-bee bpm component",
   "main": "./lib/index.js",
   "scripts": {
-    "dev": "uba server --port=5171",
+    "dev": "node --max_old_space_size=9000 ./node_modules/.bin/uba server --port=5171",
     "dist": "uba build",
     "build": "rm -rf lib && rm -rf build && babel src -d lib --no-comments",
     "bundle": "webpack --progress --mode=development  && webpack --progress -p --output-filename yyuap-bpm.min.js"
@@ -29,7 +29,7 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "yyuap-ref": "^1.x.x"
+    "pap-refer": "^1.0.7"
   },
   "devDependencies": {
     "axios": "^0.18.0",
@@ -39,14 +39,16 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
+    "bee-select": "^1.1.5",
+    "mini-css-extract-plugin": "^0.7.0",
+    "pap-refer": "1.0.7",
     "prop-types": "^15.6.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
-    "tinper-bee": "^1.5.4",
-    "bee-select": "^1.1.5",
+    "tinper-bee": "^2.0.11",
     "uba": "4.0.3",
     "uba-server-mock": "2.0.2",
     "uba-server-proxy": "2.0.3",
-    "yyuap-ref": "1.1.5"
+    "uba-server-static": "^2.0.1"
   }
 }
