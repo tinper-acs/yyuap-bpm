@@ -15,7 +15,8 @@ const propTypes = {
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
     onStart: PropTypes.func,
-    onEnd: PropTypes.func
+    onEnd: PropTypes.func,
+    params:PropTypes.object,
 };
 
 class BpmButtonRecall extends Component {
@@ -26,47 +27,62 @@ class BpmButtonRecall extends Component {
      * 收回操作事件
      */
     handlerBtn = async () => {
-        let { checkedArray, onStart, onEnd, onSuccess, onError } = this.props;
+        let { checkedArray, onStart, onEnd, onSuccess, onError,params } = this.props;
         let recallArray = [];
 
-        //检查只能一条单据提交流程
-        if (checkedArray.length >= 2) {
-            onError && onError({
-                type: 2,
-                msg: getlocals({ id:"js.b9f.src13.0001",defaultMessage:"请选择单条数据收回" })
-            });
-            return;
-        }
-
-        //操作数据至少有一个
-        if (checkedArray.length > 0) {
-            if (checkedArray[0].bpmState != 0 && checkedArray[0].bpmState != null) {
-                recallArray.push({ id: checkedArray[0].id });
-            } else {
-                onError && onError({
-                    type: 1,
-                    msg: getlocals({id:"js.b9f.src13.0002",defaultMessage:"流程没有启动无法撤回"})
-                });
-            }
-
-        } else {
-            // 弹出提示请选择数据
-            onError && onError({
-                type: 1,
-                msg: getlocals({ id:"js.b9f.src13.0003" ,defaultMessage:"请选择单据才能撤回"})
-            });
-            return;
-        }
-        if (recallArray.length > 0) {
+        if(params && params.pk_gd) {//
             onStart && onStart();
-            let { data: { success, detailMsg } } = await onRecall(this.props.url, recallArray,onError);
-            if (detailMsg.data['success'] && detailMsg.data.success == 'success') {
+            let {data: {msg, flag}} = await onRecall(this.props.url,params );//flag, msg, data
+            if (flag) {
                 onSuccess && onSuccess();
             } else {
                 onError && onError({
                     type: 2,
-                    msg: detailMsg.data.message
+                    msg:msg
                 });
+            }
+
+        }else {
+            //检查只能一条单据提交流程
+            if (checkedArray.length >= 2) {
+                onError && onError({
+                    type: 2,
+                    msg: getlocals({id:"js.b9f.src13.0001" ,defaultMessage:"请选择单条数据收回" })
+                });
+                return;
+            }
+
+            //操作数据至少有一个
+            if (checkedArray.length > 0) {
+                if (checkedArray[0] && checkedArray[0].bpmState != 0 && checkedArray[0].bpmState != null) {
+                    recallArray.push({id: checkedArray[0].id});
+                } else {
+                    onError && onError({
+                        type: 1,
+                        msg: getlocals({id:"js.b9f.src13.0002",defaultMessage:"流程没有启动无法撤回" })
+                    });
+                }
+
+            } else {
+                // 弹出提示请选择数据
+                onError && onError({
+                    type: 1,
+                    msg: getlocals({id:"js.b9f.src13.0001" ,defaultMessage:"请选择单条数据收回" })
+                });
+                return;
+            }
+            if (recallArray.length > 0) {
+                onStart && onStart();
+                let {data: {success, detailMsg}} = await onRecall(this.props.url, recallArray);
+                if (detailMsg.data['success'] && detailMsg.data.success == 'success') {
+                    onSuccess && onSuccess();
+                } else {
+                    onError && onError({
+                        type: 2,
+                        msg: detailMsg.data.message
+                    });
+                }
+
             }
         }
     }

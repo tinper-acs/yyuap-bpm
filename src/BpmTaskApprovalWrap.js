@@ -114,7 +114,7 @@ class BpmTaskApprovalWrap extends Component {
         let {  onSuccess, onError, onStart, onEnd } = this.props;
         let { processDefineCode, assignInfo, obj,copyusers,intersection,submiting } = this.state;
         //加载事件
-        onStart && onStart();
+        onStart && onStart(this.state.approvetype);
         var result = await sendBpmTaskAJAX('commit', {
                                 activityId: this.state.HuoDongID,
                                 activityName: this.state.HuoDongName,
@@ -132,7 +132,7 @@ class BpmTaskApprovalWrap extends Component {
                         });
 
         if (result.data.flag == 'success') {
-            onSuccess && onSuccess();
+             onSuccess && onSuccess(this.state.approvetype);
             this.setState({
                 huanjieShow: false,
                 childRefKey: [],
@@ -160,7 +160,7 @@ class BpmTaskApprovalWrap extends Component {
             Message.create({ content: getlocals({id:"js.b9f.src5.0005" ,defaultMessage:"审批意见不能为空" }), color: 'danger', position: 'top' });
             return;
         }
-        onStart && onStart();
+        onStart && onStart(this.state.approvetype);
         //检测需要二次请求并弹出Modal审批
         switch (this.state.approvetype) {
             case 'agree'://同意
@@ -169,7 +169,7 @@ class BpmTaskApprovalWrap extends Component {
                 //普通同意操作，没有后续操作，直接成功
                 if (result.data.flag == 'success') {
                     Message.create({ content: result.data.msg, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
+                     onSuccess && onSuccess(this.state.approvetype);
                 } else if (result.data.flag == 'faile') {
                     Message.create({ content: result.data.msg, color: 'danger', position: 'top' });
                     onError && onError({
@@ -181,7 +181,7 @@ class BpmTaskApprovalWrap extends Component {
                 if (result.data.assignAble) {
                     //判断是否有最新的活动id和name
                     if(result.data.assignList.length>1){
-                        onEnd && onEnd();
+                        onEnd && onEnd(this.state.approvetype);
                         let arr = result.data.assignList
                         //更新环节指派数据
                         this.setState({
@@ -199,9 +199,9 @@ class BpmTaskApprovalWrap extends Component {
                                 HuoDongName: result.data.assignList[0].activityName
                             });
                         }
-                    // onStart && onStart();
+                    // onStart && onStart(this.state.approvetype);
                     //可以是加签操作，拉取加签请求
-                    onEnd && onEnd();
+                    onEnd && onEnd(this.state.approvetype);
                     let options = Object.assign(JSON.parse(refOptions),
                         {
                         title: getlocals({id:"js.b9f.src5.0006" ,defaultMessage:"指派用户选择" }),
@@ -233,7 +233,7 @@ class BpmTaskApprovalWrap extends Component {
                         //保存回调sels选中的行数据showVal显示的字
                         onSave: async (sels, showVal) => {//showVal="12;13;管理员"
                             //回调
-                            onStart && onStart();
+                            onStart && onStart(this.state.approvetype);
                             //同意后续的加签
                             //TO DO:重构URL
                             var agreeeMsg = await sendBpmTaskAJAX('commit', {
@@ -265,7 +265,7 @@ class BpmTaskApprovalWrap extends Component {
                                     rejectlist: [],
                                     selectedRow: []
                                 });
-                                onSuccess && onSuccess();
+                                 onSuccess && onSuccess(this.state.approvetype);
                             } else {
                                 Message.create({ content: `${agreeeMsg.data.msg}`, color: 'danger', position: 'top' });
                                 onError && onError({
@@ -311,7 +311,7 @@ class BpmTaskApprovalWrap extends Component {
                 });
 
                 if (rejectToBillMakerMsg.data.flag == 'success') {
-                    onSuccess && onSuccess();
+                     onSuccess && onSuccess(this.state.approvetype);
                     Message.create({ content: `${rejectToBillMakerMsg.data.msg}`, color: 'info', position: 'top' });
                     this.setState({
                         rejectToActivityShow: false,
@@ -328,7 +328,7 @@ class BpmTaskApprovalWrap extends Component {
                 break;
             //加签
             case 'signAdd':
-                onStart && onStart();
+                onStart && onStart(this.state.approvetype);
                 //TO DO:重构URL
                 if(!this.state.userIds ||this.state.userIds.length ===0){
 
@@ -359,7 +359,7 @@ class BpmTaskApprovalWrap extends Component {
                 //判断加签最终是否成功
                 if (signAddMsg.data.flag == 'success') {
                     Message.create({ content: `${signAddMsg.data.msg}`, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
+                     onSuccess && onSuccess(this.state.approvetype);
                 } else {
                     Message.create({ content: `${signAddMsg.data.msg}`, color: 'danger', position: 'top' });
                     onError && onError({
@@ -370,7 +370,7 @@ class BpmTaskApprovalWrap extends Component {
                 break;
             //改派
             case 'delegate':
-                onStart && onStart();
+                onStart && onStart(this.state.approvetype);
                 if(!this.state.userId ||this.state.userId.length ===0){
                     Message.create({ content: getlocals({id:"js.b9f.src5.0018" ,defaultMessage:"改派用户不可为空" }), color: 'warning', position: 'top' });
                     onError && onError({
@@ -398,7 +398,7 @@ class BpmTaskApprovalWrap extends Component {
                 //处理后续的操作
                 if (delegateMsg.data.flag === 'success') {
                     Message.create({ content: `${delegateMsg.data.msg}`, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
+                     onSuccess && onSuccess(this.state.approvetype);
                 } else {
                     Message.create({ content: `${delegateMsg.data.msg}`, color: 'danger', position: 'top' });
                     onError && onError({
@@ -412,7 +412,7 @@ class BpmTaskApprovalWrap extends Component {
                 let res = await sendBpmTaskAJAX(this.state.approvetype, this.state);
                 if (res.data.flag === 'success') {
                     Message.create({ content: res.data.msg, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
+                     onSuccess && onSuccess(this.state.approvetype);
                 } else {
                     Message.create({ content: res.data.msg, color: 'danger', position: 'top' });
                     onError && onError({
@@ -433,7 +433,7 @@ class BpmTaskApprovalWrap extends Component {
                 });
                 if (rejectres.data.flag === 'success') {
                     Message.create({ content: rejectres.data.msg, color: 'info', position: 'top' });
-                    onSuccess && onSuccess();
+                     onSuccess && onSuccess(this.state.approvetype);
                 } else {
                     Message.create({ content: rejectres.data.msg, color: 'danger', position: 'top' });
                     onError && onError({
